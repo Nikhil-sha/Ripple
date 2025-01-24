@@ -160,7 +160,7 @@ class SongDetails extends Component {
 				<div className="w-full mt-8">
 					<h3 className="text-lg font-semibold text-gray-400">More about {song.name}</h3>
 					<div className="mt-3">
-						<h4 onClick={this.toggleLyricsState} className="text-md font-semibold flex justify-between mb-2"><span>Lyrics</span><i className="fas fa-chevron-down fa-sm ml-2"></i></h4>
+						<h4 onClick={this.toggleLyricsState} className="text-md font-semibold flex justify-between mb-2"><span>Lyrics</span><i className="fas fa-chevron-down fa-sm pt-3"></i></h4>
 						{song.lyrics ? (
 						<div>
 							<p className="text-sm text-gray-600">
