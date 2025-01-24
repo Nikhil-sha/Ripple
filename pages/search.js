@@ -1,101 +1,3 @@
-// import React, { Component, createRef } from "react";
-
-// class Search extends Component {
-// 	constructor(props) {
-// 		super(props);
-// 		this.state = {
-// 			loading: true,
-// 			error: false,
-// 			errorMessage: null,
-// 			lyricsState: "collapsed"
-// 		};
-// 		this.searchValue = createRef();
-// 	}
-
-// 	componentDidMount() {
-// 		const { state } = this.props;
-// 		if (!state) {
-// 			return;
-// 		} else {
-// 			this.setLoadingFalse();
-// 			this.setErrorFalse();
-// 		}
-// 	}
-
-// 	setLoadingTrue = () => {
-// 		this.setState({ loading: true });
-// 	};
-
-// 	setLoadingFalse = () => {
-// 		this.setState({ loading: false });
-// 	};
-
-// 	setError = (message) => {
-// 		this.setState({ error: true, loading: false, errorMessage: message });
-// 	};
-
-// 	setErrorFalse = () => {
-// 		this.setState({ error: false });
-// 	};
-
-// 	fetchResult = (query) => {
-// 		const { handleUpdate } = this.props;
-// 		this.setLoadingTrue();
-// 		fetch(`https://saavn.dev/api/search/songs?query=${query}`)
-// 			.then((response) => response.json())
-// 			.then((data) => {
-// 				if (!data.success) {
-// 					this.setError("No song found");
-// 				} else if (data.success) {
-// 					handleUpdate("this is a query", [...data.data.results]);
-// 					this.setLoadingFalse();
-// 					this.setErrorFalse();
-// 				}
-// 			})
-// 			.catch((error) => {
-// 				this.setError("API failure")
-// 			})
-// 	};
-
-// 	render() {
-// 		const { loading, error, errorMessage } = this.state;
-// 		let { state } = this.props;
-
-// 		return (
-// 			<section className="w-full h-full overflow-y-auto px-4 md:px-10 pb-20">
-// 				<div className="flex flex-col justify-center items-center mt-10">
-// 					<div className="relative w-full max-w-md">
-// 						<input type="text" placeholder="Search..." className="w-full px-4 py-2 text-gray-800 bg-white border border-gray-300 rounded-full shadow focus:outline-none focus:ring-2 focus:ring-blue-500" />
-// 						<button className="absolute top-1/2 right-2 transform -translate-y-1/2 text-blue-500 hover:text-blue-700">
-// 							<i className="fas fa-search"></i>
-// 						</button>
-// 					</div>
-// 					{loading ? (
-// 						<div className="w-full max-w-md flex flex-col justify-center items-center">
-// 							<div className="w-8 h-8 rounded-full border-4 border-blue-500 border-r-transparent animate-spin"></div>
-// 							<h2 className="pt-4">Loading…</h2>
-// 						</div>
-// 					) : error ? (
-// 						<div className="w-full max-w-md flex flex-col justify-center items-center">
-// 							<i className="fas fa-exclamation-circle text-2xl text-red-500"></i>
-// 							<h2 className="pt-2 w-64 font-bold leading-none text-lg text-center">Failed to load the song!</h2>
-// 							<p className="w-64 leading-1 text-sm text-center text-gray-400">REASON: {errorMessage ? errorMessage : "Don't know what happened!"}</p>
-// 						</div>
-// 					) : (
-// 						<div className="w-full max-w-md flex flex-col justify-center items-center">
-// 							<p className="w-64 leading-1 text-sm text-center text-gray-400">Results found</p>
-// 						</div>
-// 					)}
-// 				</div>
-// 			</section>
-// 		)
-// 	}
-// }
-
-// export default Search;
-
-
-
 import React, { Component } from "react";
 
 import Song from '../components/song.js';
@@ -187,7 +89,7 @@ class Search extends Component {
 
 		return (
 			<section className="w-full h-full overflow-y-auto px-4 md:px-10 pb-20">
-				<div className="h-3/4 flex flex-col justify-start items-center mt-5">
+				<div className="min-h-full flex flex-col justify-start items-center py-5">
 					<div className="relative w-full max-w-md">
 						<input
 							type="text"
