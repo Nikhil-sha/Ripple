@@ -211,7 +211,7 @@ class SongDetails extends Component {
 				</div>
 				
 				<p className="text-center text-md font-bold text-gray-800">
-					{song.label} - {song.copyright}
+					{specificSongDetails.label} - {specificSongDetails.copyright}
 				</p>
 			</section>
 		);
