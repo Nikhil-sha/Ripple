@@ -83,7 +83,7 @@ class SongDetails extends Component {
 		const { signal } = this.abortController;
 
 		try {
-			const isUrl = decodedSongId.startsWith("http://") || decodedSongId.startsWith("https://");
+			const isUrl = decodedSongId.startsWith("https://www.jiosaavn.com/") || decodedSongId.startsWith("https://");
 			const apiUrl = isUrl ?
 				`https://saavn.dev/api/songs?link=${encodeURIComponent(decodedSongId)}` :
 				`https://saavn.dev/api/songs/${decodedSongId}`;
