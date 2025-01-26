@@ -16,7 +16,7 @@ import Saved from './pages/saved';
 
 class App extends Component {
 	static contextType = AppContext;
-	
+
 	render() {
 		return (
 			<React.StrictMode>
@@ -30,7 +30,7 @@ class App extends Component {
 								<Route exact path="/" component={Home}/>
 								<Route path="/search" component={Search}/>
 								<Route path="/saved" component={Saved}/>
-								<Route path="/song/:songId" render={(props) => <SongDetails {...props} />}/>
+								<Route path="/song/:songId" render={(props) => <SongDetails {...props}/> } />
 								<Route path="*" render={()=> <div className="text-center mt-10">Page not found</div>}/>
 							</Switch>
 						</div>
