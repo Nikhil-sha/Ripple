@@ -1,8 +1,11 @@
 import React, { Component } from "react";
-
+import { withRouter } from 'react-router-dom';
+import { AppContext } from '../context';
 import Song from '../components/song.js';
 
 class Search extends Component {
+	static contextType = AppContext;
+
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -15,7 +18,7 @@ class Search extends Component {
 	}
 
 	componentDidMount() {
-		if (this.props.state.results) {
+		if (this.context.search.results) {
 			this.setLoadingFalse();
 			this.setErrorFalse();
 		}
@@ -53,11 +56,18 @@ class Search extends Component {
 			return;
 		}
 
-		if (this.props.state.query === query) {
+		const isUrl = query.startsWith("https://www.jiosaavn.com/") || query.startsWith("https://");
+		if (isUrl) {
+			const url = encodeURIComponent(query);
+			this.props.history.push(`/song/${url}`);
 			return;
 		}
 
-		const { handleUpdate } = this.props;
+		if (this.context.search.query === query) {
+			return;
+		}
+
+		const { updateSearchState } = this.context;
 		this.setLoadingTrue();
 
 		// Initialize AbortController before the try block
@@ -65,13 +75,13 @@ class Search extends Component {
 		const { signal } = this.abortController;
 
 		try {
-			const response = await fetch(`https://saavn.dev/api/search/songs?query=${query}`, { signal });
+			const response = await fetch(`https://saavn.dev/api/search/songs?query=${query.trim()}`, { signal });
 			const data = await response.json();
 
 			if (!data.success || !data.data.results.length) {
 				this.setError("No results found.");
 			} else {
-				handleUpdate(query, data.data.results);
+				updateSearchState(query, data.data.results);
 				this.setLoadingFalse();
 				this.setErrorFalse();
 			}
@@ -95,35 +105,45 @@ class Search extends Component {
 							type="text"
 							value={query}
 							onChange={this.handleInputChange}
-							placeholder="Search..."
-							className="w-full px-4 py-2 text-gray-800 bg-white border border-gray-300 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+							placeholder="Search for songs..."
+							className="w-full px-4 py-3 text-lg text-gray-800 bg-white border border-gray-300 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
 						/>
 						<button
 							onClick={this.handleSearch}
-							className="absolute px-4 py-1 top-1/2 right-1.5 transform -translate-y-1/2 rounded-full text-white hover:text-gray-200 bg-blue-400 hover:bg-blue-500"
+							className="absolute top-1/2 right-1.5 transform -translate-y-1/2 px-4 py-2 rounded-full text-white bg-blue-400 hover:bg-blue-500 focus:outline-none"
 						>
 							<i className="fas fa-search mt-1"></i>
 						</button>
 					</div>
+
 					{loading ? (
-						<div className="w-full h-full max-w-md flex flex-col justify-center items-center">
+						<div className="w-full max-w-md flex flex-col justify-center items-center mt-4">
 							<div className="w-8 h-8 rounded-full border-4 border-blue-500 border-r-transparent animate-spin"></div>
-							<h2 className="pt-4">Loading…</h2>
+							<h2 className="pt-4 text-lg font-semibold text-gray-600">Loading…</h2>
 						</div>
 					) : error ? (
-						<div className="w-full h-full max-w-md flex flex-col justify-center items-center">
+						<div className="w-full max-w-md flex flex-col justify-center items-center mt-4">
 							<i className="fas fa-exclamation-circle text-2xl text-red-500"></i>
-							<h2 className="pt-2 w-64 font-bold leading-none text-lg text-center">Failed to load the song!</h2>
-							<p className="w-64 leading-1 text-sm text-center text-gray-400">REASON: {errorMessage || "Don't know what happened!"}</p>
+							<h2 className="pt-2 font-bold text-lg text-center text-gray-800">Failed to load the song!</h2>
+							<p className="text-sm text-center text-gray-400">REASON: {errorMessage || "An unknown error occurred!"}</p>
 						</div>
-					) : this.props.state.results ? (
-						<div className="w-full max-w-md flex flex-col justify-center items-center mt-2">
-							{this.props.state.results.map((song, index) => (
-								<Song key={index} songId={song.id} name={song.name} artist={song.artist} cover={song.image[0].url} />
+					) : this.context.search.results ? (
+						<div className="w-full max-w-md flex flex-col justify-start items-center mt-4 space-y-4">
+							{this.context.search.results.map((song) => (
+								<Song 
+									key={song.id} 
+									songId={song.id} 
+									name={song.name} 
+									artist={song.artists.all[0].name} 
+									coverSm={song.image[0].url} 
+									coverBg={song.image[song.image.length - 1].url} 
+									src={song.downloadUrl[song.downloadUrl.length - 1].url} 
+									option="save" 
+								/>
 							))}
 						</div>
 					) : (
-						<div className="w-full h-full max-w-md flex flex-col justify-center items-center font-semibold text-gray-600">
+						<div className="w-full max-w-md flex flex-col justify-center items-center mt-4 font-semibold text-gray-600">
 							Search to get started!
 						</div>
 					)}
@@ -133,4 +153,4 @@ class Search extends Component {
 	}
 }
 
-export default Search;
+export default withRouter(Search);

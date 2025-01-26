@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 class Home extends Component {
 	constructor(props) {
 		super(props);
 	}
-	
-	addToPlayList = (track) => {
-		this.props.updatePlayList([track, ...this.props.playList]);
-	};
 
 	render() {
 		return (
@@ -23,17 +19,27 @@ class Home extends Component {
 				</div>
 				<article className="w-full p-2 px-4 bg-yellow-200 border-l-4 border-yellow-400 rounded-md mb-4">
 					<p className="text-xs">{quoteData.quote}</p>
-					<p className="text-xs text-right font-semibold"> - {quoteData.author}</p>
+					<a 
+						className="underline"
+						href={`https://www.google.com/search?q=${encodeURIComponent(quoteData.quote + ' by "' + quoteData.author + '"')}`} 
+						aria-label={`Search for quote: "${quoteData.quote}" by ${quoteData.author}`}
+					>
+						<p className="text-xs text-right font-semibold"> - {quoteData.author}</p>
+					</a>
 				</article>
 				<article className="w-full p-2 px-4">
 					<h2 className="text-lg font-bold">Go ahead and jam to your favorite tracks while we cook up some awesome new features for you!</h2>
-					<Link to="/search" className="text-sm text-blue-500 underline">
+					<Link 
+						to="/search" 
+						className="text-sm text-blue-500 underline"
+						aria-label="Go to search page"
+					>
 						<i className="fas fa-link fa-sm mr-2"></i>
 						Go to search page
 					</Link>
 				</article>
 			</section>
-		)
+		);
 	}
 }
 

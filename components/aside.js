@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { AppContext } from '../context';
 
 class Aside extends Component {
+	static contextType = AppContext;
+
 	render() {
-		const { isVisible, onAsideToggle } = this.props;
+		const { isAsideVisible, handleAsideToggle } = this.context;
 		const links = [
 			{ to: "/", icon: "fa-home", label: "Home" },
 			{ to: "/about", icon: "fa-info-circle", label: "About" },
@@ -12,25 +15,26 @@ class Aside extends Component {
 		];
 
 		return (
-			<aside className={`${isVisible ? 'block' : 'hidden' } absolute top-0 right-0 z-50 w-64 md:w-2/5 h-dvh bg-white rounded-l-xl shadow-xl transition-transform transform ${isVisible ? 'translate-x-0' : 'translate-x-full' }`}>
-				<div className="w-full h-full flex flex-col p-4">
-					<div className="inline-flex justify-between items-center">
-						<h2 className="text-md font-bold">Menu</h2>
-						<button className="p-1" onClick={onAsideToggle} aria-label="Close menu">
-							<i className="fas fa-times fa-md"></i>
+			<aside className={`fixed top-0 right-0 z-50 w-64 md:w-1/4 h-screen bg-gradient-to-b from-gray-50 to-gray-100 shadow-xl rounded-l-xl transition-transform transform ${isAsideVisible ? "translate-x-0" : "translate-x-full"}`} role="menu" aria-hidden={!isAsideVisible}>
+				<div className="flex flex-col h-full p-4">
+					<div className="flex justify-between items-center mb-4">
+						<h2 className="text-lg font-bold text-gray-700">Menu</h2>
+						<button className="p-2 rounded-full hover:bg-gray-200" onClick={handleAsideToggle} aria-label="Close menu" aria-expanded={isAsideVisible}>
+							<i className="fas fa-times text-gray-500"></i>
 						</button>
 					</div>
-					<hr className="mt-1 mb-2" />
-					<nav className="w-full grow min-h-0 overflow-auto">
-						<ul className="flex flex-col gap-1">
-							<li className="font-bold text-xs text-gray-400 my-1">PAGES</li>
+					<hr className="border-gray-300 mb-4" />
+
+					<nav className="flex-grow overflow-auto">
+						<ul className="space-y-3">
+							<li className="text-xs font-semibold text-gray-500">PAGES</li>
 							{links.map((link, index) => (
-							<li key={index} className="w-full">
-								<Link className="block text-sm p-2 hover:bg-gray-200 rounded-lg" to={link.to}>
-								<i className={`fas ${link.icon} fa-md w-6 mr-2 text-gray-400 text-center`}></i>
-								{link.label}
-								</Link>
-							</li>
+								<li key={index} role="menuitem">
+									<Link className="flex items-center text-sm p-3 hover:bg-gray-200 rounded-lg" to={link.to}>
+										<i className={`fas ${link.icon} text-gray-500 mr-3 w-5 text-center`}></i>
+										{link.label}
+									</Link>
+								</li>
 							))}
 						</ul>
 					</nav>

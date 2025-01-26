@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import { withRouter } from 'react-router-dom';
+import { AppContext } from '../context';
 
 class SongDetails extends Component {
+	static contextType = AppContext;
+
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -15,7 +18,7 @@ class SongDetails extends Component {
 
 	componentDidMount() {
 		const { songId } = this.props.match.params;
-		if (!this.props.song || this.props.song.id !== songId) {
+		if (!this.context.specificSongDetails || this.context.specificSongDetails.id !== songId) {
 			this.fetchSong(songId);
 		} else {
 			this.setLoadingFalse();
@@ -27,14 +30,12 @@ class SongDetails extends Component {
 		const currentSongId = this.props.match.params.songId;
 		const previousSongId = prevProps.match.params.songId;
 
-		// Check if the song ID has changed
 		if (currentSongId !== previousSongId) {
 			this.fetchSong(currentSongId);
 		}
 	}
 
 	componentWillUnmount() {
-		// Cancel ongoing fetch request when the component unmounts
 		if (this.abortController) {
 			this.abortController.abort();
 		}
@@ -45,7 +46,7 @@ class SongDetails extends Component {
 	};
 
 	setSong = (data) => {
-		this.props.handleUpdate(data);
+		this.context.setSpecificSongDetails(data);
 	};
 
 	setLoadingFalse = () => {
@@ -77,13 +78,17 @@ class SongDetails extends Component {
 
 	fetchSong = async (songId) => {
 		this.setLoadingTrue();
-
-		// Initialize AbortController
+		const decodedSongId = decodeURIComponent(songId);
 		this.abortController = new AbortController();
 		const { signal } = this.abortController;
 
 		try {
-			const response = await fetch(`https://saavn.dev/api/songs/${songId}`, { signal });
+			const isUrl = decodedSongId.startsWith("http://") || decodedSongId.startsWith("https://");
+			const apiUrl = isUrl ?
+				`https://saavn.dev/api/songs?link=${encodeURIComponent(decodedSongId)}` :
+				`https://saavn.dev/api/songs/${decodedSongId}`;
+
+			const response = await fetch(apiUrl, { signal });
 			const data = await response.json();
 
 			if (!data.success) {
@@ -103,21 +108,34 @@ class SongDetails extends Component {
 	};
 
 	addToPlayList = () => {
-		const { song } = this.props;
+		const { specificSongDetails } = this.context;
 		const track = {
-			id: song.id,
-			name: song.name,
-			artist: song.artists.primary[0].name,
-			src: song.downloadUrl[song.downloadUrl.length - 1].url,
-			thumbnailMin: song.image[0].url,
-			thumbnailMax: song.image[song.image.length - 1].url,
+			id: specificSongDetails.id,
+			name: specificSongDetails.name,
+			artist: specificSongDetails.artists.primary[0].name,
+			src: specificSongDetails.downloadUrl[specificSongDetails.downloadUrl.length - 1].url,
+			coverSm: specificSongDetails.image[0].url,
+			coverBg: specificSongDetails.image[specificSongDetails.image.length - 1].url,
 		};
-		this.props.updatePlayList([track, ...this.props.playList]);
+		this.context.updatePlayList([track, ...this.context.playList]);
+	};
+
+	saveThis = () => {
+		const { specificSongDetails } = this.context;
+		const track = {
+			id: specificSongDetails.id,
+			name: specificSongDetails.name,
+			artist: specificSongDetails.artists.primary[0].name,
+			src: specificSongDetails.downloadUrl[specificSongDetails.downloadUrl.length - 1].url,
+			coverSm: specificSongDetails.image[0].url,
+			coverBg: specificSongDetails.image[specificSongDetails.image.length - 1].url,
+		};
+		this.context.updateLocalStorage(track);
 	};
 
 	render() {
 		const { loading, error, errorMessage } = this.state;
-		let { song } = this.props;
+		let { specificSongDetails } = this.context;
 		if (loading) {
 			return (
 				<div className="h-full w-full pb-20 flex flex-col justify-center items-center">
@@ -140,58 +158,63 @@ class SongDetails extends Component {
 		return (
 			<section className="w-full h-full overflow-y-auto px-4 md:px-10 pt-10 pb-20">
 				<figure className="w-full flex flex-col justify-center items-center">
-					<img src={song.image[song.image.length - 1].url} alt={song.name} className="w-2/4 md:w-1/4 aspect-square rounded-lg shadow-lg" />
+					<img src={specificSongDetails.image[specificSongDetails.image.length - 1].url} alt={specificSongDetails.name} className="w-2/4 md:w-1/4 aspect-square rounded-lg shadow-lg" />
 					<figcaption className="mt-4 text-center">
-						<h2 className="text-2xl font-bold mb-1">{song.name}</h2>
-						<p className="text-sm text-gray-500 font-semibold">from <a href={song.album.url} className="hover:underline">{song.album.name}</a> by <a href={song.artists.primary[0].url} className="hover:underline">{song.artists.primary[0].name}</a></p>
-						<span className="leading-none text-sm font-semibold text-gray-500">{song.type} - {song.year}</span>
+						<h2 className="text-2xl font-bold mb-1">{specificSongDetails.name}</h2>
+						<p className="text-sm text-gray-500 font-semibold">from <a href={specificSongDetails.album.url} className="hover:underline">{specificSongDetails.album.name}</a> by <a href={specificSongDetails.artists.primary[0].url} className="hover:underline">{specificSongDetails.artists.primary[0].name}</a></p>
+						<span className="leading-none text-sm font-semibold text-gray-500">{specificSongDetails.type} - {specificSongDetails.year}</span>
 						<br />
-						<span className="leading-none text-sm font-semibold text-gray-500">{song.playCount} Plays</span>
+						<span className="leading-none text-sm font-semibold text-gray-500">{specificSongDetails.playCount} Plays</span>
 					</figcaption>
 				</figure>
+
+				{/* Button Section with Responsiveness */}
 				<div className="w-fit flex flex-row gap-4 items-center mt-3 mx-auto">
-					<button onClick={() => alert("feature coming soon!")} className="rounded-full bg-yellow-400 hover:bg-yellow-500 text-white w-12 h-12 flex justify-center items-center shadow-md">
+					<button onClick={this.saveThis} className="rounded-full border-b-2 border-r-2 border-yellow-500 hover:border-none bg-yellow-400 hover:bg-yellow-500 text-white w-12 h-12 flex justify-center items-center shadow-md">
 						<i className="pt-0.5 fas fa-bookmark text-lg"></i>
 					</button>
-					<button onClick={this.addToPlayList} className="rounded-full bg-gray-200 hover:bg-gray-300 text-gray-800 w-12 h-12 flex justify-center items-center shadow-md">
-						<i className="pt-0.5 fas fa-play text-lg"></i>
+					<button onClick={this.addToPlayList} className="rounded-full border-b-2 border-r-2 border-gray-400 hover:border-none bg-gray-200 hover:bg-gray-300 text-gray-800 w-12 h-12 flex justify-center items-center shadow-md">
+						<i className="pl-1 pt-0.5 fas fa-play text-lg"></i>
 					</button>
 				</div>
-				<div className="w-full mt-8">
-					<h3 className="text-lg font-semibold text-gray-400">More about {song.name}</h3>
+
+				{/* More Info Section */}
+				<div className="w-full mt-8 mb-4">
+					<h3 className="text-lg font-semibold text-gray-400">More about {specificSongDetails.name}</h3>
 					<div className="mt-3">
 						<h4 onClick={this.toggleLyricsState} className="text-md font-semibold flex justify-between mb-2"><span>Lyrics</span><i className="fas fa-chevron-down fa-sm pt-3"></i></h4>
-						{song.lyrics ? (
+						{specificSongDetails.lyrics ? (
 						<div>
 							<p className="text-sm text-gray-600">
-								{this.state.lyricsState === "collapsed" ? (song.lyrics.snippet + "…") : (this.renderHtml(song.lyrics.lyrics))}
+								{this.state.lyricsState === "collapsed" ? (specificSongDetails.lyrics.snippet + "…") : (this.renderHtml(specificSongDetails.lyrics.lyrics))}
 							</p>
-							<p className="text-sm font-bold">{this.renderHtml(song.lyrics.copyright)}</p>
+							<p className="text-sm font-bold">{this.renderHtml(specificSongDetails.lyrics.copyright)}</p>
 						</div>
 						) : (
 							<p>No lyrics available!</p>
 						)}
 						<h4 className="text-md font-semibold mt-4 mb-2">Artists</h4>
 						<div className="w-full flex gap-4 overflow-x-auto">
-							{song.artists.all ? song.artists.all.map((artist, index) => (
-								<div key={index} className="w-20 flex-shrink-0">
+							{specificSongDetails.artists.all ? specificSongDetails.artists.all.map((artist, index) => (
+								<div key={index} className="relative w-20 flex-shrink-0 h-20 aspect-square rounded-full overflow-hidden">
 									<a href={artist.url}>
-										<img src={artist.image.length ? artist.image[artist.image.length - 1].url : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUOdfo4lewXJYT_2xPo_Xu2Lj6XPn78X9UJA&s'} alt={artist.name} className="w-full aspect-square rounded-full shadow-lg mb-1" />
-										<div className="text-center">
-											<h5 className="text-sm font-bold">{artist.name}</h5>
-											<p className="text-xs">{artist.role}</p>
+										<img src={artist.image.length ? artist.image[artist.image.length - 1].url : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUOdfo4lewXJYT_2xPo_Xu2Lj6xqdd64xHk1-mWhbM6Fw&s'} alt={artist.name} className="w-full object-cover" />
+										<div className="absolute flex flex-col justify-center items-center top-0 p-2 min-w-0 w-full h-full bg-black/25">
+											<p className="block min-w-0 w-full text-center text-xs text-gray-200 font-bold truncate">{artist.name}</p>
+											<span className="block min-w-0 w-full text-center text-xs text-gray-200 font-thin truncate">{artist.role}</span>
 										</div>
 									</a>
 								</div>
-							)) : ''}
+							)) : null}
 						</div>
 					</div>
 				</div>
-				<div className="text-center mt-4">
-					<p className="text-sm text-gray-600 font-semibold">{song.label} - {song.copyright}</p>
-				</div>
+				
+				<p className="text-center text-md font-bold text-gray-800">
+					{song.label} - {song.copyright}
+				</p>
 			</section>
-		)
+		);
 	}
 }
 
