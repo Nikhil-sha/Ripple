@@ -14,6 +14,7 @@ import Search from './pages/search';
 import About from './pages/about';
 import SongDetails from './pages/song';
 import Saved from './pages/saved';
+import NotFound from './pages/notFound';
 
 class App extends Component {
 	static contextType = AppContext;
@@ -32,8 +33,8 @@ class App extends Component {
 								<Route path="/search" component={Search}/>
 								<Route path="/about" component={About}/>
 								<Route path="/saved" component={Saved}/>
-								<Route path="/song/:songId" render={(props) => (<SongDetails {...props}/>)} />
-								<Route path="*" render={()=> <div className="text-center mt-10">Page not found</div>}/>
+								<Route path="/song/:songId" component={SongDetails} />
+								<Route path="*" component={NotFound}/>
 							</Switch>
 						</div>
 						<Player/>
