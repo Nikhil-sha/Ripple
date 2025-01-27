@@ -24,7 +24,7 @@ class Home extends Component {
 						href={`https://www.google.com/search?q=${encodeURIComponent(quoteData.quote + ' by "' + quoteData.author + '"')}`} 
 						aria-label={`Search for quote: "${quoteData.quote}" by ${quoteData.author}`}
 					>
-						<p className="text-xs text-right font-semibold"> - {quoteData.author}</p>
+						<i className="block text-xs text-right font-bold"> - {quoteData.author}</i>
 					</a>
 				</article>
 				<article className="w-full p-2 px-4">
