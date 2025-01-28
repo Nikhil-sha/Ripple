@@ -162,7 +162,7 @@ class SongDetails extends Component {
 					<figcaption className="mt-4 text-center">
 						<h2 className="text-2xl font-bold mb-1">{specificSongDetails.name}</h2>
 						<p className="text-sm text-gray-500 font-semibold">from <a href={specificSongDetails.album.url} className="hover:underline">{specificSongDetails.album.name}</a> by <a href={specificSongDetails.artists.primary[0].url} className="hover:underline">{specificSongDetails.artists.primary[0].name}</a></p>
-						<span className="leading-none text-sm font-semibold text-gray-500">{specificSongDetails.type} - {specificSongDetails.year}</span>
+						<span className="leading-none text-sm font-semibold text-gray-500">{specificSongDetails.type} - {specificSongDetails.language} - {specificSongDetails.year}</span>
 						<br />
 						<span className="leading-none text-sm font-semibold text-gray-500">{specificSongDetails.playCount} Plays</span>
 					</figcaption>
