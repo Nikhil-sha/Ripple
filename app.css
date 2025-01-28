@@ -1,4 +1,5 @@
-body {
+html, body {
+	overscroll-behavior-y: none;
 	scrollbar-width: none !important;
 	-ms-overflow-style: none !important;
 }

@@ -11,6 +11,7 @@ class Aside extends Component {
 			{ to: "/", icon: "fa-home", label: "Home" },
 			{ to: "/about", icon: "fa-info-circle", label: "About" },
 			{ to: "/search", icon: "fa-search", label: "Search" },
+			{ to: "/notifications", icon: "fa-bell", label: "Notifications" },
 			{ to: "/saved", icon: "fa-bookmark", label: "Saved" },
 		];
 

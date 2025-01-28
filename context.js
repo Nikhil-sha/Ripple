@@ -8,7 +8,7 @@ export class AppProvider extends Component {
 	state = {
 		isAsideVisible: false,
 		isPopupVisible: false,
-		notifications: [{type: "success", text: "this is a test popup, that is extremely large and contains so many words. that's why it's soo long!"}],
+		notifications: [],
 		search: { query: null, results: null },
 		specificSongDetails: null,
 		savedTracks: [],
@@ -29,8 +29,9 @@ export class AppProvider extends Component {
 	};
 
 	addToNotification = (type, message) => {
+		const date = new Date();
 		this.setState((prevState) => ({
-			notifications: [{ type: type, text: message }, ...prevState.notifications],
+			notifications: [{ type: type, text: message, time: date.toLocaleString() }, ...prevState.notifications],
 		}));
 		this.showPopup();
 	};
