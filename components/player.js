@@ -518,12 +518,12 @@ class Player extends Component {
 				</div>
 				<div className="w-full mt-2">
 					<h2 className="text-sm font-bold text-gray-400 mb-2">QUEUE</h2>
-					<ul className="w-full">
+					<ul className="w-full flex flex-col gap-1">
 						{this.context.playList.length ? (
 							this.context.playList.map((track, index) => (
 								<li
 									key={index}
-									className={`px-3 py-2 flex flex-row items-center gap-3 rounded-lg ${this.state.currentTrackIndex === index ? "bg-yellow-300 hover:bg-yellow-400 " : "hover:bg-gray-100"} transition-colors cursor-pointer`}
+									className={`px-3 py-2 flex flex-row items-center gap-3 rounded-lg ${this.state.currentTrackIndex === index ? "bg-yellow-100 hover:bg-yellow-400 " : "hover:bg-gray-100"} transition-colors cursor-pointer`}
 									onClick={() => this.setTrack(index)}
 									aria-label={`Select ${track.name}`}
 								>
