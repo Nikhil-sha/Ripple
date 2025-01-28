@@ -25,6 +25,14 @@ class Home extends Component {
 						</p>
 					</div>
 				</div>
+				<div className="max-w-sm mx-auto bg-yellow-100 border-l-4 border-yellow-500 rounded-md text-yellow-700 p-4 mb-4">
+					<div className="flex gap-3 items-center">
+						<i className="fas fa-info-circle fa-sm"></i>
+						<p className="text-sm">
+							<strong>Note:</strong> If you are facing problem in finding any song, then you can get that song by entering the link of Jio Saavn in the search bar.
+						</p>
+					</div>
+				</div>
 				<article className="max-w-sm mx-auto w-full p-2 px-4 bg-yellow-200 border-l-4 border-yellow-400 rounded-md mb-4">
 					<p className="text-xs">{quoteData.quote}</p>
 					<a 
