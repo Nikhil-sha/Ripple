@@ -179,7 +179,7 @@ class SongDetails extends Component {
 				</div>
 
 				{/* More Info Section */}
-				<div className="w-full mt-8 mb-4">
+				<div className="w-full max-w-lg mt-8 mb-4 mx-auto">
 					<h3 className="text-lg font-semibold text-gray-400">More about {specificSongDetails.name}</h3>
 					<div className="mt-3">
 						<h4 onClick={this.toggleLyricsState} className="text-md font-semibold flex justify-between mb-2"><span>Lyrics</span><i className="fas fa-chevron-down fa-sm pt-3"></i></h4>

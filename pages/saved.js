@@ -65,7 +65,7 @@ class Saved extends Component {
 		return (
 			<section className="w-full h-full overflow-y-auto px-4 md:px-8 lg:px-12 pt-5 pb-20">
 				<h2 className="mb-4 text-2xl font-semibold text-gray-800">Saved Tracks</h2>
-				<div className="mb-4">
+				<div className="mb-4 max-w-lg mx-auto">
 					<div className="relative w-full h-4 rounded-full bg-gray-300 overflow-hidden mb-2">
 						<div style={{ width: `${(storage.occupied / storage.total * 100).toFixed(2)}%` }} className="absolute left-0 h-full rounded-full bg-red-600"></div>
 					</div>
@@ -76,7 +76,7 @@ class Saved extends Component {
 						<span className="px-4 py-2 text-white rounded-lg bg-slate-400 text-xs text-center font-semibold">Total: {storage.total}{storage.valueIn}</span>
 					</div>
 				</div>
-				<div className="mb-4">
+				<div className="mb-4 max-w-md mx-auto">
 					{savedTracks.length > 0 ? savedTracks.map((track) => (
 						<Song key={track.id} songId={track.id} name={track.name} artist={track.artist} coverSm={track.coverSm} coverBg={track.coverBg} src={track.src} option="delete" />
 					)) : (

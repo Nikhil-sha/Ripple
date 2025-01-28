@@ -8,8 +8,8 @@ class Home extends Component {
 
 	render() {
 		return (
-			<section className="h-full overflow-y-auto p-4 pb-20">
-				<div className="bg-yellow-100 border-l-4 border-yellow-500 rounded-md text-yellow-700 p-4 mb-4">
+			<section className="h-full overflow-y-auto px-4 md:px-8 lg:px-12 pt-5 pb-20">
+				<div className="max-w-sm mx-auto bg-yellow-100 border-l-4 border-yellow-500 rounded-md text-yellow-700 p-4 mb-4">
 					<div className="flex gap-3 items-center">
 						<i className="fas fa-info-circle fa-sm"></i>
 						<p className="text-sm">
@@ -17,7 +17,7 @@ class Home extends Component {
 						</p>
 					</div>
 				</div>
-				<div className="bg-yellow-100 border-l-4 border-yellow-500 rounded-md text-yellow-700 p-4 mb-4">
+				<div className="max-w-sm mx-auto bg-yellow-100 border-l-4 border-yellow-500 rounded-md text-yellow-700 p-4 mb-4">
 					<div className="flex gap-3 items-center">
 						<i className="fas fa-info-circle fa-sm"></i>
 						<p className="text-sm">
@@ -25,7 +25,7 @@ class Home extends Component {
 						</p>
 					</div>
 				</div>
-				<article className="w-full p-2 px-4 bg-yellow-200 border-l-4 border-yellow-400 rounded-md mb-4">
+				<article className="max-w-sm mx-auto w-full p-2 px-4 bg-yellow-200 border-l-4 border-yellow-400 rounded-md mb-4">
 					<p className="text-xs">{quoteData.quote}</p>
 					<a 
 						className="underline"
@@ -35,7 +35,7 @@ class Home extends Component {
 						<i className="block text-xs text-right font-bold"> - {quoteData.author}</i>
 					</a>
 				</article>
-				<article className="w-full p-2 px-4">
+				<article className="max-w-lg mx-auto w-full p-2 px-4">
 					<h2 className="text-lg font-bold">Go ahead and jam to your favorite tracks while we cook up some awesome new features for you!</h2>
 					<Link 
 						to="/search" 
