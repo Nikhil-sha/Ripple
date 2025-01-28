@@ -17,6 +17,14 @@ class Home extends Component {
 						</p>
 					</div>
 				</div>
+				<div className="bg-yellow-100 border-l-4 border-yellow-500 rounded-md text-yellow-700 p-4 mb-4">
+					<div className="flex gap-3 items-center">
+						<i className="fas fa-info-circle fa-sm"></i>
+						<p className="text-sm">
+							<strong>Note:</strong> Save the songs you like and play them from <b>Saved</b>, it will reduce the load on API.
+						</p>
+					</div>
+				</div>
 				<article className="w-full p-2 px-4 bg-yellow-200 border-l-4 border-yellow-400 rounded-md mb-4">
 					<p className="text-xs">{quoteData.quote}</p>
 					<a 
