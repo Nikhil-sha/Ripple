@@ -28,7 +28,7 @@ class About extends Component {
 				 	<h3 className="text-md font-bold text-gray-800 leading-snug mb-3">Ver. 2.1.1</h3>
 				 	<ol className="flex flex-col gap-2 list-decimal list-inside text-xs px-2">
 				 		<li>Notification center added.</li>
-				 		<li>Disabled <b>Scroll down to refresh</b>.</li>
+				 		<li>Disabled <b>Scroll to refresh</b>.</li>
 				 	</ol>
 					</div>
 					<div className="mb-4">
