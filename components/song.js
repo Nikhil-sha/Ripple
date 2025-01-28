@@ -40,7 +40,7 @@ class Song extends Component {
 		const { songId, name, artist, coverSm, src, option } = this.props;
 
 		return (
-			<div className="w-full py-2 px-3 flex items-center gap-3 rounded-md hover:bg-gray-50 transition-colors duration-200">
+			<div className="w-full py-2 px-3 flex items-center gap-3 rounded-md hover:bg-gray-100 transition-colors duration-200">
 				<Link to={`/song/${songId}`} className="min-w-0 grow flex items-center gap-3">
 					<div className="w-12 h-12 flex-shrink-0 overflow-hidden rounded-md">
 						<img className="w-full h-full object-cover" src={coverSm} alt={`Cover for ${name} by ${artist}`} />
