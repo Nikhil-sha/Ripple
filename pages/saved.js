@@ -30,7 +30,7 @@ class Saved extends Component {
 		try {
 			if (this.state.storage.total > 0) return;
 
-			const totalSpace = 1 * 1024 * 1024; // Approximate size of localStorage: 1MB
+			const totalSpace = 128 * 1024; // Approximate size of localStorage: 1MB
 			let usedSpace = 0;
 
 			for (let key in localStorage) {
