@@ -50,6 +50,13 @@ class Song extends Component {
 						<span className="text-xs text-gray-500 truncate">{artist}</span>
 					</div>
 				</Link>
+				<button 
+					onClick={this.addToPlayList} 
+					className="flex-shrink-0 w-8 h-8 text-white border-b-2 border-r-2 border-blue-500 hover:border-none rounded-full bg-blue-400 hover:bg-blue-500 flex items-center justify-center"
+					aria-label={`Add ${name} to your playlist`}
+				>
+					<i className="fas fa-play pl-0.5"></i>
+				</button>
 				{option === "save" ?
 					<button 
 						onClick={this.saveThis} 
@@ -66,13 +73,6 @@ class Song extends Component {
 						<i className="fas fa-times"></i>
 					</button> : ''
 				}
-				<button 
-					onClick={this.addToPlayList} 
-					className="flex-shrink-0 w-8 h-8 text-white border-b-2 border-r-2 border-blue-500 hover:border-none rounded-full bg-blue-400 hover:bg-blue-500 flex items-center justify-center"
-					aria-label={`Add ${name} to your playlist`}
-				>
-					<i className="fas fa-play pl-0.5"></i>
-				</button>
 			</div>
 		);
 	}
