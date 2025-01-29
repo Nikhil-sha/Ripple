@@ -19,7 +19,7 @@ class About extends Component {
 						</div>
 					</div>
 					<div className="mb-4">
-				 	<h3 className="text-md font-bold text-gray-800 leading-snug mb-3">Ver. 2.1.4 (current - stable)</h3>
+				 	<h3 className="text-md font-bold text-gray-800 leading-snug mb-3">Ver. 2.1.3 (current - stable)</h3>
 				 	<ol className="flex flex-col gap-2 list-decimal list-inside text-xs px-2">
 				 		<li>Changed Home page layout.</li>
 				 	</ol>
