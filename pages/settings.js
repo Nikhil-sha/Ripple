@@ -15,7 +15,7 @@ class Settings extends Component {
 			<section className="h-full overflow-y-auto px-4 md:px-8 lg:px-12 pt-5 pb-20">
 				<h2 className="mb-4 text-2xl font-bold text-gray-800">Settings</h2>
 				<div className="max-w-lg mx-auto">
-					<div className="w-full mb-4">
+					{/*<div className="w-full mb-4">
 						<h3 className="text-sm font-medium text-gray-800 leading-snug mb-1">Auto play Saved</h3>
 						<div className="relative text-sm w-full">
 							<select className="block w-full appearance-none px-3 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition">
@@ -26,7 +26,7 @@ class Settings extends Component {
 								<i className="fa-solid fa-chevron-down text-gray-500"></i>
 							</div>
 						</div>
-					</div>
+					</div>*/}
 					<div className="w-full mb-4">
 						<h3 className="text-sm font-medium text-gray-800 leading-snug mb-1">Audio Quality</h3>
 						<div className="relative text-sm w-full">
