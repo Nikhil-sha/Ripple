@@ -34,7 +34,10 @@ class Home extends Component {
 				
 				<div className="max-w-lg w-full aspect-video relative rounded-lg overflow-hidden mx-auto mb-4">
 					<img src="https://picsum.photos/1280/720.webp" className="absolute inset-0 brightness-75" />
-					<p className="absolute left-4 bottom-4 w-3/4 text-sm font-semibold text-white drop-shadow-sm">The best music isn’t the most complex or critically acclaimed — it’s the one that makes you feel something. If a song moves you, it doesn’t matter how simple, mainstream, or overplayed it is. That’s real art.</p>
+					<p className="absolute inset-0 flex items-center justify-center text-center px-4 text-sm font-semibold text-white drop-shadow-sm">
+						The best music isn’t the most complex or critically acclaimed — it’s the one that makes you feel something. 
+						If a song moves you, it doesn’t matter how simple, mainstream, or overplayed it is. That’s real art.
+					</p>
 				</div>
 
 				<article className="max-w-sm mx-auto w-full p-2 px-4 bg-yellow-200 border-l-4 border-yellow-400 rounded-md mb-4">

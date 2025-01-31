@@ -6,6 +6,7 @@ export const AppContext = createContext();
 // Create the Provider component
 export class AppProvider extends Component {
 	state = {
+		limitForSaved: 150,
 		isAsideVisible: false,
 		isPopupVisible: false,
 		notifications: [],
@@ -13,13 +14,54 @@ export class AppProvider extends Component {
 		specificSongDetails: null,
 		savedTracks: [],
 		playList: [],
-		playerMethods: {}
+		preferredQuality: null,
+		playerMethods: {},
 	};
 
 	setPlayerMethods = (methods) => {
 		this.setState((prevState) => ({
 			playerMethods: { ...prevState.playerMethods, ...methods },
 		}));
+	};
+
+	setPreferredQuality = (quality) => {
+		let final;
+
+		if (quality === "stored") {
+			final = localStorage.getItem("preferredQuality") || "160kbps";
+		} else {
+			final = quality;
+		}
+
+		// Update localStorage only if different
+		if (localStorage.getItem("preferredQuality") !== final) {
+			localStorage.setItem("preferredQuality", final);
+		}
+
+		// Update state only if different
+		if (this.state.preferredQuality !== final) {
+			this.setState({
+				preferredQuality: final,
+			});
+		}
+	};
+
+	getPreferredQualityURL = (urlArray) => {
+		if (!Array.isArray(urlArray) || urlArray.length === 0) {
+			this.addToNotification("error", "No sources found to play this song!");
+			return null; // Handle empty array case
+		}
+
+		const preferred = this.state.preferredQuality;
+
+		const match = urlArray.find(urlObj => urlObj.quality === preferred);
+
+		if (match) {
+			return match.url;
+		} else {
+			this.addToNotification("warning", "No sources for preferred quality.")
+			return urlArray[urlArray.length - 1].url;
+		}
 	};
 
 	handleAsideToggle = () => {
@@ -101,6 +143,12 @@ export class AppProvider extends Component {
 	};
 
 	updateLocalStorage = (newTrack) => {
+		const savedTracksLength = JSON.parse(localStorage.getItem("trackList")).length;
+		if (savedTracksLength >= this.state.limitForSaved) {
+			this.addToNotification("error", "Limit to save songs reached! please check your saved tracks.")
+			return;
+		}
+		
 		try {
 			const storedTrackList = JSON.parse(localStorage.getItem("trackList")) || [];
 			const isDuplicate = storedTrackList.some(track => track.id === newTrack.id);
@@ -142,6 +190,8 @@ export class AppProvider extends Component {
 					showPopup: this.showPopup,
 					loadSavedTracks: this.loadSavedTracks,
 					setPlayerMethods: this.setPlayerMethods,
+					setPreferredQuality: this.setPreferredQuality,
+					getPreferredQualityURL: this.getPreferredQualityURL,
 					setSpecificSongDetails: this.setSpecificSongDetails,
 					updateSearchState: this.updateSearchState,
 					updatePlayList: this.updatePlayList,

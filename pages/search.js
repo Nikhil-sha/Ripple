@@ -106,11 +106,11 @@ class Search extends Component {
 							value={query}
 							onChange={this.handleInputChange}
 							placeholder="Search for songs..."
-							className="w-full px-4 py-3 text-lg text-gray-800 bg-white border border-gray-300 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
+							className="w-full px-4 py-3 text-sm text-gray-800 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
 						/>
 						<button
 							onClick={this.handleSearch}
-							className="absolute top-1/2 right-1.5 transform -translate-y-1/2 px-4 py-2 rounded-full text-white bg-blue-400 hover:bg-blue-500 focus:outline-none"
+							className="absolute top-1/2 right-1.5 transform -translate-y-1/2 px-2 py-1 rounded-lg text-white bg-blue-400 hover:bg-blue-500 focus:outline-none"
 						>
 							<i className="fas fa-search mt-1"></i>
 						</button>
@@ -128,7 +128,8 @@ class Search extends Component {
 							<p className="text-sm text-center text-gray-400">REASON: {errorMessage || "An unknown error occurred!"}</p>
 						</div>
 					) : this.context.search.results ? (
-						<div className="w-full max-w-md flex flex-col justify-start items-center mt-4 space-y-4">
+						<div className="w-full max-w-md flex flex-col justify-start items-center mt-4 space-y-2">
+							<h2 className="w-full text-lg font-medium text-gray-800 leading-snug">Results</h2>
 							{this.context.search.results.map((song) => (
 								<Song 
 									key={song.id} 
@@ -137,7 +138,7 @@ class Search extends Component {
 									artist={song.artists.all[0].name} 
 									coverSm={song.image[0].url} 
 									coverBg={song.image[song.image.length - 1].url} 
-									src={song.downloadUrl[song.downloadUrl.length - 1].url} 
+									sources={song.downloadUrl} 
 									option="save" 
 								/>
 							))}

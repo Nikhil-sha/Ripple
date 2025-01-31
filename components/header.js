@@ -8,7 +8,7 @@ class Header extends Component {
 	render() {
 		const { handleAsideToggle } = this.context;
 		return (
-			<header className="w-full sticky top-0 z-40 flex justify-between items-center bg-gradient-to-r from-blue-100 to-white rounded-b-xl shadow-md px-3 py-2">
+			<header className="w-full sticky top-0 z-40 flex justify-between items-center bg-white rounded-b-xl shadow-md px-3 py-2">
 				<div>
 					<Link to="/">
 						<h1 className="text-xl font-black text-gray-900 flex items-center">

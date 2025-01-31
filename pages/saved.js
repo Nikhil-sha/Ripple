@@ -6,15 +6,10 @@ class Saved extends Component {
 	static contextType = AppContext;
 
 	state = {
-		storage: {
+		limit: {
 			total: 0,
 			occupied: 0,
 			available: 0,
-			valueIn: "KB"
-		},
-		lazy: {
-			BATCH_SIZE: 5,
-			startIndex: 0
 		},
 	}
 
@@ -23,65 +18,57 @@ class Saved extends Component {
 		if (!savedTracks || savedTracks.length === 0) {
 			this.context.loadSavedTracks();
 		}
-		this.calculateLocalStorageSpace();
+		this.calculateLimitUsage();
 	}
 
-	calculateLocalStorageSpace = () => {
-		try {
-			if (this.state.storage.total > 0) return;
-
-			const totalSpace = 128 * 1024;
-			let usedSpace = 0;
-
-			for (let key in localStorage) {
-				if (localStorage.hasOwnProperty(key)) {
-					const value = localStorage.getItem(key);
-					usedSpace += key.length + (value ? value.length : 0);
-				}
-			}
-
-			const remainingSpace = totalSpace - usedSpace;
-
-			console.log(`Used space: ${(usedSpace / 1024).toFixed(2)} KB`);
-			console.log(`Available space: ${(remainingSpace / 1024).toFixed(2)} KB`);
-
-			this.setState({
-				storage: {
-					total: (totalSpace / 1024).toFixed(1),
-					occupied: (usedSpace / 1024).toFixed(1),
-					available: (remainingSpace / 1024).toFixed(1),
-					valueIn: "KB",
-				}
-			});
-		} catch (error) {
-			console.error("Error calculating localStorage space:", error);
+	componentDidUpdate(prevProps, prevState) {
+		if (prevState.limit.occupied !== this.context.savedTracks.length) {
+			this.calculateLimitUsage();
 		}
+	}
+
+	playAll = () => {
+		const { updatePlayList, savedTracks } = this.context;
+		updatePlayList(savedTracks);
+	};
+
+	calculateLimitUsage = () => {
+		const { limitForSaved } = this.context;
+		const { savedTracks } = this.context;
+
+		const total = limitForSaved;
+		const available = total - savedTracks.length;
+
+		this.setState({
+			limit: {
+				total: total,
+				occupied: savedTracks.length,
+				available: available,
+			}
+		});
 	};
 
 	render() {
-		const { storage } = this.state;
 		let { savedTracks } = this.context;
 
 		return (
 			<section className="w-full h-full overflow-y-auto px-4 md:px-8 lg:px-12 pt-5 pb-20">
-				<h2 className="mb-4 text-2xl font-semibold text-gray-800">Saved Tracks</h2>
-				<div className="mb-4 max-w-lg mx-auto">
-					<div className="relative w-full h-4 rounded-full bg-gray-300 overflow-hidden mb-2">
-						<div style={{ width: `${(storage.occupied / storage.total * 100).toFixed(2)}%` }} className="absolute left-0 h-full rounded-full bg-red-600"></div>
+				<h2 className="mb-4 text-2xl font-bold text-gray-800">Saved Tracks</h2>
+				<div className="mb-6 max-w-lg h-48 mx-auto grid grid-cols-3 grid-rows-3 gap-4">
+					<div className="col-span-1 relative h-full rounded-lg bg-gray-200 overflow-hidden">
+						<div style={{ height: `${(this.state.limit.occupied / this.state.limit.total * 100)}%` }} className="absolute bottom-0 w-full bg-red-400"></div>
 					</div>
-					<div className="inline-flex justify-between items-center gap-2 flex-wrap">
-						<span className="px-4 py-2 text-white rounded-lg bg-yellow-400 text-xs text-center font-semibold">Songs: {savedTracks.length}</span>
-						<span className="px-4 py-2 text-white rounded-lg bg-blue-400 text-xs text-center font-semibold">Occupied: {storage.occupied}{storage.valueIn}</span>
-						<span className="px-4 py-2 text-white rounded-lg bg-orange-400 text-xs text-center font-semibold">Available: {storage.available}{storage.valueIn}</span>
-						<span className="px-4 py-2 text-white rounded-lg bg-slate-400 text-xs text-center font-semibold">Total: {storage.total}{storage.valueIn}</span>
-					</div>
+					<span className="block col-span-2 text-white text-center rounded-lg bg-yellow-400 text-sm flex justify-center items-center font-semibold">Saved: {this.state.limit.occupied} track(s)</span>
+					<span className="block col-span-2 text-white text-center rounded-lg bg-orange-400 text-sm flex justify-center items-center font-semibold">Available: {this.state.limit.available} track(s)</span>
+					<span className="block col-span-1 text-white text-center rounded-lg bg-cyan-400 text-sm flex justify-center items-center font-semibold">Total: {this.state.limit.total} track(s)</span>
+					<button onClick={this.playAll} className="block col-span-3 text-white text-center rounded-lg bg-blue-400 hover:bg-blue-500 transition text-sm flex justify-center items-center font-semibold">Play All</button>
 				</div>
-				<div className="mb-4 max-w-md mx-auto">
+				<div className="max-w-md flex flex-col space-y-2 mx-auto">
 					{savedTracks.length > 0 ? savedTracks.map((track) => (
-						<Song key={track.id} songId={track.id} name={track.name} artist={track.artist} coverSm={track.coverSm} coverBg={track.coverBg} src={track.src} option="delete" />
+						<Song key={track.id} songId={track.id} name={track.name} artist={track.artist} coverSm={track.coverSm} coverBg={track.coverBg} sources={track.sources} option="delete" />
 					)) : (
-						<div className="text-center text-gray-500">
-							<h2>No saved songs!</h2>
+						<div className="flex justify-center items-center text-center text-gray-400">
+							<h2>You haven't saved any song yet!</h2>
 						</div>
 					)}
 				</div>

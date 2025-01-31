@@ -19,16 +19,16 @@ class ErrorBoundary extends Component {
 
 	handleReload = () => {
 		this.setState({ hasError: false, error: null, errorInfo: null });
-		window.location.reload();
+		window.location.href = "/";
 	};
 
 	render() {
 		if (this.state.hasError) {
 			// Fallback UI
 			return (
-				<div className="h-full w-full max-w-sm p-8 flex flex-col justify-center items-center">
+				<div className="h-full w-full max-w-sm mx-auto p-8 flex flex-col justify-center items-center">
     	<h1 className="text-2xl font-bold text-red-600 mb-4">Something went wrong</h1>
-   	 <p className="text-gray-600 mb-4">
+   	 <p className="text-xs text-center text-gray-400 mb-4">
     	 {this.state.error.toString() || "An unexpected error occurred."}
     	</p>
     	<p className="text-sm text-gray-500 mb-6">
@@ -36,7 +36,7 @@ class ErrorBoundary extends Component {
     	</p>
     	<button
       onClick={this.handleReload}
-      className="mt-4 bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600"
+      className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600"
     	>
       Reload App
     	</button>

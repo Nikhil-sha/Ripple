@@ -7,12 +7,12 @@ class Song extends Component {
 
 	addToPlayList = (event) => {
 		event.stopPropagation(); // Prevents click event propagation
-		const { songId, name, artist, coverSm, coverBg, src } = this.props;
+		const { songId, name, artist, coverSm, coverBg, sources } = this.props;
 		const track = {
 			id: songId,
 			name: name,
 			artist: artist,
-			src: src,
+			sources: sources,
 			coverSm: coverSm,
 			coverBg: coverBg,
 		};
@@ -20,12 +20,12 @@ class Song extends Component {
 	};
 
 	saveThis = () => {
-		const { songId, name, artist, coverSm, coverBg, src } = this.props;
+		const { songId, name, artist, coverSm, coverBg, sources } = this.props;
 		const track = {
 			id: songId,
 			name: name,
 			artist: artist,
-			src: src,
+			sources: sources,
 			coverSm: coverSm,
 			coverBg: coverBg,
 		};
@@ -33,11 +33,16 @@ class Song extends Component {
 	};
 
 	deleteThis = () => {
-		this.context.removeTrackFromLocalStorage(this.props.songId);
+		let confirmation = confirm("Do you really want to remove this song from Saved?");
+		if (confirmation) {
+			this.context.removeTrackFromLocalStorage(this.props.songId);
+		} else {
+			return;
+		}
 	};
 
 	render() {
-		const { songId, name, artist, coverSm, src, option } = this.props;
+		const { songId, name, artist, coverSm, option } = this.props;
 
 		return (
 			<div className="w-full py-2 px-3 flex items-center gap-3 rounded-md hover:bg-gray-100 transition-colors duration-200">

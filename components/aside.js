@@ -13,6 +13,7 @@ class Aside extends Component {
 			{ to: "/search", icon: "fa-search", label: "Search" },
 			{ to: "/notifications", icon: "fa-bell", label: "Notifications" },
 			{ to: "/saved", icon: "fa-bookmark", label: "Saved" },
+			{ to: "/settings", icon: "fa-cog", label: "Settings" },
 		];
 
 		return (

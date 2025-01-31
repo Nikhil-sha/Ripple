@@ -7,7 +7,7 @@ class Notifications extends Component {
 	render() {
 		return (
 			<section className="h-full overflow-y-auto px-4 md:px-8 lg:px-12 pt-5 pb-20">
-				<h2 className="mb-4 text-2xl font-semibold text-gray-800">Notifications</h2>
+				<h2 className="mb-4 text-2xl font-bold text-gray-800">Notifications</h2>
 				<ul className="max-w-md mx-auto flex flex-col gap-2">
 					{this.context.notifications.map((notification, index) => (
 						<li key={index} className="w-full p-3 flex flex-col text-sm text-gray-600 rounded-lg shadow-md hover:bg-gray-100">

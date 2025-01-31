@@ -113,7 +113,7 @@ class SongDetails extends Component {
 			id: specificSongDetails.id,
 			name: specificSongDetails.name,
 			artist: specificSongDetails.artists.primary[0].name,
-			src: specificSongDetails.downloadUrl[specificSongDetails.downloadUrl.length - 1].url,
+			sources: specificSongDetails.downloadUrl,
 			coverSm: specificSongDetails.image[0].url,
 			coverBg: specificSongDetails.image[specificSongDetails.image.length - 1].url,
 		};

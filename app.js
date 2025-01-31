@@ -14,11 +14,16 @@ import Search from './pages/search';
 import About from './pages/about';
 import SongDetails from './pages/song';
 import Saved from './pages/saved';
+import Settings from './pages/settings';
 import Notifications from './pages/notificationCenter';
 import NotFound from './pages/notFound';
 
 class App extends Component {
 	static contextType = AppContext;
+	
+	componentDidMount() {
+		this.context.setPreferredQuality("stored");
+	}
 
 	render() {
 		return (
@@ -34,6 +39,7 @@ class App extends Component {
 								<Route path="/search" component={Search}/>
 								<Route path="/about" component={About}/>
 								<Route path="/saved" component={Saved}/>
+								<Route path="/settings" component={Settings}/>
 								<Route path="/notifications" component={Notifications}/>
 								<Route path="/song/:songId" component={SongDetails} />
 								<Route path="*" component={NotFound}/>
