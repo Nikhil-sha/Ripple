@@ -28,8 +28,8 @@ class Saved extends Component {
 	}
 
 	playAll = () => {
-		const { updatePlayList, savedTracks } = this.context;
-		savedTracks.length === 0 ? this.context.addToNotification("warning", "There are no saved tracks to play.") : updatePlayList(savedTracks);
+		const { updatePlayList, savedTracks, addToNotification } = this.context;
+		savedTracks.length === 0 ? addToNotification("warning", "There are no saved tracks to play.") : updatePlayList(savedTracks);
 	};
 
 	calculateLimitUsage = () => {
