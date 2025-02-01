@@ -14,6 +14,11 @@
 	<!-- Tailwind -->
 	<script src="https://cdn.tailwindcss.com/" type="text/javascript" charset="utf-8"></script>
 
+	<link rel="stylesheet" href="app.css">
+
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" type="text/css" media="all" />
+
 	<!-- Nunito - Google Fonts -->
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" type="text/css" media="all" />
 
@@ -22,14 +27,45 @@
 <body>
 	<div id="react-app" class="h-dvh w-screen">
 		<div class="h-full w-full flex flex-col gap-8 justify-center items-center">
+			<div id="timeout" class="hidden w-fit flex flex-col gap-1 justify-center items-center">
+				<p class="text-sm font-semibold">Still waiting? Even a snail would be faster.</p>
+				<button class="text-sm px-2 py-1 rounded-lg bg-yellow-400" onclick="window.location.reload()">Reload!</button>
+				<script>
+					let timeoutMsg = document.getElementById("timeout");
+					setTimeout(() => {
+						if (timeoutMsg) timeoutMsg.classList.remove("hidden");
+					}, 6500)
+				</script>
+			</div>
 			<div class="relative w-24 h-24 flex justify-center items-center">
 				<div class="w-full h-full absolute z-20 rounded-full border-8 border-yellow-400 border-y-transparent animate-spin" style="animation-duration: 6s"></div>
-				<div class="w-[76%] h-[76%] absolute z-30 rounded-full bg-gray-800 flex justify-center items-center text-sm text-white font-black">
-					Offline
+				<div class="w-[76%] h-[76%] absolute z-30 rounded-full bg-gray-800 flex justify-center items-center overflow-hidden">
+					<img src="https://i.pinimg.com/originals/86/4a/f0/864af0b9fbafa236a1bc180b2964a5f2.gif" alt="is it boring!" class="size-2/3" />
 				</div>
+			</div>
+			<div class="max-w-64">
+				<p id="quote" class="text-xs text-gray-700"></p>
+				<i id="author" class="text-xs block text-right font-bold"></i>
 			</div>
 		</div>
 	</div>
+	<!-- Project -->
+	<script src="config.js"></script>
+	<script type="text/javascript" charset="utf-8">
+		var quoteData = {};
+
+		const quote = document.getElementById("quote");
+		const author = document.getElementById("author");
+		fetch("https://quotes-api-self.vercel.app/quote")
+			.then(res => res.json())
+			.then((data) => {
+				if (quote && author) {
+					quote.innerText = data.quote;
+					author.innerText = "- " + data.author;
+				}
+				quoteData = data;
+			})
+	</script>
 </body>
 
 </html>
