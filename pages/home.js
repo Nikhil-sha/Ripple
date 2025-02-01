@@ -30,6 +30,12 @@ class Home extends Component {
 							<span className="text-sm font-bold text-white">Notifications</span>
 						</Link>
 					</div>
+					<div className="flex-shrink-0 w-28 h-28 bg-gradient-to-tr from-sky-500 to-sky-400 rounded-lg">
+						<Link to="/settings" className="w-full h-full flex flex-col gap-1 justify-end items-start px-3 py-2">
+							<i className="fas fa-cogs fa-md text-white"></i>
+							<span className="text-sm font-bold text-white">Settings</span>
+						</Link>
+					</div>
 				</div>
 				
 				<div className="max-w-lg w-full aspect-video relative rounded-lg overflow-hidden mx-auto mb-4">
@@ -47,11 +53,7 @@ class Home extends Component {
 					</a>
 				</article>
 				<article className="max-w-lg mx-auto w-full p-2 px-4">
-					<h2 className="text-lg font-bold">Go ahead and jam to your favorite tracks while we cook up some awesome new features for you!</h2>
-					<Link to="/search" className="text-sm text-blue-500 underline" aria-label="Go to search page">
-						<i className="fas fa-link fa-sm mr-2"></i>
-						Go to search page
-					</Link>
+					<h2 className="text-lg font-semibold text-center">Go ahead and jam to your favorite tracks while we cook up some awesome new features for you!</h2>
 				</article>
 			</section>
 		);

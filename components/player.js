@@ -420,7 +420,7 @@ class Player extends Component {
 						{this.context.playList.length ? (
 							this.context.playList.map((track, index) => (
 								<li
-									key={index}
+									key={track.id}
 									className={`px-3 py-2 flex flex-row items-center gap-3 rounded-lg ${this.state.currentTrackIndex === index ? "bg-yellow-100 hover:bg-yellow-200 " : "hover:bg-gray-100"} transition-colors cursor-pointer`}
 									onClick={() => this.setTrack(index)}
 									aria-label={`Select ${track.name}`}

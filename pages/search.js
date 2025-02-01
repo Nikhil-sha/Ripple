@@ -100,17 +100,17 @@ class Search extends Component {
 		return (
 			<section className="w-full h-full overflow-y-auto px-4 md:px-10 pb-20">
 				<div className="min-h-full flex flex-col justify-start items-center py-5">
-					<div className="relative w-full max-w-md">
+					<div className="flex gap-2 w-full max-w-md">
 						<input
 							type="text"
 							value={query}
 							onChange={this.handleInputChange}
 							placeholder="Search for songs..."
-							className="w-full px-4 py-3 text-sm text-gray-800 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
+							className="grow px-4 py-2 text-md text-gray-800 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder-gray-400 transition"
 						/>
 						<button
 							onClick={this.handleSearch}
-							className="absolute top-1/2 right-1.5 transform -translate-y-1/2 px-2 py-1 rounded-lg text-white bg-blue-400 hover:bg-blue-500 focus:outline-none"
+							className="flex-shrink-0 border border-white px-4 py-2 rounded-lg text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:border-yellow-400 transition"
 						>
 							<i className="fas fa-search mt-1"></i>
 						</button>

@@ -148,7 +148,7 @@ export class AppProvider extends Component {
 			this.addToNotification("error", "Limit to save songs reached! please check your saved tracks.")
 			return;
 		}
-		
+
 		try {
 			const storedTrackList = JSON.parse(localStorage.getItem("trackList")) || [];
 			const isDuplicate = storedTrackList.some(track => track.id === newTrack.id);

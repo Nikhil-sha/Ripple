@@ -29,7 +29,7 @@ class Saved extends Component {
 
 	playAll = () => {
 		const { updatePlayList, savedTracks } = this.context;
-		updatePlayList(savedTracks);
+		savedTracks.length === 0 ? this.context.addToNotification("warning", "There are no saved tracks to play.") : updatePlayList(savedTracks);
 	};
 
 	calculateLimitUsage = () => {
@@ -61,7 +61,7 @@ class Saved extends Component {
 					<span className="block col-span-2 text-white text-center rounded-lg bg-yellow-400 text-sm flex justify-center items-center font-semibold">Saved: {this.state.limit.occupied} track(s)</span>
 					<span className="block col-span-2 text-white text-center rounded-lg bg-orange-400 text-sm flex justify-center items-center font-semibold">Available: {this.state.limit.available} track(s)</span>
 					<span className="block col-span-1 text-white text-center rounded-lg bg-cyan-400 text-sm flex justify-center items-center font-semibold">Total: {this.state.limit.total} track(s)</span>
-					<button onClick={this.playAll} className="block col-span-3 text-white text-center rounded-lg bg-blue-400 hover:bg-blue-500 transition text-sm flex justify-center items-center font-semibold">Play All</button>
+					<button onClick={this.playAll} className="block col-span-3 text-white text-center rounded-lg bg-blue-400 hover:bg-blue-500 transition text-sm flex justify-center items-center font-semibold"><i className="fas fa-play mr-3"></i>Play All</button>
 				</div>
 				<div className="max-w-md flex flex-col space-y-2 mx-auto">
 					{savedTracks.length > 0 ? savedTracks.map((track) => (
