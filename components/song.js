@@ -6,7 +6,7 @@ class Song extends Component {
 	static contextType = AppContext;
 
 	addToPlayList = (event) => {
-		event.stopPropagation(); // Prevents click event propagation
+		event.stopPropagation();
 		const { songId, name, artist, coverSm, coverBg, sources } = this.props;
 		const track = {
 			id: songId,
@@ -19,7 +19,8 @@ class Song extends Component {
 		this.context.updatePlayList([track, ...this.context.playList]); // Updates the playlist context
 	};
 
-	saveThis = () => {
+	saveThis = (event) => {
+		event.stopPropagation();
 		const { songId, name, artist, coverSm, coverBg, sources } = this.props;
 		const track = {
 			id: songId,
