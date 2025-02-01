@@ -17,7 +17,7 @@ class Player extends Component {
 			isShuffling: false,
 			currentTrack: null,
 		};
-		this.audioRef = createRef(); // Use React ref
+		this.audioRef = createRef();
 	}
 
 	componentDidMount() {
