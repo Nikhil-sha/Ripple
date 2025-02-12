@@ -20,9 +20,10 @@ import NotFound from './pages/notFound';
 
 class App extends Component {
 	static contextType = AppContext;
-	
+
 	componentDidMount() {
 		this.context.setPreferredQuality("stored");
+		this.context.setSearchLimit("stored");
 	}
 
 	render() {

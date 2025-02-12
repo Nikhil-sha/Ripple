@@ -14,7 +14,13 @@ class About extends Component {
 				<article className="max-w-lg mx-auto">
 					<h2 className="text-lg font-bold text-gray-800 leading-snug mb-4"><i className="w-6 text-left text-md fas fa-clipboard text-gray-400"></i>ChangeLog</h2>
 					<div className="mb-4">
-				 	<h3 className="text-md font-bold text-gray-800 leading-snug mb-3">Ver. 2.2.0 (current)</h3>
+				 	<h3 className="text-md font-bold text-gray-800 leading-snug mb-3">Ver. 2.2.1 (current - stable! maybe...)</h3>
+				 	<ol className="border-l-2 border-gray-300 flex flex-col gap-2 list-decimal list-inside text-xs px-3">
+				 		<li>New <b>Search results limit</b> option added in Settings.</li>
+				 	</ol>
+					</div>
+					<div className="mb-4">
+				 	<h3 className="text-md font-bold text-gray-800 leading-snug mb-3">Ver. 2.2.0</h3>
 				 	<ol className="border-l-2 border-gray-300 flex flex-col gap-2 list-decimal list-inside text-xs px-3">
 				 		<li>New <b>Quality Preference</b> added.</li>
 				 		<li>New <b>Settings</b> section added.</li>

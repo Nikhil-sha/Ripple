@@ -10,6 +10,12 @@ class Settings extends Component {
 		this.context.addToNotification("success", "Quality preference updated!")
 	};
 
+	handleLimitChange = (event) => {
+		let value = event.target.value;
+		this.context.setSearchLimit(value);
+		this.context.addToNotification("success", "Search results limit updated!")
+	};
+
 	render() {
 		return (
 			<section className="h-full overflow-y-auto px-4 md:px-8 lg:px-12 pt-5 pb-20">
@@ -24,6 +30,21 @@ class Settings extends Component {
 								<option value="96kbps">96 Kbps (mid)</option>
 								<option value="160kbps">160 Kbps (preferred)</option>
 								<option value="320kbps">320 Kbps (high)</option>
+							</select>
+							<div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+								<i className="fa-solid fa-chevron-down text-gray-500"></i>
+							</div>
+						</div>
+					</div>
+					<div className="w-full mb-4">
+						<h3 className="text-sm font-medium text-gray-800 leading-snug mb-1">Search results limit</h3>
+						<div className="relative text-sm w-full">
+							<select value={this.context.searchResultsLimit} onChange={this.handleLimitChange} className="block w-full appearance-none px-3 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition">
+								<option value="5">5</option>
+								<option value="10">10</option>
+								<option value="15">15 (preferred)</option>
+								<option value="20">20</option>
+								<option value="30">30 (max)</option>
 							</select>
 							<div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
 								<i className="fa-solid fa-chevron-down text-gray-500"></i>

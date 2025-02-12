@@ -75,7 +75,7 @@ class Search extends Component {
 		const { signal } = this.abortController;
 
 		try {
-			const response = await fetch(`https://saavn.dev/api/search/songs?query=${query.trim()}`, { signal });
+			const response = await fetch(`https://saavn.dev/api/search/songs?query=${query.trim()}&limit=${parseInt(this.context.searchResultsLimit || "10")}`, { signal });
 			const data = await response.json();
 
 			if (!data.success || !data.data.results.length) {

@@ -15,6 +15,7 @@ export class AppProvider extends Component {
 		savedTracks: [],
 		playList: [],
 		preferredQuality: null,
+		searchResultsLimit: null,
 		playerMethods: {},
 	};
 
@@ -22,6 +23,28 @@ export class AppProvider extends Component {
 		this.setState((prevState) => ({
 			playerMethods: { ...prevState.playerMethods, ...methods },
 		}));
+	};
+
+	setSearchLimit = (limit) => {
+		let final;
+
+		if (limit === "stored") {
+			final = localStorage.getItem("searchResultsLimit") || "5";
+		} else {
+			final = limit;
+		}
+
+		// Update localStorage only if different
+		if (localStorage.getItem("searchResultsLimit") !== final) {
+			localStorage.setItem("searchResultsLimit", final);
+		}
+
+		// Update state only if different
+		if (this.state.searchResultsLimit !== final) {
+			this.setState({
+				searchResultsLimit: final,
+			});
+		}
 	};
 
 	setPreferredQuality = (quality) => {
@@ -188,6 +211,7 @@ export class AppProvider extends Component {
 					handleAsideToggle: this.handleAsideToggle,
 					addToNotification: this.addToNotification,
 					showPopup: this.showPopup,
+					setSearchLimit: this.setSearchLimit,
 					loadSavedTracks: this.loadSavedTracks,
 					setPlayerMethods: this.setPlayerMethods,
 					setPreferredQuality: this.setPreferredQuality,
