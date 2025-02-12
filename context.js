@@ -99,6 +99,7 @@ export class AppProvider extends Component {
 			notifications: [{ type: type, text: message, time: date.toLocaleString() }, ...prevState.notifications],
 		}));
 		this.showPopup();
+		navigator.vibrate(100);
 	};
 
 	showPopup = () => {
@@ -166,14 +167,15 @@ export class AppProvider extends Component {
 	};
 
 	updateLocalStorage = (newTrack) => {
-		const savedTracksLength = JSON.parse(localStorage.getItem("trackList")).length;
-		if (savedTracksLength >= this.state.limitForSaved) {
-			this.addToNotification("error", "Limit to save songs reached! please check your saved tracks.")
+		const storedData = localStorage.getItem("trackList");
+		const storedTrackList = storedData ? JSON.parse(storedData) : []; // Ensure an array
+
+		if (storedTrackList.length >= this.state.limitForSaved) {
+			this.addToNotification("error", "Limit to save songs reached! Please check your saved tracks.");
 			return;
 		}
 
 		try {
-			const storedTrackList = JSON.parse(localStorage.getItem("trackList")) || [];
 			const isDuplicate = storedTrackList.some(track => track.id === newTrack.id);
 
 			if (!isDuplicate) {
@@ -191,7 +193,7 @@ export class AppProvider extends Component {
 
 	removeTrackFromLocalStorage = (songId) => {
 		try {
-			const storedTrackList = JSON.parse(localStorage.getItem("trackList")) || [];
+			const storedTrackList = JSON.parse(localStorage.getItem("trackList") || []);
 			const updatedTrackList = storedTrackList.filter(track => track.id !== songId);
 			localStorage.setItem("trackList", JSON.stringify(updatedTrackList));
 			this.loadSavedTracks();

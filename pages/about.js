@@ -17,6 +17,7 @@ class About extends Component {
 				 	<h3 className="text-md font-bold text-gray-800 leading-snug mb-3">Ver. 2.2.1 (current - stable! maybe...)</h3>
 				 	<ol className="border-l-2 border-gray-300 flex flex-col gap-2 list-decimal list-inside text-xs px-3">
 				 		<li>New <b>Search results limit</b> option added in Settings.</li>
+				 		<li>Haptic feedback added.</li>
 				 	</ol>
 					</div>
 					<div className="mb-4">
