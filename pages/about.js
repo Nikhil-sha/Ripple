@@ -7,7 +7,7 @@ class About extends Component {
 				<article className="mb-8 max-w-lg mx-auto">
 					<h1 className="text-xl font-bold text-gray-800 leading-snug mb-2"><i className="w-6 text-left text-md fas fa-hand text-yellow-400"></i>Welcome to Ripple!</h1>
 					<p className="text-sm text-gray-600">
-						This is a music webapp made using HTML5, CSS3 and JavaScript(React.js). You can find <a className="underline underline-offset-2 text-sky-400" href="https://github.com/Nikhil-sha/Ripple/">the repository</a> on GitHub.<br /><br />
+						This is a music webapp made using HTML5, CSS3(Tailwind.css) and JavaScript(React.js). You can find <a className="underline underline-offset-2 text-sky-400" href="https://github.com/Nikhil-sha/Ripple/">the repository</a> on GitHub.<br /><br />
 						API used to make this possible: <a className="underline underline-offset-2 text-sky-400" href="https://saavn.dev/">Saavn.dev</a>
 					</p>
 				</article>
