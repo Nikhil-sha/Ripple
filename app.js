@@ -31,10 +31,10 @@ class App extends Component {
 			<React.StrictMode>
 				<HashRouter>
 					{this.context.isPopupVisible && <Popup />}
-					<div className="h-dvh w-screen relative flex flex-col">
+					<div className="h-dvh w-screen relative flex flex-col bg-neutral-800">
 						<Header/>
 						<Aside/>
-						<div className="min-h-0 grow">
+						<div className="min-h-0 grow w-full overflow-y-auto px-4 md:px-8 lg:px-12 pt-4 pb-[65px]">
 							<Switch>
 								<Route exact path="/" component={Home}/>
 								<Route path="/search" component={Search}/>

@@ -10,6 +10,10 @@ export class AppProvider extends Component {
 		isAsideVisible: false,
 		isPopupVisible: false,
 		notifications: [],
+		homeSuggestion: {
+			picked: null,
+			results: null,
+		},
 		search: { query: null, results: null },
 		specificSongDetails: null,
 		savedTracks: [],
@@ -18,6 +22,8 @@ export class AppProvider extends Component {
 		searchResultsLimit: null,
 		playerMethods: {},
 	};
+
+	popupTimeout = null;
 
 	setPlayerMethods = (methods) => {
 		this.setState((prevState) => ({
@@ -99,15 +105,26 @@ export class AppProvider extends Component {
 			notifications: [{ type: type, text: message, time: date.toLocaleString() }, ...prevState.notifications],
 		}));
 		this.showPopup();
-		navigator.vibrate(100);
+		if (type === "success") {
+			navigator.vibrate(40);
+		} else if (type === "error") {
+			navigator.vibrate([40, 100, 60]);
+		} else {
+			navigator.vibrate([40, 100, 40]);
+		}
 	};
 
 	showPopup = () => {
 		this.setState({
 			isPopupVisible: true,
 		});
+		
+		if (this.popupTimeout) {
+			clearTimeout(this.popupTimeout);
+			this.popupTimeout = null;
+		}
 
-		setTimeout(() => {
+		this.popupTimeout = setTimeout(() => {
 			this.setState({
 				isPopupVisible: false,
 			});
@@ -130,7 +147,6 @@ export class AppProvider extends Component {
 	};
 
 	updatePlayList = (newPlayList) => {
-		let prevLength = this.state.playList.length;
 		const uniqueTrackIds = new Set();
 		const filteredPlayList = newPlayList.filter(track => {
 			if (!uniqueTrackIds.has(track.id)) {
@@ -144,26 +160,20 @@ export class AppProvider extends Component {
 			playList: filteredPlayList,
 		});
 
-		const { setTrack } = this.state.playerMethods;
-		let newLength = filteredPlayList.length;
-		if (!setTrack) {
-			return;
-		} else if (newLength > prevLength) {
-			setTimeout(() => {
-				setTrack(0);
-			}, 500);
-		}
-
 		this.addToNotification("success", "Playlist updated!");
 	};
 
 	loadSavedTracks = () => {
-		const savedTracksInStorage = JSON.parse(localStorage.getItem("trackList"));
-		if (savedTracksInStorage) {
-			this.setState({
-				savedTracks: savedTracksInStorage,
-			});
-		}
+		return new Promise((resolve) => {
+			const savedTracksInStorage = JSON.parse(localStorage.getItem("trackList"));
+			if (savedTracksInStorage) {
+				this.setState({ savedTracks: savedTracksInStorage }, () => {
+					resolve(savedTracksInStorage);
+				});
+			} else {
+				resolve(null);
+			}
+		});
 	};
 
 	updateLocalStorage = (newTrack) => {
@@ -204,6 +214,18 @@ export class AppProvider extends Component {
 		}
 	};
 
+	setHomeSuggestionResults = (results) => {
+		this.setState((prevState) => ({
+			homeSuggestion: { picked: prevState.homeSuggestion.picked, results: results },
+		}));
+	};
+
+	setHomeSuggestionPicked = (song) => {
+		this.setState({
+			homeSuggestion: { picked: song, results: null },
+		});
+	};
+
 	render() {
 		return (
 			<AppContext.Provider
@@ -213,6 +235,8 @@ export class AppProvider extends Component {
 					handleAsideToggle: this.handleAsideToggle,
 					addToNotification: this.addToNotification,
 					showPopup: this.showPopup,
+					setHomeSuggestionResults: this.setHomeSuggestionResults,
+					setHomeSuggestionPicked: this.setHomeSuggestionPicked,
 					setSearchLimit: this.setSearchLimit,
 					loadSavedTracks: this.loadSavedTracks,
 					setPlayerMethods: this.setPlayerMethods,

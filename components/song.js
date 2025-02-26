@@ -17,6 +17,7 @@ class Song extends Component {
 			coverBg: coverBg,
 		};
 		this.context.updatePlayList([track, ...this.context.playList]); // Updates the playlist context
+		setTimeout(() => this.context.playerMethods.setTrack(0), 100);
 	};
 
 	saveThis = (event) => {
@@ -46,37 +47,37 @@ class Song extends Component {
 		const { songId, name, artist, coverSm, option } = this.props;
 
 		return (
-			<div className="w-full py-2 px-3 flex items-center gap-3 rounded-md hover:bg-gray-100 transition-colors duration-200">
+			<div className="w-full py-2 px-3 flex items-center gap-3 rounded-md hover:bg-neutral-600/50 transition-colors duration-200">
 				<Link to={`/song/${songId}`} className="min-w-0 grow flex items-center gap-3">
 					<div className="w-12 h-12 flex-shrink-0 overflow-hidden rounded-md">
 						<img className="w-full h-full object-cover" src={coverSm} alt={`Cover for ${name} by ${artist}`} />
 					</div>
 					<div className="flex-1 min-w-0">
-						<h2 className="text-sm font-medium text-gray-800 truncate">{name}</h2>
-						<span className="text-xs text-gray-500 truncate">{artist}</span>
+						<h2 className="text-sm font-medium text-neutral-100 truncate">{name}</h2>
+						<span className="text-xs text-neutral-400 truncate">{artist}</span>
 					</div>
 				</Link>
 				<button 
 					onClick={this.addToPlayList} 
-					className="flex-shrink-0 w-8 h-8 text-white border-b-2 border-r-2 border-blue-500 hover:border-none rounded-full bg-blue-400 hover:bg-blue-500 flex items-center justify-center"
+					className="flex-shrink-0 group size-8 flex justify-center items-center rounded-full bg-neutral-600 hover:bg-neutral-800 transition-all"
 					aria-label={`Add ${name} to your playlist`}
 				>
-					<i className="fas fa-play pl-0.5"></i>
+					<i className="fas fa-play pl-0.5 text-neutral-200 group-hover:text-yellow-400"></i>
 				</button>
 				{option === "save" ?
 					<button 
 						onClick={this.saveThis} 
-						className="flex-shrink-0 w-8 h-8 text-white border-b-2 border-r-2 border-yellow-500 hover:border-none rounded-full bg-yellow-400 hover:bg-yellow-500 flex items-center justify-center"
+						className="flex-shrink-0 group size-8 flex justify-center items-center rounded-full bg-yellow-400 hover:bg-yellow-600 transition-all"
 						aria-label={`Save ${name} to your list`}
 					>
-						<i className="fas fa-bookmark"></i>
+						<i className="fas fa-bookmark text-neutral-600 group-hover:text-yellow-400"></i>
 					</button> : option === "delete" ?
 					<button 
 						onClick={this.deleteThis} 
-						className="flex-shrink-0 w-8 h-8 text-white border-b-2 border-r-2 border-red-500 hover:border-none rounded-full bg-red-400 hover:bg-red-500 flex items-center justify-center"
+						className="flex-shrink-0 group size-8 flex justify-center items-center rounded-full bg-red-400 hover:bg-red-600 transition-all"
 						aria-label={`Delete ${name}`}
 					>
-						<i className="fas fa-times"></i>
+						<i className="fas fa-times tex-neutral-600 group-hover:text-red-400"></i>
 					</button> : ''
 				}
 			</div>

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { withRouter } from 'react-router-dom';
 import { AppContext } from '../context';
 import Song from '../components/song.js';
@@ -98,19 +98,19 @@ class Search extends Component {
 		const { loading, error, errorMessage, query } = this.state;
 
 		return (
-			<section className="w-full h-full overflow-y-auto px-4 md:px-10 pb-20">
-				<div className="min-h-full flex flex-col justify-start items-center py-5">
+			<Fragment>
+				<div className="min-h-full flex flex-col justify-start items-center">
 					<div className="flex gap-2 w-full max-w-md">
 						<input
 							type="text"
 							value={query}
 							onChange={this.handleInputChange}
 							placeholder="Search for songs..."
-							className="grow px-4 py-2 text-md text-gray-800 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder-gray-400 transition"
+							className="grow px-4 py-2 rounded-md bg-neutral-700/50 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder-neutral-400 transition"
 						/>
 						<button
 							onClick={this.handleSearch}
-							className="flex-shrink-0 border border-white px-4 py-2 rounded-lg text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:border-yellow-400 transition"
+							className="flex-shrink-0 bg-yellow-400 hover:bg-yellow-500 text-neutral-900 font-semibold px-6 py-3 rounded-md transition"
 						>
 							<i className="fas fa-search mt-1"></i>
 						</button>
@@ -118,24 +118,24 @@ class Search extends Component {
 
 					{loading ? (
 						<div className="w-full max-w-md flex flex-col justify-center items-center mt-4">
-							<div className="w-8 h-8 rounded-full border-4 border-blue-500 border-r-transparent animate-spin"></div>
-							<h2 className="pt-4 text-lg font-semibold text-gray-600">Loading…</h2>
+							<div className="w-8 h-8 rounded-full border-4 border-yellow-500 border-r-transparent animate-spin"></div>
+							<h2 className="pt-4 text-lg font-semibold text-neutral-200">Loading…</h2>
 						</div>
 					) : error ? (
 						<div className="w-full max-w-md flex flex-col justify-center items-center mt-4">
 							<i className="fas fa-exclamation-circle text-2xl text-red-500"></i>
-							<h2 className="pt-2 font-bold text-lg text-center text-gray-800">Failed to load the song!</h2>
-							<p className="text-sm text-center text-gray-400">REASON: {errorMessage || "An unknown error occurred!"}</p>
+							<h2 className="pt-2 font-bold text-lg text-center text-neutral-100">Failed to load the song!</h2>
+							<p className="text-sm text-center text-neutral-300">REASON: {errorMessage || "An unknown error occurred!"}</p>
 						</div>
 					) : this.context.search.results ? (
 						<div className="w-full max-w-md flex flex-col justify-start items-center mt-4 space-y-2">
-							<h2 className="w-full text-lg font-medium text-gray-800 leading-snug">Results</h2>
+							<h2 className="w-full text-lg font-medium text-neutral-200 leading-snug">Results</h2>
 							{this.context.search.results.map((song) => (
 								<Song 
 									key={song.id} 
 									songId={song.id} 
 									name={song.name} 
-									artist={song.artists.all[0].name} 
+									artist={song.artists.primary[0].name} 
 									coverSm={song.image[0].url} 
 									coverBg={song.image[song.image.length - 1].url} 
 									sources={song.downloadUrl} 
@@ -144,12 +144,12 @@ class Search extends Component {
 							))}
 						</div>
 					) : (
-						<div className="w-full max-w-md flex flex-col justify-center items-center mt-4 font-semibold text-gray-600">
+						<div className="w-full max-w-md flex flex-col justify-center items-center mt-4 font-semibold text-neutral-400">
 							Search to get started!
 						</div>
 					)}
 				</div>
-			</section>
+			</Fragment>
 		);
 	}
 }

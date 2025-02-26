@@ -23,28 +23,29 @@
 
 </head>
 
-<body>
+<body class="bg-neutral-900 text-neutral-200">
 	<div id="react-app" class="h-dvh w-screen">
-		<div class="h-full w-full flex flex-col gap-8 justify-center items-center">
+		<div class="h-dvh w-full flex flex-col gap-8 justify-center items-center">
 			<div id="timeout" class="hidden w-fit flex flex-col gap-1 justify-center items-center">
-				<p class="text-sm font-semibold">Still waiting? Even a snail would be faster.</p>
-				<button class="text-sm px-2 py-1 rounded-lg bg-yellow-400" onclick="window.location.reload()">Reload!</button>
+				<p class="text-sm text-neutral-100 font-semibold">Still waiting? Even a snail would be faster.</p>
+				<button class="text-sm text-neutral-700 px-2 py-1 rounded-lg bg-yellow-400" onclick="window.location.reload()">Reload!</button>
 				<script>
 					let timeoutMsg = document.getElementById("timeout");
 					setTimeout(() => {
 						if (timeoutMsg) timeoutMsg.classList.remove("hidden");
-					}, 8000);
+					}, 10000);
 				</script>
 			</div>
+
 			<div class="relative w-24 h-24 flex justify-center items-center">
 				<div class="w-full h-full absolute z-20 rounded-full border-8 border-yellow-400 border-y-transparent animate-spin" style="animation-duration: 6s"></div>
-				<div class="w-[76%] h-[76%] absolute z-30 rounded-full bg-gray-800 flex justify-center items-center overflow-hidden">
+				<div class="w-[76%] h-[76%] absolute z-30 rounded-full bg-neutral-100 flex justify-center items-center overflow-hidden">
 					<img src="https://i.pinimg.com/originals/86/4a/f0/864af0b9fbafa236a1bc180b2964a5f2.gif" alt="is it boring!" class="size-2/3" />
 				</div>
 			</div>
 			<div class="max-w-64">
-				<p id="quote" class="text-xs text-gray-700"></p>
-				<i id="author" class="text-xs block text-right font-bold"></i>
+				<p id="quote" class="text-xs text-neutral-200"></p>
+				<i id="author" class="text-xs block text-right text-neutral-400 font-bold"></i>
 			</div>
 		</div>
 	</div>

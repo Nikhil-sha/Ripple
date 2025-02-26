@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Elegant UI - Tailwind CSS</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-neutral-900 text-neutral-100">
+
+	<!-- Navbar (30%) -->
+	<nav class="bg-neutral-800 p-4 flex justify-between items-center">
+		<h1 class="text-yellow-400 text-2xl font-bold">Elegant UI</h1>
+		<button class="bg-yellow-500 hover:bg-yellow-400 text-neutral-900 px-5 py-2 rounded-md font-medium">Login</button>
+	</nav>
+
+	<!-- Main Content (60% background, 30% secondary elements, 10% accents) -->
+	<div class="container mx-auto px-4 py-12 flex flex-col items-center">
+
+		<!-- Hero Section -->
+		<div class="text-center max-w-2xl">
+			<h2 class="text-4xl font-extrabold text-yellow-400">Balanced & Elegant UI</h2>
+			<p class="text-neutral-300 mt-4 text-lg leading-relaxed">
+				A well-balanced color palette using the 60-30-10 rule for harmony and readability.
+			</p>
+			<div class="mt-6">
+				<button class="bg-yellow-500 hover:bg-yellow-400 text-neutral-900 font-semibold px-6 py-3 rounded-md text-lg">Get Started</button>
+				<button class="bg-neutral-700 hover:bg-neutral-600 text-neutral-100 px-6 py-3 rounded-md ml-3 text-lg">Learn More</button>
+			</div>
+		</div>
+
+		<!-- Card (30% secondary background, 10% accents) -->
+		<div class="mt-12 w-full max-w-lg bg-neutral-800 p-6 rounded-lg">
+			<h3 class="text-2xl font-semibold text-yellow-400">Card Title</h3>
+			<p class="text-neutral-200 mt-3 leading-relaxed">
+				A clean and contrast-focused card with a balanced color scheme.
+			</p>
+			<button class="mt-4 bg-yellow-500 hover:bg-yellow-400 text-neutral-900 px-5 py-3 rounded-md font-medium">Explore</button>
+		</div>
+
+		<!-- Form (30% secondary background, 10% accents) -->
+		<div class="mt-12 w-full max-w-lg bg-neutral-800 p-6 rounded-lg">
+			<h3 class="text-2xl font-semibold text-yellow-400">Sign Up</h3>
+			<form class="mt-6 space-y-4">
+				<div>
+					<label class="block text-neutral-300 font-medium">Email</label>
+					<input type="email" class="w-full p-3 rounded-md bg-neutral-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Enter your email">
+				</div>
+				<div>
+					<label class="block text-neutral-300 font-medium">Password</label>
+					<input type="password" class="w-full p-3 rounded-md bg-neutral-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Enter your password">
+				</div>
+				<button class="mt-4 w-full bg-yellow-500 hover:bg-yellow-400 text-neutral-900 font-semibold px-6 py-3 rounded-md">Sign Up</button>
+			</form>
+		</div>
+
+	</div>
+
+</body>
+
+</html>

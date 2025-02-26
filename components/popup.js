@@ -7,11 +7,11 @@ class Popup extends Component {
 	theme = () => {
 		const { type } = this.context.notifications[0];
 		if (type === 'success') {
-			return 'bg-green-400 border-green-500';
+			return 'border-green-400';
 		} else if (type === 'error') {
-			return 'bg-red-400 border-red-500';
+			return 'border-red-400';
 		} else {
-			return 'bg-yellow-400 border-yellow-500';
+			return 'border-yellow-400';
 		}
 	};
 
@@ -21,12 +21,12 @@ class Popup extends Component {
 
 		return (
 			<div
-				className={`flex gap-2 items-center absolute top-4 left-4 mr-4 z-50 w-fit max-w-sm px-4 py-2 border-b-2 border-r-2 rounded-xl ${themeClasses}`}
+				className={`flex bg-neutral-700 gap-2 items-center absolute top-4 left-4 mr-4 z-50 w-fit max-w-sm px-4 py-2 border-2 rounded-xl ${themeClasses}`}
 				aria-live="polite"
 				aria-label={`Notification: ${notificationText}`}
 			>
-				<i className="fas fa-bell text-white" aria-hidden="true"></i>
-				<p className="text-sm font-semibold text-white">{notificationText}</p>
+				<i className="fas fa-info-circle text-neutral-400" aria-hidden="true"></i>
+				<p className="text-sm font-semibold text-neutral-100">{notificationText}</p>
 			</div>
 		);
 	}
