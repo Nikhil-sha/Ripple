@@ -132,18 +132,18 @@ class Home extends Component {
 				</article>
 				
 				{this.state.loading ? (
-					<div className="w-full max-w-md flex flex-col justify-center items-center mt-6">
+					<div className="w-full max-w-md mx-auto flex flex-col justify-center items-center mt-6">
 						<div className="w-8 h-8 rounded-full border-4 border-yellow-500 border-r-transparent animate-spin"></div>
 						<h2 className="pt-4 text-lg font-semibold text-neutral-200">Loading…</h2>
 					</div>
 				) : this.state.error ? (
-					<div className="w-full max-w-md flex flex-col justify-center items-center mt-6">
+					<div className="w-full max-w-md mx-auto flex flex-col justify-center items-center mt-6">
 						<i className="fas fa-exclamation-circle text-2xl text-red-500"></i>
 						<h2 className="pt-2 font-bold text-lg text-center text-neutral-100">Failed to load the song!</h2>
 						<p className="text-sm text-center text-neutral-300">REASON: {this.state.errorMessage || "An unknown error occurred!"}</p>
 					</div>
 				) : this.context.homeSuggestion.results ? (
-					<div className="w-full max-w-md flex flex-col justify-start items-center mt-6 space-y-2">
+					<div className="w-full max-w-md mx-auto flex flex-col justify-start items-center mt-6 space-y-2">
 						<h2 className="w-full text-lg font-medium text-neutral-200 leading-snug mb-2">Since you liked {this.context.homeSuggestion.picked}</h2>
 						{this.context.homeSuggestion.results.map((song) => (
 							<Song 

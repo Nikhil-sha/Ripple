@@ -203,8 +203,7 @@ class Player extends Component {
 				isPlaying: false,
 			});
 			this.changePlayList([]);
-		}
-		else if (trackIndex === currentTrackIndex) {
+		} else if (trackIndex === currentTrackIndex) {
 			this.resetAudio();
 			const newTrackIndex =
 				trackIndex === updatedPlaylist.length ? Math.max(trackIndex - 1, 0) : trackIndex;
@@ -215,14 +214,15 @@ class Player extends Component {
 				isPlaying: false,
 			});
 			this.changePlayList(updatedPlaylist);
-			this.setTrack(newTrackIndex);
+			setTimeout(() => this.setTrack(newTrackIndex), 100);
 		} else {
 			const newTrackIndex =
-				trackIndex < currentTrackIndex ? Math.max(currentTrackIndex - 1, 0) : currentTrackIndex;
+				trackIndex <= currentTrackIndex ? Math.max(currentTrackIndex - 1, 0) : currentTrackIndex;
 			this.setState({
 				currentTrackIndex: newTrackIndex,
 			});
 			this.changePlayList(updatedPlaylist);
+			setTimeout(() => this.setTrack(newTrackIndex), 100);
 		}
 	};
 
