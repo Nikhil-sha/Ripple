@@ -67,7 +67,7 @@ class Home extends Component {
 		const { signal } = this.abortController;
 
 		try {
-			const apiUrl = `https://jiosavan-api-tawny.vercel.app/api/songs/${songId}/suggestions?limit=15`;
+			const apiUrl = `https://jiosavan-api-tawny.vercel.app/api/songs/${songId}/suggestions?limit=25`;
 
 			const response = await fetch(apiUrl, { signal });
 			const data = await response.json();
