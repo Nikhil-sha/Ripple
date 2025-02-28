@@ -27,7 +27,10 @@ class Home extends Component {
 			return;
 		}
 
-		const randomPick = Math.floor(Math.random() * savedTracks.length);
+		let randomPick = Math.floor(Math.random() * savedTracks.length);
+		if (randomPick >= savedTracks.length) {
+			random -= 1;
+		}
 		const pickedSong = savedTracks[randomPick];
 		if (!pickedSong || !pickedSong.id) {
 			this.setError("Invalid song data!");
