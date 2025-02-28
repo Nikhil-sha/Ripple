@@ -288,7 +288,7 @@ class Player extends Component {
 					/>
 				</div>
 				<div className="min-w-0 grow">
-					<h2 className="text-md text-neutral-100 font-bold leading-tight truncate" aria-live="assertive">
+					<h2 className="text-base text-neutral-100 font-bold leading-tight truncate" aria-live="assertive">
 						{currentTrack ? currentTrack.name : "No Track"}
 					</h2>
 					<p className="text-xs text-neutral-400 truncate" aria-hidden="true">

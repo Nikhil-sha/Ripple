@@ -60,9 +60,9 @@ class Saved extends Component {
 					<span className="p-3 block text-neutral-300 text-center rounded-lg bg-neutral-700/50 text-sm flex justify-center items-center font-semibold">Total: {this.state.limit.total} track(s)</span>
 					<button onClick={this.playAll} className="p-3 block text-white text-center rounded-lg bg-blue-400 hover:bg-blue-500 transition text-sm flex justify-center items-center font-semibold"><i className="fas fa-play mr-3"></i>Play All</button>
 				</div>
-				<div className="max-w-md flex flex-col space-y-2 mx-auto">
-					{savedTracks.length > 0 ? savedTracks.map((track) => (
-						<Song key={track.id} songId={track.id} name={track.name} artist={track.artist} coverSm={track.coverSm} coverBg={track.coverBg} sources={track.sources} option="delete" />
+				<div className="max-w-md flex flex-col gap-2 mx-auto">
+					{savedTracks.length > 0 ? savedTracks.map((track, index) => (
+						<Song key={index} songId={track.id} name={track.name} artist={track.artist} coverSm={track.coverSm} coverBg={track.coverBg} sources={track.sources} option="delete" />
 					)) : (
 						<div className="flex justify-center items-center text-center text-neutral-400">
 							<h2>You haven't saved any song yet!</h2>

@@ -159,7 +159,7 @@ class Home extends Component {
 						))}
 					</div>
 				) : (
-					<div className="w-full max-w-md flex flex-col justify-center items-center mt-4 font-semibold text-md text-center text-neutral-200">
+					<div className="w-full max-w-md flex flex-col justify-center items-center mt-4 font-semibold text-base text-center text-neutral-200">
 						"Find and play your favorite songs while we work on some awesome new surprises for you!"
 					</div>
 				)}

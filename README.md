@@ -17,6 +17,49 @@ The source code for Ripple is available on GitHub:
 
 ## ChangeLog
 
+---
+
+### Version 2.4.0 (current)
+**Release Notes:**  
+- Artist page added.
+
+---
+
+### Version 2.3.0 (stable?
+**Release Notes:**  
+- Improved UI.
+- Suggestions according to saved tracks, on Home page.
+- Improved Haptic feedback.
+
+---
+
+### Version 2.2.1
+**Release Notes:**  
+- New **Search results limit** option added in Settings.
+- Haptic feedback added.
+
+---
+
+### Version 2.2.0
+**Release Notes:**  
+- New **Quality Preference** added.
+- New **Settings** section added.
+- Improved UI.
+
+---
+
+### Version 2.1.3 (stable)
+**Release Notes:**  
+- Changed Home page layout.
+
+---
+
+### Version 2.1.2
+**Release Notes:**  
+- Highlight current track in player.
+
+---
+
 ### Version 2.2.1 (Current - Stable)  
 **Release Notes:**  
 - Added **Search results limit** option in Settings.  

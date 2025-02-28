@@ -130,9 +130,9 @@ class Search extends Component {
 					) : this.context.search.results ? (
 						<div className="w-full max-w-md flex flex-col justify-start items-center mt-4 space-y-2">
 							<h2 className="w-full text-lg font-medium text-neutral-200 leading-snug">Results</h2>
-							{this.context.search.results.map((song) => (
+							{this.context.search.results.map((song, index) => (
 								<Song 
-									key={song.id} 
+									key={index} 
 									songId={song.id} 
 									name={song.name} 
 									artist={song.artists.primary[0].name} 

@@ -16,6 +16,7 @@ export class AppProvider extends Component {
 		},
 		search: { query: null, results: null },
 		specificSongDetails: null,
+		specificArtistDetails: null,
 		savedTracks: [],
 		playList: [],
 		preferredQuality: null,
@@ -118,7 +119,7 @@ export class AppProvider extends Component {
 		this.setState({
 			isPopupVisible: true,
 		});
-		
+
 		if (this.popupTimeout) {
 			clearTimeout(this.popupTimeout);
 			this.popupTimeout = null;
@@ -143,6 +144,12 @@ export class AppProvider extends Component {
 	setSpecificSongDetails = (newData) => {
 		this.setState({
 			specificSongDetails: newData,
+		});
+	};
+
+	setSpecificArtistDetails = (newData) => {
+		this.setState({
+			specificArtistDetails: newData,
 		});
 	};
 
@@ -243,6 +250,7 @@ export class AppProvider extends Component {
 					setPreferredQuality: this.setPreferredQuality,
 					getPreferredQualityURL: this.getPreferredQualityURL,
 					setSpecificSongDetails: this.setSpecificSongDetails,
+					setSpecificArtistDetails: this.setSpecificArtistDetails,
 					updateSearchState: this.updateSearchState,
 					updatePlayList: this.updatePlayList,
 					updateLocalStorage: this.updateLocalStorage,

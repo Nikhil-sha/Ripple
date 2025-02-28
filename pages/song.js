@@ -1,6 +1,8 @@
 import React, { Component, Fragment } from "react";
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { AppContext } from '../context';
+
+import Artist from '../components/artist.js';
 
 class SongDetails extends Component {
 	static contextType = AppContext;
@@ -94,7 +96,7 @@ class SongDetails extends Component {
 			if (!data.success) {
 				this.setError("No song found");
 			} else {
-				this.setSong(data.data[0]);
+				this.setSong(Array.isArray(data.data) ? data.data[0] : data.data);
 				this.setLoadingFalse();
 				this.setErrorFalse();
 			}
@@ -162,10 +164,10 @@ class SongDetails extends Component {
 					<img src={specificSongDetails.image[specificSongDetails.image.length - 1].url} alt={specificSongDetails.name} className="w-2/4 md:w-1/4 aspect-square rounded-lg" />
 					<figcaption className="mt-4 text-center">
 						<h2 className="text-2xl text-neutral-100 font-bold mb-1">{specificSongDetails.name}</h2>
-						<p className="text-sm text-neutral-300 font-semibold">from <a href={specificSongDetails.album.url} className="hover:underline">{specificSongDetails.album.name}</a> by <a href={specificSongDetails.artists.primary[0].url} className="hover:underline">{specificSongDetails.artists.primary[0].name}</a></p>
-						<span className="leading-none text-sm font-semibold text-neutral-500">{specificSongDetails.type} - {specificSongDetails.language} - {specificSongDetails.year}</span>
+						<p className="text-sm text-neutral-300 font-semibold">from <a href={specificSongDetails.album.url} className="hover:underline">{specificSongDetails.album.name}</a> by <Link to={`/artist/${specificSongDetails.artists.primary[0].id}`} className="hover:underline">{specificSongDetails.artists.primary[0].name}</Link></p>
+						<span className="leading-none text-sm text-neutral-500">{specificSongDetails.type} - {specificSongDetails.language} - {specificSongDetails.year}</span>
 						<br />
-						<span className="leading-none text-sm font-semibold text-neutral-500">{specificSongDetails.playCount} Plays</span>
+						<span className="leading-none text-sm text-neutral-500">{specificSongDetails.playCount} Plays</span>
 					</figcaption>
 				</figure>
 
@@ -183,9 +185,9 @@ class SongDetails extends Component {
 				<div className="w-full max-w-lg mt-8 mb-4 mx-auto">
 					<h3 className="text-lg font-semibold text-neutral-200">More about {specificSongDetails.name}</h3>
 					<div className="mt-3">
-						<h4 onClick={this.toggleLyricsState} className="text-md font-semibold flex justify-between mb-2"><span>Lyrics</span><i className="fas fa-chevron-down fa-sm pt-3"></i></h4>
+						<h4 onClick={this.toggleLyricsState} className="text-base font-semibold flex justify-between mb-2"><span>Lyrics</span><i className="fas fa-chevron-down fa-sm pt-3"></i></h4>
 						{specificSongDetails.lyrics ? (
-						<div>
+						<div className="mb-8">
 							<p className="text-sm text-neutral-200">
 								{this.state.lyricsState === "collapsed" ? (specificSongDetails.lyrics.snippet + "…") : (this.renderHtml(specificSongDetails.lyrics.lyrics))}
 							</p>
@@ -194,24 +196,16 @@ class SongDetails extends Component {
 						) : (
 							<p className="text-sm text-neutral-400">No lyrics available!</p>
 						)}
-						<h4 className="text-md font-semibold mt-4 mb-2">Artists</h4>
-						<div className="w-full flex gap-4 overflow-x-auto">
+						<h4 className="text-base font-semibold mt-4 mb-2">Artists</h4>
+						<div className="w-full flex gap-4 mb-8 overflow-x-auto">
 							{specificSongDetails.artists.all ? specificSongDetails.artists.all.map((artist, index) => (
-								<div key={index} className="relative w-20 flex-shrink-0 h-20 aspect-square rounded-full overflow-hidden">
-									<a href={artist.url}>
-										<img src={artist.image.length ? artist.image[artist.image.length - 1].url : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUOdfo4lewXJYT_2xPo_Xu2Lj6xqdd64xHk1-mWhbM6Fw&s'} alt={artist.name} className="w-full object-cover" />
-										<div className="absolute flex flex-col justify-center items-center top-0 p-2 min-w-0 w-full h-full bg-black/35">
-											<p className="block min-w-0 w-full text-center text-xs text-neutral-100 font-bold truncate">{artist.name}</p>
-											<span className="block min-w-0 w-full text-center text-xs text-neutral-200 font-thin truncate">{artist.role}</span>
-										</div>
-									</a>
-								</div>
-							)) : null}
+								<Artist key={index} artistId={artist.id} name={artist.name} image={artist.image.length ? artist.image[artist.image.length - 1].url : ''} role={artist.role} />
+							)) : ""}
 						</div>
 					</div>
 				</div>
 				
-				<p className="text-center text-md font-bold text-neutral-300">
+				<p className="text-center text-base font-bold text-neutral-300">
 					{specificSongDetails.label} - {specificSongDetails.copyright}
 				</p>
 			</Fragment>

@@ -13,6 +13,7 @@ import Home from './pages/home';
 import Search from './pages/search';
 import About from './pages/about';
 import SongDetails from './pages/song';
+import ArtistDetails from './pages/artist';
 import Saved from './pages/saved';
 import Settings from './pages/settings';
 import Notifications from './pages/notificationCenter';
@@ -43,6 +44,7 @@ class App extends Component {
 								<Route path="/settings" component={Settings}/>
 								<Route path="/notifications" component={Notifications}/>
 								<Route path="/song/:songId" component={SongDetails} />
+								<Route path="/artist/:artistId" component={ArtistDetails} />
 								<Route path="*" component={NotFound}/>
 							</Switch>
 						</div>
