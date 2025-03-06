@@ -2,7 +2,6 @@
 	"name": "Ripple",
 	"short_name": "Ripple",
 	"description": "A music webapp built using ReactJS and Saavn.dev Api",
-	"version": "2.5.0",
 	"scope": "/Ripple/index.html",
 	"display": "standalone",
 	"background_color": "#fafafa",
