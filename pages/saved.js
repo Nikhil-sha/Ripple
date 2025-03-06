@@ -29,8 +29,9 @@ class Saved extends Component {
 	}
 
 	playAll = () => {
-		const { updatePlayList, savedTracks, addToNotification } = this.context;
+		const { updatePlayList, savedTracks, addToNotification, playerMethods } = this.context;
 		savedTracks.length === 0 ? addToNotification("warning", "There are no saved tracks to play.") : updatePlayList(savedTracks);
+		setTimeout(() => playerMethods.setTrack(0), 100);
 	};
 
 	calculateLimitUsage = () => {
