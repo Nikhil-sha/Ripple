@@ -1,4 +1,7 @@
-html, body {
+/* -- Scrollbar -- */
+
+html,
+body {
 	overscroll-behavior-y: none;
 	scrollbar-width: none !important;
 	-ms-overflow-style: none !important;
@@ -6,4 +9,112 @@ html, body {
 
 ::-webkit-scrollbar {
 	display: none !important;
+}
+
+/* -- Animations -- */
+
+@-webkit-keyframes fadeIn {
+	0% {
+		opacity: 0
+	}
+
+	to {
+		opacity: 1
+	}
+}
+
+@keyframes fadeIn {
+	0% {
+		opacity: 0
+	}
+
+	to {
+		opacity: 1
+	}
+}
+
+@-webkit-keyframes fadeInUp {
+	from {
+		opacity: 0;
+		-webkit-transform: translateY(40px);
+		transform: translateY(40px);
+	}
+
+	to {
+		opacity: 1;
+		-webkit-transform: translateY(0);
+		transform: translateY(0);
+	}
+}
+
+@keyframes fadeInUp {
+	from {
+		opacity: 0;
+		-webkit-transform: translateY(40px);
+		transform: translateY(40px);
+	}
+
+	to {
+		opacity: 1;
+		-webkit-transform: translateY(0);
+		transform: translateY(0);
+	}
+}
+
+@-webkit-keyframes expand {
+	from {
+		height: 56px;
+	}
+
+	to {
+		height: 100%;
+	}
+}
+
+@keyframes expand {
+	from {
+		height: 56px;
+	}
+
+	to {
+		height: 100%;
+	}
+}
+
+@-webkit-keyframes shrink {
+	from {
+		height: 100%;
+	}
+
+	to {
+		height: 56px;
+	}
+}
+
+@keyframes shrink {
+	from {
+		height: 100%;
+	}
+
+	to {
+		height: 56px;
+	}
+}
+
+/* -- Animation Classes -- */
+
+.fade_in {
+	animation: fadeIn 0.35s ease-in-out;
+}
+
+.fade_in_up {
+	animation: fadeInUp 0.35s ease-in-out;
+}
+
+.expand_height {
+	animation: expand 0.2s linear;
+}
+
+.shrink_height {
+	animation: shrink 0.25s linear;
 }

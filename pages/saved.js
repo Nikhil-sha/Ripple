@@ -13,7 +13,8 @@ class Saved extends Component {
 		},
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
+		await this.context.loadSavedTracks();
 		const { savedTracks } = this.context;
 		if (!savedTracks || savedTracks.length === 0) {
 			this.context.loadSavedTracks();
@@ -52,24 +53,26 @@ class Saved extends Component {
 		let { savedTracks } = this.context;
 
 		return (
-			<Fragment>
-				<h2 className="mb-4 text-2xl font-bold text-neutral-300">Saved Tracks</h2>
+			<section className="fade_in_up min-h-0 grow w-full overflow-y-auto px-4 md:px-8 lg:px-12 pt-4 pb-[65px]">
+				<h2 className="mb-4 text-2xl font-bold text-neutral-800">Saved Tracks</h2>
 				<div className="mb-6 max-w-lg mx-auto flex flex-col gap-4">
-					<span className="p-3 block text-neutral-300 text-center rounded-lg bg-neutral-700/50 text-sm flex justify-center items-center font-semibold">Saved: {this.state.limit.occupied} track(s)</span>
-					<span className="p-3 block text-neutral-300 text-center rounded-lg bg-neutral-700/50 text-sm flex justify-center items-center font-semibold">Available: {this.state.limit.available} track(s)</span>
-					<span className="p-3 block text-neutral-300 text-center rounded-lg bg-neutral-700/50 text-sm flex justify-center items-center font-semibold">Total: {this.state.limit.total} track(s)</span>
+					<div className="w-full flex items-center justify-center">
+						<span key={this.state.limit.occupied} className="fade_in py-5 diagonal-fractions drop-shadow-lg text-center text-9xl text-yellow-400 font-bold">
+							{this.state.limit.occupied}/{this.state.limit.total}
+						</span>
+					</div>
 					<button onClick={this.playAll} className="p-3 block text-white text-center rounded-lg bg-blue-400 hover:bg-blue-500 transition text-sm flex justify-center items-center font-semibold"><i className="fas fa-play mr-3"></i>Play All</button>
 				</div>
-				<div className="max-w-md flex flex-col gap-2 mx-auto">
+				<div className="fade_in_up max-w-md flex flex-col gap-2 mx-auto">
 					{savedTracks.length > 0 ? savedTracks.map((track, index) => (
 						<Song key={index} songId={track.id} name={track.name} artist={track.artist} coverSm={track.coverSm} coverBg={track.coverBg} sources={track.sources} option="delete" />
 					)) : (
-						<div className="flex justify-center items-center text-center text-neutral-400">
+						<div className="fade_in flex justify-center items-center text-center text-neutral-600">
 							<h2>You haven't saved any song yet!</h2>
 						</div>
 					)}
 				</div>
-			</Fragment>
+			</section>
 		);
 	}
 }

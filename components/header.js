@@ -8,10 +8,10 @@ class Header extends Component {
 	render() {
 		const { handleAsideToggle } = this.context;
 		return (
-			<header className="w-full flex justify-between items-center bg-neutral-700 rounded-b-xl shadow-md px-3 py-3.5">
+			<header className="w-full flex justify-between items-center bg-neutral-50 border-b border-neutral-200 rounded-b-xl px-3 py-3.5">
 				<div>
 					<Link to="/">
-						<h1 className="text-xl font-black text-neutral-200 flex items-center">
+						<h1 className="text-xl font-black text-neutral-700 flex items-center">
 							<span>Ripple</span>
 							<span className="text-yellow-400">.</span>
 						</h1>
@@ -19,8 +19,8 @@ class Header extends Component {
 				</div>
 
 				<nav>
-					<button className="group size-8 flex justify-center items-center rounded-full bg-neutral-600 hover:bg-yellow-400 transition-all" onClick={handleAsideToggle} aria-label="Toggle menu" aria-expanded="false">
-						<i className="fas fa-bars text-neutral-300 group-hover:text-neutral-600"></i>
+					<button className="group size-8 flex justify-center items-center rounded-full bg-neutral-100 hover:bg-yellow-400 transition-all" onClick={handleAsideToggle} aria-label="Toggle menu" aria-expanded="false">
+						<i className="fas fa-bars text-neutral-700 group-hover:text-neutral-100"></i>
 					</button>
 				</nav>
 			</header>

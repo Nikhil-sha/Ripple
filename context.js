@@ -1,12 +1,11 @@
 import React, { createContext, Component } from 'react';
 
-// Create the context
 export const AppContext = createContext();
 
-// Create the Provider component
 export class AppProvider extends Component {
 	state = {
 		limitForSaved: 150,
+		isOverlayVisible: false,
 		isAsideVisible: false,
 		isPopupVisible: false,
 		notifications: [],
@@ -94,10 +93,26 @@ export class AppProvider extends Component {
 		}
 	};
 
+	showOverlay = () => {
+		this.setState({
+			isOverlayVisible: true,
+		});
+	};
+
+	hideOverlay = () => {
+		this.setState({
+			isOverlayVisible: false,
+		});
+	};
+
 	handleAsideToggle = () => {
-		this.setState((prevState) => ({
-			isAsideVisible: !prevState.isAsideVisible,
-		}));
+		this.setState((prevState) => {
+			const shouldShowOverlay = !prevState.isAsideVisible; // Toggle state
+			return {
+				isAsideVisible: shouldShowOverlay,
+				isOverlayVisible: shouldShowOverlay, // Sync overlay with aside
+			};
+		});
 	};
 
 	addToNotification = (type, message) => {
@@ -214,7 +229,6 @@ export class AppProvider extends Component {
 			const updatedTrackList = storedTrackList.filter(track => track.id !== songId);
 			localStorage.setItem("trackList", JSON.stringify(updatedTrackList));
 			this.loadSavedTracks();
-
 			this.addToNotification("success", "Track removed and Local Storage updated.");
 		} catch (error) {
 			this.addToNotification("warning", "Error interacting with localStorage.");
@@ -239,6 +253,8 @@ export class AppProvider extends Component {
 				value={{
 					...this.state,
 					playerRef: this.playerRef,
+					showOverlay: this.showOverlay,
+					hideOverlay: this.hideOverlay,
 					handleAsideToggle: this.handleAsideToggle,
 					addToNotification: this.addToNotification,
 					showPopup: this.showPopup,

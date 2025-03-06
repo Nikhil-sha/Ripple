@@ -6,6 +6,7 @@ import { HashRouter, Switch, Route } from 'react-router-dom';
 
 import Header from './components/header';
 import Aside from './components/aside';
+import Overlay from './components/overlay';
 import Popup from './components/popup';
 import Player from './components/player';
 
@@ -31,23 +32,22 @@ class App extends Component {
 		return (
 			<React.StrictMode>
 				<HashRouter>
-					{this.context.isPopupVisible && <Popup />}
-					<div className="h-dvh w-screen relative flex flex-col bg-neutral-800">
+					{this.context.isPopupVisible && <Popup key={this.context.notifications.length} />}
+					<Overlay onClose={this.context.handleAsideToggle}/>
+					<div className="h-dvh w-screen relative flex flex-col bg-neutral-50">
 						<Header/>
 						<Aside/>
-						<div className="min-h-0 grow w-full overflow-y-auto px-4 md:px-8 lg:px-12 pt-4 pb-[65px]">
-							<Switch>
-								<Route exact path="/" component={Home}/>
-								<Route path="/search" component={Search}/>
-								<Route path="/about" component={About}/>
-								<Route path="/saved" component={Saved}/>
-								<Route path="/settings" component={Settings}/>
-								<Route path="/notifications" component={Notifications}/>
-								<Route path="/song/:songId" component={SongDetails} />
-								<Route path="/artist/:artistId" component={ArtistDetails} />
-								<Route path="*" component={NotFound}/>
-							</Switch>
-						</div>
+						<Switch>
+							<Route exact path="/" component={Home}/>
+							<Route path="/search" component={Search}/>
+							<Route path="/about" component={About}/>
+							<Route path="/saved" component={Saved}/>
+							<Route path="/settings" component={Settings}/>
+							<Route path="/notifications" component={Notifications}/>
+							<Route path="/song/:songId" component={SongDetails} />
+							<Route path="/artist/:artistId" component={ArtistDetails} />
+							<Route path="*" component={NotFound}/>
+						</Switch>
 						<Player/>
 					</div>
 				</HashRouter>

@@ -70,13 +70,15 @@ class SongDetails extends Component {
 		});
 	};
 
-	renderHtml = (html) =>
-		html.split(/<br\s*\/?>/gi).map((part, i) => (
+	renderHtml = (html) => {
+		const parts = html.split(/<br\s*\/?>/gi);
+		return parts.map((part, i) => (
 			<React.Fragment key={i}>
 				{part}
-				{i < html.split(/<br\s*\/?>/gi).length - 1 && <br />}
+				{i < parts.length - 1 && <br />}
 			</React.Fragment>
 		));
+	};
 
 	fetchSong = async (songId) => {
 		this.setLoadingTrue();
@@ -141,7 +143,7 @@ class SongDetails extends Component {
 		let { specificSongDetails } = this.context;
 		if (loading) {
 			return (
-				<div className="h-full w-full flex flex-col justify-center items-center">
+				<div className="fade_in h-full w-full flex flex-col justify-center items-center">
 					<div className="w-8 h-8 rounded-full border-4 border-yellow-400 border-r-transparent animate-spin"></div>
 					<h2 className="pt-4">Loading…</h2>
 				</div>
@@ -150,45 +152,45 @@ class SongDetails extends Component {
 
 		if (error) {
 			return (
-				<div className="h-full w-full flex flex-col justify-center items-center">
+				<section className="fade_in h-full w-full flex flex-col justify-center items-center">
 					<i className="fas fa-exclamation-circle text-2xl text-red-500"></i>
 					<h2 className="pt-2 w-64 font-bold leading-none text-lg text-center">Failed to load the song!</h2>
 					<p className="w-64 leading-1 text-sm text-center text-neutral-400">REASON: {errorMessage ? errorMessage : "Don't know what happened!"}</p>
-				</div>
+				</section>
 			)
 		}
 
 		return (
-			<Fragment>
+			<section className="fade_in_up min-h-0 grow w-full overflow-y-auto px-4 md:px-8 lg:px-12 pt-4 pb-[65px]">
 				<figure className="w-full flex flex-col justify-center items-center">
 					<img src={specificSongDetails.image[specificSongDetails.image.length - 1].url} alt={specificSongDetails.name} className="w-2/4 md:w-1/4 aspect-square rounded-lg" />
 					<figcaption className="mt-4 text-center">
-						<h2 className="text-2xl text-neutral-100 font-bold mb-1">{specificSongDetails.name}</h2>
-						<p className="text-sm text-neutral-300 font-semibold">from <a href={specificSongDetails.album.url} className="hover:underline">{specificSongDetails.album.name}</a> by <Link to={`/artist/${specificSongDetails.artists.primary[0].id}`} className="hover:underline">{specificSongDetails.artists.primary[0].name}</Link></p>
-						<span className="leading-none text-sm text-neutral-500">{specificSongDetails.type} - {specificSongDetails.language} - {specificSongDetails.year}</span>
+						<h2 className="text-2xl text-neutral-800 font-bold mb-1">{specificSongDetails.name}</h2>
+						<p className="text-sm text-neutral-600 font-semibold">from <a href={specificSongDetails.album.url} className="hover:underline">{specificSongDetails.album.name}</a> by <Link to={`/artist/${specificSongDetails.artists.primary[0].id}`} className="hover:underline">{specificSongDetails.artists.primary[0].name}</Link></p>
+						<span className="leading-none text-sm text-neutral-400">{specificSongDetails.type} - {specificSongDetails.language} - {specificSongDetails.year}</span>
 						<br />
-						<span className="leading-none text-sm text-neutral-500">{specificSongDetails.playCount} Plays</span>
+						<span className="leading-none text-sm text-neutral-400">{specificSongDetails.playCount} Plays</span>
 					</figcaption>
 				</figure>
 
 				{/* Button Section with Responsiveness */}
 				<div className="w-fit flex flex-row gap-4 items-center mt-3 mx-auto">
-					<button onClick={this.saveThis} className="rounded-full bg-yellow-400 hover:bg-yellow-600 text-neutral-600 hover:text-yellow-400 w-12 h-12 flex justify-center items-center transition">
+					<button onClick={this.saveThis} className="rounded-full bg-yellow-400 hover:bg-neutral-400 text-neutral-700 hover:text-yellow-400 w-12 h-12 flex justify-center items-center transition">
 						<i className="pt-0.5 fas fa-bookmark text-lg"></i>
 					</button>
-					<button onClick={this.addToPlayList} className="rounded-full bg-neutral-600 hover:bg-neutral-900 text-neutral-200 hover:text-yellow-400 w-12 h-12 flex justify-center items-center transition">
+					<button onClick={this.addToPlayList} className="rounded-full bg-neutral-200/50 hover:bg-pink-400 text-neutral-700 hover:text-neutral-100 w-12 h-12 flex justify-center items-center transition">
 						<i className="pl-1 pt-0.5 fas fa-play text-lg"></i>
 					</button>
 				</div>
 
 				{/* More Info Section */}
 				<div className="w-full max-w-lg mt-8 mb-4 mx-auto">
-					<h3 className="text-lg font-semibold text-neutral-200">More about {specificSongDetails.name}</h3>
+					<h3 className="text-lg font-semibold text-neutral-600">More about {specificSongDetails.name}</h3>
 					<div className="mt-3">
 						<h4 onClick={this.toggleLyricsState} className="text-base font-semibold flex justify-between mb-2"><span>Lyrics</span><i className="fas fa-chevron-down fa-sm pt-3"></i></h4>
 						{specificSongDetails.lyrics ? (
 						<div className="mb-8">
-							<p className="text-sm text-neutral-200">
+							<p className="text-sm text-neutral-600">
 								{this.state.lyricsState === "collapsed" ? (specificSongDetails.lyrics.snippet + "…") : (this.renderHtml(specificSongDetails.lyrics.lyrics))}
 							</p>
 							<p className="text-sm font-bold">{this.renderHtml(specificSongDetails.lyrics.copyright)}</p>
@@ -205,10 +207,10 @@ class SongDetails extends Component {
 					</div>
 				</div>
 				
-				<p className="text-center text-base font-bold text-neutral-300">
+				<p className="text-center text-sm font-bold text-neutral-600">
 					{specificSongDetails.label} - {specificSongDetails.copyright}
 				</p>
-			</Fragment>
+			</section>
 		);
 	}
 }

@@ -1,13 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" class="font-[Nunito] font-xs text-gray-800">
+<html lang="en" class="font-[Nunito] font-xs text-neutral-800">
 
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="theme-color" content="#171717">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<meta name="theme-color" content="#facc15">
+	<link rel="icon" href="/Ripple/assets/images/icons/icon-192x192.png" type="image/png" />
 
 	<title>Ripple - Music webapp</title>
+
+	<!-- Manifest -->
+	<link rel="manifest" href="./manifest.json">
 
 	<!-- SystemJS -->
 	<script src="//unpkg.com/systemjs@0.19.47/dist/system.js"></script>
@@ -24,12 +28,12 @@
 
 </head>
 
-<body class="bg-neutral-900 text-neutral-200">
+<body class="bg-neutral-50 text-neutral-800 select-none">
 	<div id="react-app" class="h-dvh w-screen">
 		<div class="h-dvh w-full flex flex-col gap-8 justify-center items-center">
 			<div id="timeout" class="hidden w-fit flex flex-col gap-1 justify-center items-center">
-				<p class="text-sm text-neutral-100 font-semibold">Still waiting? Even a snail would be faster.</p>
-				<button class="text-sm text-neutral-700 px-2 py-1 rounded-lg bg-yellow-400" onclick="window.location.reload()">Reload!</button>
+				<p class="text-sm text-neutral-700 font-semibold">Still waiting? Even a snail would be faster.</p>
+				<button class="text-sm text-neutral-800 px-2 py-1 rounded-lg bg-yellow-400" onclick="window.location.reload()">Reload!</button>
 				<script>
 					let timeoutMsg = document.getElementById("timeout");
 					setTimeout(() => {
@@ -45,8 +49,8 @@
 				</div>
 			</div>
 			<div class="max-w-64">
-				<p id="quote" class="text-xs text-neutral-200"></p>
-				<i id="author" class="text-xs block text-right text-neutral-400 font-bold"></i>
+				<p id="quote" class="text-xs text-neutral-700"></p>
+				<i id="author" class="text-xs block text-right text-neutral-800 font-bold"></i>
 			</div>
 		</div>
 	</div>

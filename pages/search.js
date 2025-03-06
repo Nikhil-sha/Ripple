@@ -98,7 +98,7 @@ class Search extends Component {
 		const { loading, error, errorMessage, query } = this.state;
 
 		return (
-			<Fragment>
+			<section className="fade_in_up min-h-0 grow w-full overflow-y-auto px-4 md:px-8 lg:px-12 pt-4 pb-[65px]">
 				<div className="min-h-full flex flex-col justify-start items-center">
 					<div className="flex gap-2 w-full max-w-md">
 						<input
@@ -106,30 +106,30 @@ class Search extends Component {
 							value={query}
 							onChange={this.handleInputChange}
 							placeholder="Search for songs..."
-							className="grow px-4 py-2 rounded-md bg-neutral-700/50 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder-neutral-400 transition"
+							className="grow px-4 py-2 rounded-md bg-yellow-100/50 text-neutral-800 focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder-neutral-600 transition"
 						/>
 						<button
 							onClick={this.handleSearch}
-							className="flex-shrink-0 bg-yellow-400 hover:bg-yellow-500 text-neutral-900 font-semibold px-6 py-3 rounded-md transition"
+							className="flex-shrink-0 bg-yellow-300 hover:bg-yellow-400 text-neutral-700 font-semibold px-6 py-3 rounded-md transition"
 						>
 							<i className="fas fa-search mt-1"></i>
 						</button>
 					</div>
 
 					{loading ? (
-						<div className="w-full max-w-md flex flex-col justify-center items-center mt-4">
-							<div className="w-8 h-8 rounded-full border-4 border-yellow-500 border-r-transparent animate-spin"></div>
-							<h2 className="pt-4 text-lg font-semibold text-neutral-200">Loading…</h2>
+						<div className="fade_in w-full max-w-md flex flex-col justify-center items-center mt-4">
+							<div className="w-8 h-8 rounded-full border-4 border-yellow-400 border-r-transparent animate-spin"></div>
+							<h2 className="pt-4 text-lg font-semibold text-neutral-800">Loading…</h2>
 						</div>
 					) : error ? (
-						<div className="w-full max-w-md flex flex-col justify-center items-center mt-4">
-							<i className="fas fa-exclamation-circle text-2xl text-red-500"></i>
-							<h2 className="pt-2 font-bold text-lg text-center text-neutral-100">Failed to load the song!</h2>
-							<p className="text-sm text-center text-neutral-300">REASON: {errorMessage || "An unknown error occurred!"}</p>
-						</div>
+						<section className="fade_in w-full max-w-md flex flex-col justify-center items-center mt-4">
+							<i className="fas fa-exclamation-circle text-2xl text-red-400"></i>
+							<h2 className="pt-2 font-bold text-lg text-center text-neutral-800">Failed to load the song!</h2>
+							<p className="text-sm text-center text-neutral-600">REASON: {errorMessage || "An unknown error occurred!"}</p>
+						</section>
 					) : this.context.search.results ? (
-						<div className="w-full max-w-md flex flex-col justify-start items-center mt-4 space-y-2">
-							<h2 className="w-full text-lg font-medium text-neutral-200 leading-snug">Results</h2>
+						<div className="fade_in_up w-full max-w-md flex flex-col justify-start items-center mt-4 space-y-2">
+							<h2 className="w-full text-lg font-medium text-neutral-800 leading-snug">Results for {this.context.search.query}</h2>
 							{this.context.search.results.map((song, index) => (
 								<Song 
 									key={index} 
@@ -144,12 +144,12 @@ class Search extends Component {
 							))}
 						</div>
 					) : (
-						<div className="w-full max-w-md flex flex-col justify-center items-center mt-4 font-semibold text-neutral-400">
-							Search to get started!
-						</div>
+						<p className="fade_in w-full max-w-md flex flex-col justify-center items-center mt-4 font-semibold text-neutral-600">
+							What's on your mind today?
+						</p>
 					)}
 				</div>
-			</Fragment>
+			</section>
 		);
 	}
 }
