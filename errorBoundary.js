@@ -13,7 +13,6 @@ class ErrorBoundary extends Component {
 
 	componentDidCatch(error, errorInfo) {
 		// Log the error to an error reporting service (or console)
-		console.error("Error Boundary Caught an Error:", error, errorInfo);
 		this.setState({ errorInfo });
 	}
 
@@ -44,7 +43,6 @@ class ErrorBoundary extends Component {
 			);
 
 		}
-
 
 		// Render children if no error occurred
 		return this.props.children;

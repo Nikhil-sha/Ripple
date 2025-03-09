@@ -14,6 +14,7 @@ export class AppProvider extends Component {
 			results: null,
 		},
 		search: { query: null, results: null },
+		specificSongLyrics: null,
 		specificSongDetails: null,
 		specificArtistDetails: null,
 		savedTracks: [],
@@ -156,6 +157,12 @@ export class AppProvider extends Component {
 		});
 	};
 
+	setSpecificSongLyrics = (songId, songLyrics) => {
+		this.setState({
+			specificSongLyrics: { id: songId, lyrics: songLyrics },
+		});
+	};
+
 	setSpecificSongDetails = (newData) => {
 		this.setState({
 			specificSongDetails: newData,
@@ -265,6 +272,7 @@ export class AppProvider extends Component {
 					setPlayerMethods: this.setPlayerMethods,
 					setPreferredQuality: this.setPreferredQuality,
 					getPreferredQualityURL: this.getPreferredQualityURL,
+					setSpecificSongLyrics: this.setSpecificSongLyrics,
 					setSpecificSongDetails: this.setSpecificSongDetails,
 					setSpecificArtistDetails: this.setSpecificArtistDetails,
 					updateSearchState: this.updateSearchState,

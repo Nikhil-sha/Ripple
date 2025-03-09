@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { withRouter, Link } from 'react-router-dom';
 import { AppContext } from '../context';
+import { renderLyrics } from '../components/utilities/all.js';
 
 import Artist from '../components/artist.js';
 
@@ -13,7 +14,10 @@ class SongDetails extends Component {
 			loading: true,
 			error: false,
 			errorMessage: null,
-			lyricsState: "collapsed"
+			lyricsState: {
+				status: "idle",
+				message: null
+			},
 		};
 		this.abortController = null;
 	}
@@ -47,10 +51,6 @@ class SongDetails extends Component {
 		this.setState({ loading: true });
 	};
 
-	setSong = (data) => {
-		this.context.setSpecificSongDetails(data);
-	};
-
 	setLoadingFalse = () => {
 		this.setState({ loading: false });
 	};
@@ -63,21 +63,10 @@ class SongDetails extends Component {
 		this.setState({ error: false });
 	};
 
-	toggleLyricsState = () => {
-		let stateToSet = this.state.lyricsState === "collapsed" ? "expanded" : "collapsed";
+	setLyricsState = (status, message = null) => {
 		this.setState({
-			lyricsState: stateToSet,
+			lyricsState: { status, message },
 		});
-	};
-
-	renderHtml = (html) => {
-		const parts = html.split(/<br\s*\/?>/gi);
-		return parts.map((part, i) => (
-			<React.Fragment key={i}>
-				{part}
-				{i < parts.length - 1 && <br />}
-			</React.Fragment>
-		));
 	};
 
 	fetchSong = async (songId) => {
@@ -98,7 +87,8 @@ class SongDetails extends Component {
 			if (!data.success) {
 				this.setError("No song found");
 			} else {
-				this.setSong(Array.isArray(data.data) ? data.data[0] : data.data);
+				const filtered = Array.isArray(data.data) ? data.data[0] : data.data;
+				this.context.setSpecificSongDetails(filtered);
 				this.setLoadingFalse();
 				this.setErrorFalse();
 			}
@@ -107,6 +97,41 @@ class SongDetails extends Component {
 				console.log("Fetch request was aborted");
 			} else {
 				this.setError("API failure");
+			}
+		}
+	};
+
+	loadLyrics = () => {
+		const { id } = this.context.specificSongDetails;
+		if (!this.context.specificSongLyrics || this.context.specificSongLyrics.id !== id) {
+			this.fetchLyrics(id);
+		} else {
+			this.setLyricsState("idle");
+		}
+	};
+
+	fetchLyrics = async (songId) => {
+		this.setLyricsState("loading");
+		this.abortController = new AbortController();
+		const { signal } = this.abortController;
+
+		try {
+			const apiUrl = `https://saavn.dev/api/songs/${songId}/lyrics`;
+
+			const response = await fetch(apiUrl, { signal });
+			const data = await response.json();
+
+			if (!data.success) {
+				this.setLyricsState("error", "Lyrics not found!");
+			} else {
+				this.context.setSpecificSongLyrics(songId, data.data);
+				this.setLyricsState("success");
+			}
+		} catch (error) {
+			if (error.name === "AbortError") {
+				this.setLyricsState("error", "Fetch request was aborted!");
+			} else {
+				this.setLyricsState("error", "API failure!");
 			}
 		}
 	};
@@ -139,8 +164,8 @@ class SongDetails extends Component {
 	};
 
 	render() {
-		const { loading, error, errorMessage } = this.state;
-		let { specificSongDetails } = this.context;
+		const { loading, error, errorMessage, lyricsState } = this.state;
+		let { specificSongDetails, specificSongLyrics } = this.context;
 		if (loading) {
 			return (
 				<div className="fade_in h-full w-full flex flex-col justify-center items-center">
@@ -187,16 +212,23 @@ class SongDetails extends Component {
 				<div className="w-full max-w-lg mt-8 mb-4 mx-auto">
 					<h3 className="text-lg font-semibold text-neutral-600">More about {specificSongDetails.name}</h3>
 					<div className="mt-3">
-						<h4 onClick={this.toggleLyricsState} className="text-base font-semibold flex justify-between mb-2"><span>Lyrics</span><i className="fas fa-chevron-down fa-sm pt-3"></i></h4>
-						{specificSongDetails.lyrics ? (
+						<h4 className="text-base font-semibold flex justify-between mb-2"><span>Lyrics</span><i className="fas fa-chevron-down fa-sm pt-3"></i></h4>
+						{lyricsState.status === "loading" ? (
+							<div className="fade_in w-fit mx-auto flex justify-center items-center">
+								<div className="w-4 h-4 rounded-full border-2 border-yellow-400 border-r-transparent animate-spin"></div>
+								<h5 className="ml-2 text-sm">Loading…</h5>
+							</div>
+						) : lyricsState.status === "error" ? (
+							<p className="text-sm text-neutral-400">{lyricsState.message}</p>
+						) : specificSongLyrics && specificSongLyrics.id === specificSongDetails.id ? (
 						<div className="mb-8">
 							<p className="text-sm text-neutral-600">
-								{this.state.lyricsState === "collapsed" ? (specificSongDetails.lyrics.snippet + "…") : (this.renderHtml(specificSongDetails.lyrics.lyrics))}
+								{renderLyrics(specificSongLyrics.lyrics.lyrics)}
 							</p>
-							<p className="text-sm font-bold">{this.renderHtml(specificSongDetails.lyrics.copyright)}</p>
+							<p className="text-sm font-bold">{renderLyrics(specificSongLyrics.lyrics.copyright)}</p>
 						</div>
 						) : (
-							<p className="text-sm text-neutral-400">No lyrics available!</p>
+							<button onClick={this.loadLyrics} className="px-2 py-1 text-sm bg-yellow-400 hover:bg-yellow-500 rounded-md text-neutral-600">Load lyrics</button>
 						)}
 						<h4 className="text-base font-semibold mt-4 mb-2">Artists</h4>
 						<div className="w-full flex gap-4 mb-8 overflow-x-auto">
