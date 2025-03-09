@@ -212,7 +212,7 @@ class SongDetails extends Component {
 				<div className="w-full max-w-lg mt-8 mb-4 mx-auto">
 					<h3 className="text-lg font-semibold text-neutral-600">More about {specificSongDetails.name}</h3>
 					<div className="mt-3">
-						<h4 className="text-base font-semibold flex justify-between mb-2"><span>Lyrics</span><i className="fas fa-chevron-down fa-sm pt-3"></i></h4>
+						<h4 className="text-base font-semibold mb-2">Lyrics</h4>
 						{lyricsState.status === "loading" ? (
 							<div className="fade_in w-fit mx-auto flex justify-center items-center">
 								<div className="w-4 h-4 rounded-full border-2 border-yellow-400 border-r-transparent animate-spin"></div>
