@@ -34,8 +34,8 @@ class App extends Component {
 				{this.context.isPopupVisible && <Popup key={this.context.notifications.length} />}
 				<Overlay onClose={this.context.handleAsideToggle}/>
 				<div className="h-dvh w-screen relative flex flex-col bg-neutral-50">
-					<Header/>
 					<Aside/>
+					<Header/>
 					<Switch>
 						<Route exact path="/" component={Home}/>
 						<Route path="/search" component={Search}/>
