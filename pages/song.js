@@ -76,10 +76,11 @@ class SongDetails extends Component {
 		const { signal } = this.abortController;
 
 		try {
+			const { endpoints } = this.context;
 			const isUrl = decodedSongId.startsWith("https://www.jiosaavn.com/") || decodedSongId.startsWith("https://");
 			const apiUrl = isUrl ?
-				`https://saavn.dev/api/songs?link=${encodeURIComponent(decodedSongId)}` :
-				`https://saavn.dev/api/songs/${decodedSongId}`;
+				`${endpoints[0].songs}?link=${encodeURIComponent(decodedSongId)}` :
+				`${endpoints[0].songs}/${decodedSongId}`;
 
 			const response = await fetch(apiUrl, { signal });
 			const data = await response.json();
@@ -116,7 +117,8 @@ class SongDetails extends Component {
 		const { signal } = this.abortController;
 
 		try {
-			const apiUrl = `https://saavn.dev/api/songs/${songId}/lyrics`;
+			const { endpoints } = this.context;
+			const apiUrl = `${endpoints[0].songs}/${songId}/lyrics`;
 
 			const response = await fetch(apiUrl, { signal });
 			const data = await response.json();
@@ -191,7 +193,7 @@ class SongDetails extends Component {
 					<img src={specificSongDetails.image[specificSongDetails.image.length - 1].url} alt={specificSongDetails.name} className="w-2/4 md:w-1/4 aspect-square rounded-lg" />
 					<figcaption className="mt-4 text-center">
 						<h2 className="text-2xl text-neutral-800 font-bold mb-1">{specificSongDetails.name}</h2>
-						<p className="text-sm text-neutral-600 font-semibold">from <a href={specificSongDetails.album.url} className="hover:underline">{specificSongDetails.album.name}</a> by <Link to={`/artist/${specificSongDetails.artists.primary[0].id}`} className="hover:underline">{specificSongDetails.artists.primary[0].name}</Link></p>
+						<p className="text-sm text-neutral-600 font-semibold">from <Link to={`/album/${specificSongDetails.album.id}`} className="hover:underline">{specificSongDetails.album.name}</Link> by <Link to={`/artist/${specificSongDetails.artists.primary[0].id}`} className="hover:underline">{specificSongDetails.artists.primary[0].name}</Link></p>
 						<span className="leading-none text-sm text-neutral-400">{specificSongDetails.type} - {specificSongDetails.language} - {specificSongDetails.year}</span>
 						<br />
 						<span className="leading-none text-sm text-neutral-400">{specificSongDetails.playCount} Plays</span>

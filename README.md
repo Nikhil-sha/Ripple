@@ -17,7 +17,13 @@ The source code for Ripple is available on GitHub:
 
 ## ChangeLog
 
-### Version 2.5.1 (current)
+### Version 2.6.0 (current - stable)
+**Release Notes:**  
+- Album page added.
+
+---
+
+### Version 2.5.1
 **Release Notes:**  
 - lyrics support.
 

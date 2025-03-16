@@ -77,8 +77,9 @@ class ArtistDetails extends Component {
 		const { signal } = this.abortController;
 
 		try {
+			const { endpoints } = this.context;
 			const isUrl = decodedArtistId.startsWith("https://www.jiosaavn.com/") || decodedArtistId.startsWith("https://");
-			const apiUrl = `https://saavn.dev/api/artists/${decodedArtistId}?songCount=15&albumCount=10`;
+			const apiUrl = `${endpoints[0].artists}/${decodedArtistId}?songCount=15&albumCount=10`;
 
 			const response = await fetch(apiUrl, { signal });
 			const data = await response.json();

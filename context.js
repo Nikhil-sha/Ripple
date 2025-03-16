@@ -16,6 +16,7 @@ export class AppProvider extends Component {
 		search: { query: null, results: null },
 		specificSongLyrics: null,
 		specificSongDetails: null,
+		specificAlbumDetails: null,
 		specificArtistDetails: null,
 		savedTracks: [],
 		playList: [],
@@ -23,6 +24,18 @@ export class AppProvider extends Component {
 		searchResultsLimit: null,
 		playerMethods: {},
 	};
+
+	endpoints = [
+		{
+			songs: "https://saavn.dev/api/songs",
+			artists: "https://saavn.dev/api/artists",
+			albums: "https://saavn.dev/api/albums"
+		},
+		{
+			search: "https://jiosavan-api-tawny.vercel.app/api/search/songs",
+			songs: "https://jiosavan-api-tawny.vercel.app/api/songs",
+		}
+	];
 
 	popupTimeout = null;
 
@@ -169,6 +182,12 @@ export class AppProvider extends Component {
 		});
 	};
 
+	setSpecificAlbumDetails = (newData) => {
+		this.setState({
+			specificAlbumDetails: newData,
+		});
+	};
+
 	setSpecificArtistDetails = (newData) => {
 		this.setState({
 			specificArtistDetails: newData,
@@ -259,6 +278,7 @@ export class AppProvider extends Component {
 			<AppContext.Provider
 				value={{
 					...this.state,
+					endpoints: this.endpoints,
 					playerRef: this.playerRef,
 					showOverlay: this.showOverlay,
 					hideOverlay: this.hideOverlay,
@@ -274,6 +294,7 @@ export class AppProvider extends Component {
 					getPreferredQualityURL: this.getPreferredQualityURL,
 					setSpecificSongLyrics: this.setSpecificSongLyrics,
 					setSpecificSongDetails: this.setSpecificSongDetails,
+					setSpecificAlbumDetails: this.setSpecificAlbumDetails,
 					setSpecificArtistDetails: this.setSpecificArtistDetails,
 					updateSearchState: this.updateSearchState,
 					updatePlayList: this.updatePlayList,

@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { withRouter } from 'react-router-dom';
 import { AppContext } from '../context';
+
 import Song from '../components/song.js';
 
 class Search extends Component {
@@ -67,7 +68,7 @@ class Search extends Component {
 			return;
 		}
 
-		const { updateSearchState } = this.context;
+		const { endpoints, updateSearchState } = this.context;
 		this.setLoadingTrue();
 
 		// Initialize AbortController before the try block
@@ -75,7 +76,7 @@ class Search extends Component {
 		const { signal } = this.abortController;
 
 		try {
-			const response = await fetch(`https://jiosavan-api-tawny.vercel.app/api/search/songs?query=${query.trim()}&limit=${parseInt(this.context.searchResultsLimit || "10")}`, { signal });
+			const response = await fetch(`${endpoints[1].search}?query=${query.trim()}&limit=${parseInt(this.context.searchResultsLimit || "10")}`, { signal });
 			const data = await response.json();
 
 			if (!data.success || !data.data.results.length) {

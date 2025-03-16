@@ -1,5 +1,5 @@
 SystemJS.config({
-	baseURL: 'https://unpkg.com/',
+	baseURL: 'https://cdn.jsdelivr.net/npm/',
 	defaultExtension: true,
 	packages: {
 		".": {
