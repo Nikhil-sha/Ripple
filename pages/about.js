@@ -14,7 +14,14 @@ class About extends Component {
 				<article className="max-w-lg mx-auto">
 					<h2 className="text-lg font-normal text-neutral-800 leading-snug mb-4"><i className="w-6 text-left text-base fas fa-clipboard text-neutral-400"></i>ChangeLog</h2>
 					<div className="mb-4">
-				 	<h3 className="text-base font-normal text-neutral-800 leading-snug mb-3">Ver. 2.6.0 (current)</h3>
+				 	<h3 className="text-base font-normal text-neutral-800 leading-snug mb-3">Ver. 2.7.0 (current)</h3>
+				 	<ol className="border-l-2 border-yellow-400 text-neutral-600 flex flex-col gap-2 list-decimal list-inside text-sm px-3">
+				 		<li>Major improvements in UI.</li>
+				 		<li>Minor improvement in APIs.</li>
+				 	</ol>
+					</div>
+					<div className="mb-4">
+				 	<h3 className="text-base font-normal text-neutral-800 leading-snug mb-3">Ver. 2.6.0</h3>
 				 	<ol className="border-l-2 border-yellow-400 text-neutral-600 flex flex-col gap-2 list-decimal list-inside text-sm px-3">
 				 		<li>Album page added.</li>
 				 	</ol>
