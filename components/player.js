@@ -13,7 +13,7 @@ class Player extends Component {
 			currentTime: 0,
 			totalDuration: 0,
 			currentTrackIndex: 0,
-			repeatMode: "none", // "none", "single", "playlist"
+			repeatMode: "none",
 			isShuffling: false,
 			currentTrack: null,
 		};
@@ -70,7 +70,7 @@ class Player extends Component {
 			totalDuration: 0,
 		});
 	};
-
+	
 	changePlayList = (newPlayList) => {
 		const { currentTrackIndex } = this.state;
 		let updatedIndex = currentTrackIndex;
@@ -255,25 +255,26 @@ class Player extends Component {
 
 	return (
 		<div
-			className={`flex-shrink-0 bg-neutral-50 absolute z-30 left-0 bottom-0 ${
+			className={`flex-shrink-0 bg-neutral-50 rounded-t-xl absolute z-30 left-0 bottom-0 ${
 				isExpanded ? "expand_height h-full md:h-96" : "shrink_height"
-			} max-w-md w-full border-t border-neutral-200 rounded-t-xl overflow-auto`}
+			} max-w-md w-full border-t border-neutral-200 overflow-auto`}
 			aria-live="polite"
 		>
 			<audio ref={this.audioRef} aria-hidden="true" />
 			<div
+				key="collapsed"
 				className={`${
 					isExpanded ? "hidden" : "flex"
-				} relative w-full flex-row items-center p-2 gap-2`}
+				} fade_in relative w-full flex-row items-center p-2 gap-2`}
 			>
 				<div
-					className="absolute -z-10 inset-y-0 left-0 h-full bg-blue-400/10"
+					className="absolute -z-10 inset-y-0 left-0 h-full bg-gradient-to-r from-red-400/15 from-75% to-pink-400/20"
 					style={{ width: `${(currentTime / totalDuration) * 100}%` }}
 					aria-hidden="true"
 				></div>
 				<div
-					className={`flex-shrink-0 w-10 h-10 rounded-md overflow-hidden border-2 ${
-						isBuffering ? "border-yellow-400" : "border-neutral-200"
+					className={`flex-shrink-0 w-10 h-10 rounded-md overflow-hidden ${
+						isBuffering ? "border-2 border-yellow-400" : ""
 					} transition duration-800`}
 					aria-label="Track Thumbnail"
 				>
@@ -288,7 +289,7 @@ class Player extends Component {
 					/>
 				</div>
 				<div className="min-w-0 grow">
-					<h2 className="text-base text-neutral-800 font-bold leading-tight truncate" aria-live="assertive">
+					<h2 className="text-base text-neutral-800 font-medium leading-tight truncate" aria-live="assertive">
 						{currentTrack ? currentTrack.name : "No Track"}
 					</h2>
 					<p className="text-xs text-neutral-600 truncate" aria-hidden="true">
@@ -313,7 +314,7 @@ class Player extends Component {
 				</div>
 			</div>
 
-			<div className={`${isExpanded ? "" : "hidden"} w-full p-3`} aria-hidden={!isExpanded}>
+			<div key="expanded" className={`${isExpanded ? "" : "hidden"} fade_in w-full p-3`} aria-hidden={!isExpanded}>
 				<button
 					className="ml-auto group size-8 flex justify-center items-center rounded-full bg-neutral-100 hover:bg-yellow-400 transition-all"
 					onClick={this.handleExpand}
@@ -349,7 +350,7 @@ class Player extends Component {
 						/>
 					</div>
 					<div className="flex flex-col items-center">
-						<h2 className="max-w-72 text-neutral-800 inline-block text-lg font-bold leading-tight truncate" aria-live="assertive">
+						<h2 className="max-w-72 text-neutral-800 inline-block text-lg font-medium leading-tight truncate" aria-live="assertive">
 							{currentTrack ? currentTrack.name : "No Track"}
 						</h2>
 						<span className="text-sm text-neutral-600" aria-hidden="true">
@@ -423,7 +424,7 @@ class Player extends Component {
 					</div>
 				</div>
 				<div className="w-full mt-2">
-					<h2 className="text-sm font-bold text-neutral-800 mb-2">QUEUE</h2>
+					<h2 className="text-sm font-medium text-neutral-800 mb-2">QUEUE</h2>
 					<ul className="w-full flex flex-col gap-1">
 						{this.context.playList.length ? (
 							this.context.playList.map((track, index) => (
@@ -443,10 +444,10 @@ class Player extends Component {
 										className="w-8 h-8 rounded-md"
 									/>
 									<div className="min-w-0 grow flex flex-col">
-										<h3 className="text-sm text-neutral-800 font-semibold leading-tight truncate" aria-hidden="true">
+										<h3 className="text-sm text-neutral-800 font-normal leading-tight truncate" aria-hidden="true">
 											{track.name}
 										</h3>
-										<span className="text-xs text-neutral-600 leading-none truncate" aria-hidden="true">
+										<span className="text-xs font-light text-neutral-600 leading-none truncate" aria-hidden="true">
 											{track.artist}
 										</span>
 									</div>
@@ -463,7 +464,7 @@ class Player extends Component {
 						) : (
 							<li className="px-3 py-2 flex flex-row items-center gap-3 rounded-lg hover:bg-neutral-200 transition-colors cursor-pointer">
 								<div className="grow flex flex-col">
-									<h3 className="text-sm text-neutral-600 font-semibold leading-tight truncate">Nothing in your playlist!</h3>
+									<h3 className="text-sm text-neutral-600 font-normal leading-tight truncate">Nothing in your playlist!</h3>
 									<span className="text-xs text-neutral-400 leading-none truncate">Go find some songs to enjoy.</span>
 								</div>
 							</li>

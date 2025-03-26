@@ -1,0 +1,7 @@
+light
+normal
+medium
+semibold
+bold
+extrabold
+black

@@ -14,20 +14,20 @@ class Header extends Component {
 		const currRoute = this.props.location.pathname.split("/")[1].slice(0, 1).toUpperCase() + this.props.location.pathname.split("/")[1].slice(1);
 
 		return (
-			<header className="w-full flex justify-between items-center bg-neutral-50 border-b border-neutral-200 rounded-b-xl px-3 py-3.5">
+			<header className="w-full flex justify-between items-center bg-neutral-50 rounded-b-xl border-b border-neutral-200 px-3 py-3.5">
 				<div>
 					{currRoute !== "" ?
 						<div className="flex gap-2 items-center">
 							<button className="fade_in group flex justify-center items-center" onClick={this.navigateBack} aria-label="go back">
-								<i className="fas fa-circle-chevron-left text-lg text-neutral-600 group-hover:text-yellow-400 mr-1.5"></i>
-								<h1 className="fade_in text-xl font-black text-neutral-700">
+								<i className="fas fa-chevron-left text-lg text-yellow-400 group-hover:text-yellow-400 mr-1.5"></i>
+								<h1 className="fade_in text-xl font-bold text-neutral-700">
 									{currRoute}
 								</h1>
 							</button>
 						</div>
 					:
 					<Link to="/">
-							<h1 className="fade_in text-xl font-black text-neutral-700 flex items-center">
+							<h1 className="fade_in text-xl font-extrabold text-neutral-700 flex items-center">
 								<span>Ripple</span>
 								<span className="text-yellow-400">.</span>
 							</h1>

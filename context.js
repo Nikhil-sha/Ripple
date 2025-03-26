@@ -7,8 +7,6 @@ export class AppProvider extends Component {
 		limitForSaved: 150,
 		isOverlayVisible: false,
 		isAsideVisible: false,
-		isPopupVisible: false,
-		notifications: [],
 		homeSuggestion: {
 			picked: null,
 			results: null,
@@ -32,12 +30,10 @@ export class AppProvider extends Component {
 			albums: "https://saavn.dev/api/albums"
 		},
 		{
-			search: "https://jiosavan-api-tawny.vercel.app/api/search/songs",
-			songs: "https://jiosavan-api-tawny.vercel.app/api/songs",
+			search: "https://jiosavan-api2.vercel.app/api/search/songs",
+			songs: "https://jiosavan-api2.vercel.app/api/songs",
 		}
 	];
-
-	popupTimeout = null;
 
 	setPlayerMethods = (methods) => {
 		this.setState((prevState) => ({
@@ -91,7 +87,7 @@ export class AppProvider extends Component {
 
 	getPreferredQualityURL = (urlArray) => {
 		if (!Array.isArray(urlArray) || urlArray.length === 0) {
-			this.addToNotification("error", "No sources found to play this song!");
+			this.notify("error", "No sources found to play this song!");
 			return null; // Handle empty array case
 		}
 
@@ -102,7 +98,7 @@ export class AppProvider extends Component {
 		if (match) {
 			return match.url;
 		} else {
-			this.addToNotification("warning", "No sources for preferred quality.")
+			this.notify("warning", "No sources for preferred quality.")
 			return urlArray[urlArray.length - 1].url;
 		}
 	};
@@ -129,12 +125,8 @@ export class AppProvider extends Component {
 		});
 	};
 
-	addToNotification = (type, message) => {
+	notify = (type, message) => {
 		const date = new Date();
-		this.setState((prevState) => ({
-			notifications: [{ type: type, text: message, time: date.toLocaleString() }, ...prevState.notifications],
-		}));
-		this.showPopup();
 		if (type === "success") {
 			navigator.vibrate(40);
 		} else if (type === "error") {
@@ -142,23 +134,6 @@ export class AppProvider extends Component {
 		} else {
 			navigator.vibrate([40, 100, 40]);
 		}
-	};
-
-	showPopup = () => {
-		this.setState({
-			isPopupVisible: true,
-		});
-
-		if (this.popupTimeout) {
-			clearTimeout(this.popupTimeout);
-			this.popupTimeout = null;
-		}
-
-		this.popupTimeout = setTimeout(() => {
-			this.setState({
-				isPopupVisible: false,
-			});
-		}, 4000);
 	};
 
 	updateSearchState = (query, results) => {
@@ -208,7 +183,7 @@ export class AppProvider extends Component {
 			playList: filteredPlayList,
 		});
 
-		this.addToNotification("success", "Playlist updated!");
+		this.notify("success", "Playlist updated!");
 	};
 
 	loadSavedTracks = () => {
@@ -229,7 +204,7 @@ export class AppProvider extends Component {
 		const storedTrackList = storedData ? JSON.parse(storedData) : []; // Ensure an array
 
 		if (storedTrackList.length >= this.state.limitForSaved) {
-			this.addToNotification("error", "Limit to save songs reached! Please check your saved tracks.");
+			this.notify("error", "Limit to save songs reached! Please check your saved tracks.");
 			return;
 		}
 
@@ -240,12 +215,12 @@ export class AppProvider extends Component {
 				const updatedTrackList = [newTrack, ...storedTrackList];
 				localStorage.setItem("trackList", JSON.stringify(updatedTrackList));
 				this.loadSavedTracks();
-				this.addToNotification("success", "Track saved and Local Storage updated!");
+				this.notify("success", "Track saved and Local Storage updated!");
 			} else {
-				this.addToNotification("warning", "Track already exists in the track list.");
+				this.notify("warning", "Track already exists in the track list.");
 			}
 		} catch (error) {
-			this.addToNotification("error", "Error interacting with localStorage!");
+			this.notify("error", "Error interacting with localStorage!");
 		}
 	};
 
@@ -255,9 +230,9 @@ export class AppProvider extends Component {
 			const updatedTrackList = storedTrackList.filter(track => track.id !== songId);
 			localStorage.setItem("trackList", JSON.stringify(updatedTrackList));
 			this.loadSavedTracks();
-			this.addToNotification("success", "Track removed and Local Storage updated.");
+			this.notify("success", "Track removed and Local Storage updated.");
 		} catch (error) {
-			this.addToNotification("warning", "Error interacting with localStorage.");
+			this.notify("warning", "Error interacting with localStorage.");
 		}
 	};
 
@@ -283,8 +258,7 @@ export class AppProvider extends Component {
 					showOverlay: this.showOverlay,
 					hideOverlay: this.hideOverlay,
 					handleAsideToggle: this.handleAsideToggle,
-					addToNotification: this.addToNotification,
-					showPopup: this.showPopup,
+					notify: this.notify,
 					setHomeSuggestionResults: this.setHomeSuggestionResults,
 					setHomeSuggestionPicked: this.setHomeSuggestionPicked,
 					setSearchLimit: this.setSearchLimit,

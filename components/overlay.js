@@ -11,7 +11,7 @@ class Overlay extends Component {
 
 	render() {
 		return (
-			<section onClick={this.close} className={`fixed inset-0 z-40 transition-all duration-300 ${this.context.isOverlayVisible ? "opacity-1 backdrop-blur-md" : "opacity-0 pointer-events-none"}`} aria-hidden="true">
+			<section onClick={this.close} className={`fixed inset-0 z-40 transition-all duration-300 ${this.context.isOverlayVisible ? "opacity-1 bg-black/50" : "opacity-0 pointer-events-none"}`} aria-hidden="true">
 			</section>
 		);
 	}

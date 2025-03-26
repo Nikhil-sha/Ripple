@@ -7,7 +7,6 @@ import { HashRouter, Switch, Route } from 'react-router-dom';
 import Header from './components/header';
 import Aside from './components/aside';
 import Overlay from './components/overlay';
-import Popup from './components/popup';
 import Player from './components/player';
 
 import Home from './pages/home';
@@ -18,7 +17,6 @@ import AlbumDetails from './pages/album';
 import ArtistDetails from './pages/artist';
 import Saved from './pages/saved';
 import Settings from './pages/settings';
-import Notifications from './pages/notificationCenter';
 import NotFound from './pages/notFound';
 
 class App extends Component {
@@ -32,24 +30,27 @@ class App extends Component {
 	render() {
 		return (
 			<HashRouter>
-				{this.context.isPopupVisible && <Popup key={this.context.notifications.length} />}
-				<Overlay onClose={this.context.handleAsideToggle}/>
-				<div className="h-dvh w-screen relative flex flex-col bg-neutral-50">
-					<Aside/>
-					<Header/>
-					<Switch>
-						<Route exact path="/" component={Home}/>
-						<Route path="/search" component={Search}/>
-						<Route path="/about" component={About}/>
-						<Route path="/saved" component={Saved}/>
-						<Route path="/settings" component={Settings}/>
-						<Route path="/notifications" component={Notifications}/>
-						<Route path="/song/:songId" component={SongDetails} />
-						<Route path="/album/:albumId" component={AlbumDetails} />
-						<Route path="/artist/:artistId" component={ArtistDetails} />
-						<Route path="*" component={NotFound}/>
-					</Switch>
-					<Player/>
+				<Overlay onClose={this.context.handleAsideToggle} />
+
+				<div className="relative flex flex-col h-dvh w-screen bg-neutral-50 text-neutral-900 overflow-hidden">
+					<Aside />
+					<Header />
+
+					<main className="flex-1 overflow-y-auto">
+						<Switch>
+							<Route exact path="/" component={Home} />
+							<Route path="/search" component={Search} />
+							<Route path="/about" component={About} />
+							<Route path="/saved" component={Saved} />
+							<Route path="/settings" component={Settings} />
+							<Route path="/song/:songId" component={SongDetails} />
+							<Route path="/album/:albumId" component={AlbumDetails} />
+							<Route path="/artist/:artistId" component={ArtistDetails} />
+							<Route path="*" component={NotFound} />
+						</Switch>
+					</main>
+
+					<Player />
 				</div>
 			</HashRouter>
 		);

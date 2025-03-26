@@ -29,8 +29,8 @@ class Saved extends Component {
 	}
 
 	playAll = () => {
-		const { updatePlayList, savedTracks, addToNotification, playerMethods } = this.context;
-		savedTracks.length === 0 ? addToNotification("warning", "There are no saved tracks to play.") : updatePlayList(savedTracks);
+		const { updatePlayList, savedTracks, notify, playerMethods } = this.context;
+		savedTracks.length === 0 ? notify("warning", "There are no saved tracks to play.") : updatePlayList(savedTracks);
 		setTimeout(() => playerMethods.setTrack(0), 100);
 	};
 
@@ -55,14 +55,13 @@ class Saved extends Component {
 
 		return (
 			<section className="fade_in_up min-h-0 grow w-full overflow-y-auto px-4 md:px-8 lg:px-12 pt-4 pb-[65px]">
-				<h2 className="mb-4 text-2xl font-bold text-neutral-800">Saved Tracks</h2>
 				<div className="mb-6 max-w-lg mx-auto flex flex-col gap-4">
 					<div className="w-full flex items-center justify-center">
-						<span key={this.state.limit.occupied} className="fade_in py-5 diagonal-fractions drop-shadow-lg text-center text-9xl text-yellow-400 font-bold">
+						<span key={this.state.limit.occupied} className="fade_in py-5 diagonal-fractions drop-shadow-lg text-center text-9xl font-black text-yellow-400">
 							{this.state.limit.occupied}/{this.state.limit.total}
 						</span>
 					</div>
-					<button onClick={this.playAll} className="p-3 block text-white text-center rounded-lg bg-blue-400 hover:bg-blue-500 transition text-sm flex justify-center items-center font-semibold"><i className="fas fa-play mr-3"></i>Play All</button>
+					<button onClick={this.playAll} className="p-3 block text-white text-center rounded-lg bg-blue-400 hover:bg-blue-500 transition text-sm flex justify-center items-center font-medium"><i className="fas fa-play mr-3"></i>Play All</button>
 				</div>
 				<div className="fade_in_up max-w-md flex flex-col gap-2 mx-auto">
 					{savedTracks.length > 0 ? savedTracks.map((track, index) => (

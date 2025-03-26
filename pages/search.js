@@ -3,6 +3,9 @@ import { withRouter } from 'react-router-dom';
 import { AppContext } from '../context';
 
 import Song from '../components/song.js';
+import ErrorCard from '../components/error';
+import { checkResponseCode } from '../components/utilities/all';
+import LoadingSongs from '../components/loadings/loadingSongs';
 
 class Search extends Component {
 	static contextType = AppContext;
@@ -77,6 +80,7 @@ class Search extends Component {
 
 		try {
 			const response = await fetch(`${endpoints[1].search}?query=${query.trim()}&limit=${parseInt(this.context.searchResultsLimit || "10")}`, { signal });
+			checkResponseCode(response);
 			const data = await response.json();
 
 			if (!data.success || !data.data.results.length) {
@@ -87,7 +91,7 @@ class Search extends Component {
 				this.setErrorFalse();
 			}
 		} catch (e) {
-			this.setError("API failure. Please try again.");
+			this.setError(e.message);
 		}
 	};
 
@@ -107,30 +111,25 @@ class Search extends Component {
 							value={query}
 							onChange={this.handleInputChange}
 							placeholder="Search for songs..."
-							className="grow px-4 py-2 rounded-md bg-yellow-100/50 text-neutral-800 focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder-neutral-600 transition"
+							className="grow px-4 py-2 rounded-xl bg-white border border-neutral-200 text-neutral-800 focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder-neutral-600 transition"
 						/>
 						<button
 							onClick={this.handleSearch}
-							className="flex-shrink-0 bg-yellow-300 hover:bg-yellow-400 text-neutral-700 font-semibold px-6 py-3 rounded-md transition"
+							className="flex-shrink-0 bg-yellow-300 hover:bg-yellow-400 text-neutral-700 font-semibold px-6 py-3 rounded-xl transition"
 						>
 							<i className="fas fa-search mt-1"></i>
 						</button>
 					</div>
 
 					{loading ? (
-						<div className="fade_in w-full max-w-md flex flex-col justify-center items-center mt-4">
-							<div className="w-8 h-8 rounded-full border-4 border-yellow-400 border-r-transparent animate-spin"></div>
-							<h2 className="pt-4 text-lg font-semibold text-neutral-800">Loading…</h2>
-						</div>
+						<LoadingSongs list="8">
+							<h2 className="w-full text-lg font-normal text-neutral-800 leading-snug">Hold On…</h2>
+						</LoadingSongs>
 					) : error ? (
-						<section className="fade_in w-full max-w-md flex flex-col justify-center items-center mt-4">
-							<i className="fas fa-exclamation-circle text-2xl text-red-400"></i>
-							<h2 className="pt-2 font-bold text-lg text-center text-neutral-800">Failed to load the song!</h2>
-							<p className="text-sm text-center text-neutral-600">REASON: {errorMessage || "An unknown error occurred!"}</p>
-						</section>
+						<ErrorCard errorContext={this.state.errorMessage} />
 					) : this.context.search.results ? (
-						<div className="fade_in_up w-full max-w-md flex flex-col justify-start items-center mt-4 space-y-2">
-							<h2 className="w-full text-lg font-medium text-neutral-800 leading-snug">Results for {this.context.search.query}</h2>
+						<section className="fade_in w-full max-w-md flex flex-col justify-start items-center mt-4 space-y-2">
+							<h2 className="w-full text-lg font-normal text-neutral-800 leading-snug">Results for {this.context.search.query}</h2>
 							{this.context.search.results.map((song, index) => (
 								<Song 
 									key={index} 
@@ -143,9 +142,9 @@ class Search extends Component {
 									option="save" 
 								/>
 							))}
-						</div>
+						</section>
 					) : (
-						<p className="fade_in w-full max-w-md flex flex-col justify-center items-center mt-4 font-semibold text-neutral-600">
+						<p className="fade_in w-full max-w-md flex flex-col justify-center items-center mt-4 font-normal text-neutral-600">
 							What's on your mind today?
 						</p>
 					)}

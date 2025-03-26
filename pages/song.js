@@ -1,9 +1,11 @@
 import React, { Component, Fragment } from "react";
 import { withRouter, Link } from 'react-router-dom';
 import { AppContext } from '../context';
-import { renderLyrics } from '../components/utilities/all.js';
+import { renderLyrics, checkResponseCode } from '../components/utilities/all';
 
-import Artist from '../components/artist.js';
+import Artist from '../components/artist';
+import ErrorCard from '../components/error';
+import LoadingSpecificSong from '../components/loadings/loadingSpecificSong';
 
 class SongDetails extends Component {
 	static contextType = AppContext;
@@ -83,6 +85,7 @@ class SongDetails extends Component {
 				`${endpoints[0].songs}/${decodedSongId}`;
 
 			const response = await fetch(apiUrl, { signal });
+			checkResponseCode(response);
 			const data = await response.json();
 
 			if (!data.success) {
@@ -97,7 +100,7 @@ class SongDetails extends Component {
 			if (error.name === "AbortError") {
 				console.log("Fetch request was aborted");
 			} else {
-				this.setError("API failure");
+				this.setError(error.message);
 			}
 		}
 	};
@@ -118,9 +121,10 @@ class SongDetails extends Component {
 
 		try {
 			const { endpoints } = this.context;
-			const apiUrl = `${endpoints[0].songs}/${songId}/lyrics`;
+			const apiUrl = `${endpoints[1].songs}/${songId}/lyrics`;
 
 			const response = await fetch(apiUrl, { signal });
+			checkResponseCode(response);
 			const data = await response.json();
 
 			if (!data.success) {
@@ -133,7 +137,7 @@ class SongDetails extends Component {
 			if (error.name === "AbortError") {
 				this.setLyricsState("error", "Fetch request was aborted!");
 			} else {
-				this.setLyricsState("error", "API failure!");
+				this.setLyricsState("error", error.message);
 			}
 		}
 	};
@@ -170,20 +174,13 @@ class SongDetails extends Component {
 		let { specificSongDetails, specificSongLyrics } = this.context;
 		if (loading) {
 			return (
-				<div className="fade_in h-full w-full flex flex-col justify-center items-center">
-					<div className="w-8 h-8 rounded-full border-4 border-yellow-400 border-r-transparent animate-spin"></div>
-					<h2 className="pt-4">Loading…</h2>
-				</div>
+				<LoadingSpecificSong />
 			)
 		}
 
 		if (error) {
 			return (
-				<section className="fade_in h-full w-full flex flex-col justify-center items-center">
-					<i className="fas fa-exclamation-circle text-2xl text-red-500"></i>
-					<h2 className="pt-2 w-64 font-bold leading-none text-lg text-center">Failed to load the song!</h2>
-					<p className="w-64 leading-1 text-sm text-center text-neutral-400">REASON: {errorMessage ? errorMessage : "Don't know what happened!"}</p>
-				</section>
+				<ErrorCard errorContext={this.state.errorMessage} />
 			)
 		}
 
@@ -192,8 +189,8 @@ class SongDetails extends Component {
 				<figure className="w-full flex flex-col justify-center items-center">
 					<img src={specificSongDetails.image[specificSongDetails.image.length - 1].url} alt={specificSongDetails.name} className="w-2/4 md:w-1/4 aspect-square rounded-lg" />
 					<figcaption className="mt-4 text-center">
-						<h2 className="text-2xl text-neutral-800 font-bold mb-1">{specificSongDetails.name}</h2>
-						<p className="text-sm text-neutral-600 font-semibold">from <Link to={`/album/${specificSongDetails.album.id}`} className="hover:underline">{specificSongDetails.album.name}</Link> by <Link to={`/artist/${specificSongDetails.artists.primary[0].id}`} className="hover:underline">{specificSongDetails.artists.primary[0].name}</Link></p>
+						<h2 className="text-2xl text-neutral-800 font-medium mb-1">{specificSongDetails.name}</h2>
+						<p className="text-sm text-neutral-600 font-normal">from <Link to={`/album/${specificSongDetails.album.id}`} className="hover:underline">{specificSongDetails.album.name}</Link> by <Link to={`/artist/${specificSongDetails.artists.primary[0].id}`} className="hover:underline">{specificSongDetails.artists.primary[0].name}</Link></p>
 						<span className="leading-none text-sm text-neutral-400">{specificSongDetails.type} - {specificSongDetails.language} - {specificSongDetails.year}</span>
 						<br />
 						<span className="leading-none text-sm text-neutral-400">{specificSongDetails.playCount} Plays</span>
@@ -212,9 +209,9 @@ class SongDetails extends Component {
 
 				{/* More Info Section */}
 				<div className="w-full max-w-lg mt-8 mb-4 mx-auto">
-					<h3 className="text-lg font-semibold text-neutral-600">More about {specificSongDetails.name}</h3>
+					<h3 className="text-lg font-normal text-neutral-600">More about {specificSongDetails.name}</h3>
 					<div className="mt-3">
-						<h4 className="text-base font-semibold mb-2">Lyrics</h4>
+						<h4 className="text-base font-normal mb-2">Lyrics</h4>
 						{lyricsState.status === "loading" ? (
 							<div className="fade_in w-fit mx-auto flex justify-center items-center">
 								<div className="w-4 h-4 rounded-full border-2 border-yellow-400 border-r-transparent animate-spin"></div>
@@ -227,12 +224,12 @@ class SongDetails extends Component {
 							<p className="text-sm text-neutral-600">
 								{renderLyrics(specificSongLyrics.lyrics.lyrics)}
 							</p>
-							<p className="text-sm font-bold">{renderLyrics(specificSongLyrics.lyrics.copyright)}</p>
+							<p className="text-sm font-medium">{renderLyrics(specificSongLyrics.lyrics.copyright)}</p>
 						</div>
 						) : (
 							<button onClick={this.loadLyrics} className="px-2 py-1 text-sm bg-yellow-400 hover:bg-yellow-500 rounded-md text-neutral-600">Load lyrics</button>
 						)}
-						<h4 className="text-base font-semibold mt-4 mb-2">Artists</h4>
+						<h4 className="text-base font-normal mt-4 mb-2">Artists</h4>
 						<div className="w-full flex gap-4 mb-8 overflow-x-auto">
 							{specificSongDetails.artists.all ? specificSongDetails.artists.all.map((artist, index) => (
 								<Artist key={index} artistId={artist.id} name={artist.name} image={artist.image.length ? artist.image[artist.image.length - 1].url : ''} role={artist.role} />
@@ -241,7 +238,7 @@ class SongDetails extends Component {
 					</div>
 				</div>
 				
-				<p className="text-center text-sm font-bold text-neutral-600">
+				<p className="text-center text-sm font-medium text-neutral-600">
 					{specificSongDetails.label} - {specificSongDetails.copyright}
 				</p>
 			</section>

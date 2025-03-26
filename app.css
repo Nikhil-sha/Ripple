@@ -1,7 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
 /* -- Scrollbar -- */
 
 html,
 body {
+	font-family: "Rubik", "SF Pro Text", "Roboto", "Segoe UI", sans-serif;
+	font-style: normal;
 	overscroll-behavior-y: none;
 	scrollbar-width: none !important;
 	-ms-overflow-style: none !important;
@@ -103,18 +107,23 @@ body {
 
 /* -- Animation Classes -- */
 
+.fade_in,
+.fade_in_up {
+	will-change: opacity, transform;
+}
+
 .fade_in {
-	animation: fadeIn 0.35s ease-in-out;
+	animation: fadeIn 0.5s cubic-bezier(0.39, 0.575, 0.565, 1);
 }
 
 .fade_in_up {
-	animation: fadeInUp 0.35s ease-in-out;
+	animation: fadeInUp 0.3s cubic-bezier(0.455, 0.03, 0.515, 0.955);
 }
 
 .expand_height {
-	animation: expand 0.2s linear;
+	animation: expand 0.28s cubic-bezier(0.895, 0.03, 0.685, 0.22);
 }
 
 .shrink_height {
-	animation: shrink 0.25s linear;
+	animation: shrink 0.28s cubic-bezier(0.895, 0.03, 0.685, 0.22);
 }

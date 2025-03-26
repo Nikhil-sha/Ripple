@@ -27,7 +27,7 @@ class ErrorBoundary extends Component {
 			return (
 				<div className="h-full w-full max-w-sm mx-auto p-8 flex flex-col justify-center items-center">
     	<h1 className="text-2xl font-bold text-red-600 mb-4">Something went wrong</h1>
-   	 <p className="text-sm text-center text-neutral-200 mb-4">
+   	 <p className="text-sm text-center text-neutral-600 mb-4">
     	 {this.state.error.toString() || "An unexpected error occurred."}
     	</p>
     	<p className="text-sm text-neutral-400 mb-6">

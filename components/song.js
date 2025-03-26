@@ -53,8 +53,8 @@ class Song extends Component {
 						<img className="w-full h-full object-cover" src={coverSm} alt={`Cover for ${name} by ${artist}`} />
 					</div>
 					<div className="flex-1 min-w-0">
-						<h2 className="text-sm font-medium text-neutral-800 truncate">{name}</h2>
-						<span className="text-xs text-neutral-600 truncate">{artist}</span>
+						<h2 className="text-sm font-normal text-neutral-800 truncate mb-0.5">{name}</h2>
+						<p className="text-xs text-neutral-600 truncate">{artist}</p>
 					</div>
 				</Link>
 				<button 
