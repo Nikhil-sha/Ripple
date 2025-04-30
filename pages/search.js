@@ -103,7 +103,7 @@ class Search extends Component {
 		const { loading, error, errorMessage, query } = this.state;
 
 		return (
-			<section className="fade_in_up min-h-0 grow w-full overflow-y-auto px-4 md:px-8 lg:px-12 pt-4 pb-[65px]">
+			<section className="animate-fade-in-up min-h-0 w-full px-4 md:px-8 lg:px-12 pt-4">
 				<div className="min-h-full flex flex-col justify-start items-center">
 					<div className="flex gap-2 w-full max-w-md">
 						<input
@@ -117,7 +117,7 @@ class Search extends Component {
 							onClick={this.handleSearch}
 							className="flex-shrink-0 bg-yellow-300 hover:bg-yellow-400 text-neutral-700 font-semibold px-6 py-3 rounded-xl transition"
 						>
-							<i className="fas fa-search mt-1"></i>
+							<i className="fa-solid fa-search mt-1"></i>
 						</button>
 					</div>
 
@@ -128,7 +128,7 @@ class Search extends Component {
 					) : error ? (
 						<ErrorCard errorContext={this.state.errorMessage} />
 					) : this.context.search.results ? (
-						<section className="fade_in w-full max-w-md flex flex-col justify-start items-center mt-4 space-y-2">
+						<section className="animate-fade-in w-full max-w-md flex flex-col justify-start items-center mt-4 space-y-2">
 							<h2 className="w-full text-lg font-normal text-neutral-800 leading-snug">Results for {this.context.search.query}</h2>
 							{this.context.search.results.map((song, index) => (
 								<Song 
@@ -144,7 +144,7 @@ class Search extends Component {
 							))}
 						</section>
 					) : (
-						<p className="fade_in w-full max-w-md flex flex-col justify-center items-center mt-4 font-normal text-neutral-600">
+						<p className="animate-fade-in w-full max-w-md flex flex-col justify-center items-center mt-4 font-normal text-neutral-600">
 							What's on your mind today?
 						</p>
 					)}

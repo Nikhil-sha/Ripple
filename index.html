@@ -19,20 +19,18 @@
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 	<meta name="mobile-web-app-capable" content="yes">
 
-	<!-- SystemJS -->
-	<script src="//unpkg.com/systemjs@0.19.47/dist/system.js"></script>
-
 	<!-- Tailwind -->
 	<script src="https://cdn.tailwindcss.com/" type="text/javascript" charset="utf-8"></script>
+	<script src="./tailwind.config.js" type="text/javascript" charset="utf-8"></script>
+
 	<link rel="stylesheet" href="app.css">
 
 	<!-- Font Awesome -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" type="text/css" media="all" />
-
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
-<body class="bg-neutral-50 text-neutral-800 select-none">
-	<div id="react-app" class="h-dvh w-screen">
+<body class="bg-neutral-50 text-neutral-800 h-screen w-screen select-none">
+	<div id="react-app" class="h-dvh w-full">
 		<div class="relative h-full w-full flex flex-col gap-8 justify-center items-center">
 			<div id="timeout" class="hidden w-fit flex flex-col gap-1 justify-center items-center">
 				<p class="text-sm text-neutral-700 font-normal">Still waiting? Even a snail would be faster.</p>
@@ -46,7 +44,7 @@
 			</div>
 
 			<div class="flex gap-3 justify-center items-center">
-				<div class="size-6 border-4 border-blue-400 border-r-transparent rounded-full animate-spin"></div>
+				<span class="fa-solid fa-compact-disc animate-ping"></span>
 				<h4 class="text-lg">Loading…</h4>
 			</div>
 			<div class="max-w-64">
@@ -54,34 +52,24 @@
 				<i id="author" class="text-xs block text-right text-neutral-800 font-bold"></i>
 			</div>
 
-			<div class="absolute bottom-5 right-5 w-fit flex flex-col gap-2 items-end">
-				<p class="bg-yellow-400 p-2 py-1 shadow-lg rounded text-sm font-normal">
-					<i class="fas fa-mobile-screen-button mr-1.5"></i>Mobile Optimized
+			<div class="absolute bottom-5 inset-x-auto w-fit flex flex-col gap-2 items-center">
+				<p class="text-sm font-normal">
+					<i class="fa-solid fa-mobile mr-1.5"></i>Best on Mobile Devices
 				</p>
-				<a class="block bg-yellow-400 p-2 py-1 shadow-lg rounded text-sm font-medium hover:text-blue-500" href="https://nikhil-sha.github.io/">
+				<a class="text-sm font-normal hover:underline" href="https://nikhil-sha.github.io/">
 					Made by Nikhil Sharma
 				</a>
 			</div>
 		</div>
 	</div>
 
-	<!-- Scripts -->
-	<script src="config.js"></script>
-	<script type="text/javascript" charset="utf-8">
-		var quoteData = null;
+	<aside id="popupContainer" role="status" aria-live="polite" class="fixed top-4 z-50 flex flex-col items-center gap-2 h-fit w-full pointer-events-none">
+	</aside>
 
-		const quote = document.getElementById("quote");
-		const author = document.getElementById("author");
-		fetch("https://quotes-api-self.vercel.app/quote")
-			.then(res => res.json())
-			.then((data) => {
-				if (quote && author) {
-					quote.innerText = data.quote;
-					author.innerText = "- " + data.author;
-				}
-				quoteData = data;
-			})
-	</script>
+	<!-- Scripts -->
+	<script src="global.js"></script>
+	<script defer src="https://unpkg.com/systemjs@0.19.47/dist/system.js"></script>
+	<script defer src="config.js"></script>
 </body>
 
 </html>

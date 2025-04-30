@@ -1,5 +1,6 @@
 import React, { Component, createRef } from "react";
 import { AppContext } from '../context';
+import { renderText } from './utilities/all';
 
 class Player extends Component {
 	static contextType = AppContext;
@@ -34,6 +35,32 @@ class Player extends Component {
 		if (this.context.playList.length !== 0) this.setTrack(0);
 
 		this.context.setPlayerMethods({ setTrack: this.setTrack });
+
+		if ('mediaSession' in navigator) {
+			navigator.mediaSession.setActionHandler('play', () => {
+				this.togglePlayPause();
+			});
+
+			navigator.mediaSession.setActionHandler('pause', () => {
+				this.togglePlayPause();
+			});
+
+			navigator.mediaSession.setActionHandler('nexttrack', () => {
+				this.playNextTrack();
+			});
+
+			navigator.mediaSession.setActionHandler('previoustrack', () => {
+				this.playPreviousTrack();
+			});
+
+			navigator.mediaSession.setActionHandler('seekbackward', (details) => {
+				this.audioRef.current.currentTime = Math.max(audio.currentTime - (details.seekOffset || 10), 0);
+			});
+
+			navigator.mediaSession.setActionHandler('seekforward', (details) => {
+				this.audioRef.current.currentTime = Math.min(audio.currentTime + (details.seekOffset || 10), audio.duration);
+			});
+		}
 	}
 
 	componentWillUnmount() {
@@ -180,6 +207,16 @@ class Player extends Component {
 
 		this.audioRef.current.src = this.context.getPreferredQualityURL(track.sources);
 		this.audioRef.current.play();
+
+		if ('mediaSession' in navigator) {
+			navigator.mediaSession.metadata = new MediaMetadata({
+				title: track.name || 'Unknown Title',
+				artist: track.artist || 'Unknown Artist',
+				artwork: [
+					{ src: track.coverBg || './assets/images/icons/icon-512x512.png', sizes: '512x512', type: 'image/jpeg' }
+    ]
+			});
+		}
 	};
 
 	seekTrack = (event) => {
@@ -256,7 +293,7 @@ class Player extends Component {
 	return (
 		<div
 			className={`flex-shrink-0 bg-neutral-50 rounded-t-xl absolute z-30 left-0 bottom-0 ${
-				isExpanded ? "expand_height h-full md:h-96" : "shrink_height"
+				isExpanded ? "animate-expand-height h-full md:h-96" : "animate-shrink-height"
 			} max-w-md w-full border-t border-neutral-200 overflow-auto`}
 			aria-live="polite"
 		>
@@ -265,10 +302,10 @@ class Player extends Component {
 				key="collapsed"
 				className={`${
 					isExpanded ? "hidden" : "flex"
-				} fade_in relative w-full flex-row items-center p-2 gap-2`}
+				} animate-fade-in relative w-full flex-row items-center p-2 gap-2`}
 			>
 				<div
-					className="absolute -z-10 inset-y-0 left-0 h-full bg-gradient-to-r from-red-400/15 from-75% to-pink-400/20"
+					className="absolute -z-10 bottom-0 left-0 h-2 bg-pink-400 blur-md translate-y-1/2"
 					style={{ width: `${(currentTime / totalDuration) * 100}%` }}
 					aria-hidden="true"
 				></div>
@@ -290,37 +327,44 @@ class Player extends Component {
 				</div>
 				<div className="min-w-0 grow">
 					<h2 className="text-base text-neutral-800 font-medium leading-tight truncate" aria-live="assertive">
-						{currentTrack ? currentTrack.name : "No Track"}
+						{currentTrack ? renderText(currentTrack.name) : "No Track"}
 					</h2>
 					<p className="text-xs text-neutral-600 truncate" aria-hidden="true">
-						{currentTrack ? currentTrack.artist : ""}
+						{currentTrack ? renderText(currentTrack.artist) : ""}
 					</p>
 				</div>
-				<div className="inline-flex gap-4">
+				<div className="inline-flex gap-2">
 					<button
 						className="group size-8 rounded-full bg-neutral-100 flex justify-center items-center text-neutral-700 hover:bg-yellow-400 transition-all"
 						onClick={this.togglePlayPause}
 						aria-label={isPlaying ? "Pause" : "Play"}
 					>
-						<i className={`fas ${isPlaying ? "fa-pause" : "ml-0.5 fa-play"} group-hover:text-neutral-100`} />
+						<i className={`fa-solid fa-${isPlaying ? "pause" : "play ml-0.5"} group-hover:text-neutral-100`} />
+					</button>
+					<button
+						className="group size-8 rounded-full bg-neutral-100 flex justify-center items-center text-neutral-700 hover:bg-yellow-400 transition-all"
+						onClick={this.playNextTrack}
+						aria-label="Play next track"
+					>
+						<i className="fa-solid fa-forward-step group-hover:text-neutral-100" />
 					</button>
 					<button
 						className="group size-8 rounded-full bg-neutral-100 flex justify-center items-center text-neutral-700 hover:bg-yellow-400 transition-all"
 						onClick={this.handleExpand}
 						aria-label="Expand player"
 					>
-						<i className="fas fa-chevron-up group-hover:text-neutral-100" />
+						<i className="fa-solid fa-chevron-up group-hover:text-neutral-100" />
 					</button>
 				</div>
 			</div>
 
-			<div key="expanded" className={`${isExpanded ? "" : "hidden"} fade_in w-full p-3`} aria-hidden={!isExpanded}>
+			<div key="expanded" className={`${isExpanded ? "" : "hidden"} animate-fade-in w-full p-3`} aria-hidden={!isExpanded}>
 				<button
 					className="ml-auto group size-8 flex justify-center items-center rounded-full bg-neutral-100 hover:bg-yellow-400 transition-all"
 					onClick={this.handleExpand}
 					aria-label="Collapse player"
 				>
-					<i className="fas fa-chevron-down text-neutral-700 group-hover:text-neutral-100" />
+					<i className="fa-solid fa-chevron-down text-neutral-700 group-hover:text-neutral-100" />
 				</button>
 				<div className="w-full mt-6">
 					<div
@@ -351,10 +395,10 @@ class Player extends Component {
 					</div>
 					<div className="flex flex-col items-center">
 						<h2 className="max-w-72 text-neutral-800 inline-block text-lg font-medium leading-tight truncate" aria-live="assertive">
-							{currentTrack ? currentTrack.name : "No Track"}
+							{currentTrack ? renderText(currentTrack.name) : "No Track"}
 						</h2>
 						<span className="text-sm text-neutral-600" aria-hidden="true">
-							{currentTrack ? currentTrack.artist : ""}
+							{currentTrack ? renderText(currentTrack.artist) : ""}
 						</span>
 						<div className="w-72 mt-4">
 							<input
@@ -381,12 +425,12 @@ class Player extends Component {
 								aria-label={`Repeat mode: ${repeatMode}`}
 							>
 								<i
-									className={`fas ${
+									className={`fa-solid fa-${
 										repeatMode === "single"
-											? "fa-repeat text-blue-400"
+											? "repeat text-blue-400"
 											: repeatMode === "playlist"
-											? "fa-rotate text-blue-400"
-											: "fa-repeat text-neutral-700"
+											? "infinity text-blue-400"
+											: "repeat text-neutral-700"
 									}`}
 								/>
 							</button>
@@ -395,21 +439,21 @@ class Player extends Component {
 								onClick={this.playPreviousTrack}
 								aria-label="Previous track"
 							>
-								<i className="fas fa-backward-step" />
+								<i className="fa-solid fa-backward-step" />
 							</button>
 							<button
 								className="text-4xl p-3 text-yellow-400"
 								onClick={this.togglePlayPause}
 								aria-label={isPlaying ? "Pause track" : "Play track"}
 							>
-								<i className={`fas ${isPlaying ? "fa-pause-circle" : "fa-play-circle"}`} />
+								<i className={`fa-solid fa-${isPlaying ? "pause" : "play"}-circle`} />
 							</button>
 							<button
 								className="text-xl text-neutral-700 p-2"
 								onClick={this.playNextTrack}
 								aria-label="Next track"
 							>
-								<i className="fas fa-forward-step" />
+								<i className="fa-solid fa-forward-step" />
 							</button>
 							<button
 								className="text-lg text-neutral-700 p-2"
@@ -417,7 +461,7 @@ class Player extends Component {
 								aria-label={`Shuffle: ${isShuffling ? "On" : "Off"}`}
 							>
 								<i
-									className={`fas fa-random ${isShuffling ? "text-blue-400" : ""}`}
+									className={`fa-solid fa-shuffle ${isShuffling ? "text-blue-400" : ""}`}
 								/>
 							</button>
 						</div>
@@ -445,14 +489,14 @@ class Player extends Component {
 									/>
 									<div className="min-w-0 grow flex flex-col">
 										<h3 className="text-sm text-neutral-800 font-normal leading-tight truncate" aria-hidden="true">
-											{track.name}
+											{renderText(track.name)}
 										</h3>
 										<span className="text-xs font-light text-neutral-600 leading-none truncate" aria-hidden="true">
-											{track.artist}
+											{renderText(track.artist)}
 										</span>
 									</div>
 									<span
-										className="size-8 fas fa-times flex justify-center items-center rounded-full bg-neutral-100 text-neutral-700 hover:bg-red-400 hover:text-neutral-100 transition-all"
+										className="size-8 fa-solid fa-times flex justify-center items-center rounded-full bg-neutral-100 text-neutral-700 hover:bg-red-400 hover:text-neutral-100 transition-all"
 										onClick={(e) => {
 											e.stopPropagation();
 											this.removeTrack(index);

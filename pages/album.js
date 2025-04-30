@@ -112,7 +112,7 @@ class AlbumDetails extends Component {
 		}
 
 		return (
-			<section className="fade_in_up min-h-0 grow w-full overflow-y-auto px-4 md:px-8 lg:px-12 pt-4 pb-[65px]">
+			<section className="animate-fade-in-up min-h-0 w-full px-4 md:px-8 lg:px-12 pt-4">
 				<figure className="w-full flex flex-col justify-center items-center">
 					<img src={specificAlbumDetails.image[specificAlbumDetails.image.length - 1].url} alt={specificAlbumDetails.name} className="w-2/4 md:w-1/4 aspect-square rounded-lg" />
 					<figcaption className="mt-4 text-center">

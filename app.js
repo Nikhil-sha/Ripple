@@ -5,8 +5,6 @@ import { AppProvider, AppContext } from './context';
 import { HashRouter, Switch, Route } from 'react-router-dom';
 
 import Header from './components/header';
-import Aside from './components/aside';
-import Overlay from './components/overlay';
 import Player from './components/player';
 
 import Home from './pages/home';
@@ -30,13 +28,10 @@ class App extends Component {
 	render() {
 		return (
 			<HashRouter>
-				<Overlay onClose={this.context.handleAsideToggle} />
-
-				<div className="relative flex flex-col h-dvh w-screen bg-neutral-50 text-neutral-900 overflow-hidden">
-					<Aside />
+				<div className="relative flex flex-col h-full w-full bg-neutral-50 text-neutral-900 overflow-hidden">
 					<Header />
 
-					<main className="flex-1 overflow-y-auto">
+					<main className="min-h-0 grow overflow-y-auto pb-[65px]">
 						<Switch>
 							<Route exact path="/" component={Home} />
 							<Route path="/search" component={Search} />

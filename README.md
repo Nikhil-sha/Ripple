@@ -15,121 +15,89 @@ The source code for Ripple is available on GitHub:
 
 ---
 
-## ChangeLog
+## 📦 ChangeLog
 
-### Version 2.7.0 (current)
-**Release Notes:**  
-- Minor improvement in APIs.
-- Major improvements in UI.
+### Version 2.8.0 (Current)
+- Major improvements in UI  
+- Added **Media Session API** for better UX  
+- Pagination for saved tracks  
+- Improved notification popup  
 
 ---
 
-### Version 2.6.0 (stable)
-**Release Notes:**  
-- Album page added.
+### Version 2.7.0
+- Minor improvements in API  
+- Major UI enhancements  
+
+---
+
+### Version 2.6.0
+- Added **Album** page  
 
 ---
 
 ### Version 2.5.1
-**Release Notes:**  
-- lyrics support.
+- Added **Lyrics** support  
 
 ---
 
 ### Version 2.5.0
-**Release Notes:**  
-- Improved UI.
+- UI improvements  
 
 ---
 
-### Version 2.4.0 
-**Release Notes:**  
-- Artist page added.
+### Version 2.4.0
+- Added **Artist** page  
 
 ---
 
-### Version 2.3.0 (stable?
-**Release Notes:**  
-- Improved UI.
-- Suggestions according to saved tracks, on Home page.
-- Improved Haptic feedback.
+### Version 2.3.0 (Stable)
+- UI improvements  
+- Suggestions on Home page based on saved tracks  
+- Enhanced **Haptic feedback**  
 
 ---
 
 ### Version 2.2.1
-**Release Notes:**  
-- New **Search results limit** option added in Settings.
-- Haptic feedback added.
+- Added **Search results limit** option in Settings  
+- Integrated haptic feedback for a better experience  
 
 ---
 
 ### Version 2.2.0
-**Release Notes:**  
-- New **Quality Preference** added.
-- New **Settings** section added.
-- Improved UI.
+- Added **Quality Preference** setting  
+- Introduced a new **Settings** section  
+- UI improvements  
 
 ---
 
-### Version 2.1.3 (stable)
-**Release Notes:**  
-- Changed Home page layout.
+### Version 2.1.3
+- Updated **Home page layout**  
 
 ---
 
 ### Version 2.1.2
-**Release Notes:**  
-- Highlight current track in player.
+- Highlighted **current playing track** in the player  
 
 ---
 
-### Version 2.2.1 (Current - Stable)  
-**Release Notes:**  
-- Added **Search results limit** option in Settings.  
-- Integrated haptic feedback for better user experience.  
+### Version 2.1.1
+- Added **Notification Center**  
+- Disabled scroll-to-refresh  
 
 ---
 
-### Version 2.2.0  
-**Release Notes:**  
-- Introduced **Quality Preference** setting.  
-- Added a new **Settings** section.  
-- Improved user interface (UI).  
+### Version 2.1.0
+- Direct song playback from search page  
+- Save songs to **Local Storage**  
+- Added **Saved Songs** page  
 
 ---
 
-### Version 2.1.3 (Stable)  
-**Release Notes:**  
-- Updated **Home page layout** for better usability.  
-
----
-
-### Version 2.1.2  
-**Release Notes:**  
-- **Current track highlighting** added in the player.  
-
----
-
-### Version 2.1.1  
-**Release Notes:**  
-- Implemented **Notification Center** for updates.  
-- **Scroll to refresh** feature disabled.  
-
----
-
-### Version 2.1.0  
-**Release Notes:**  
-- Users can **play songs directly** from the search page.  
-- Users can **save songs to Local Storage** from both the search and details pages.  
-- A **Saved page** has been added to access stored songs.  
-
----
-
-### Version 2.0.0  
-**Release Notes:**  
-- Implemented **music search functionality**.  
-- Added **detailed song pages** with metadata.  
-- Users can **play songs** from the details page.  
+### Version 2.0.0
+- Introduced **music search**  
+- Added **song detail pages** with metadata  
+- Streaming support from detail pages  
 
 ---
 
@@ -160,11 +128,15 @@ Developers can refer to the official API documentation for further customization
 
 ---
 
-## Futures In Progress  
+## Features In Progress  
 
-- **Playlist creation and management**  
-- **Customizable themes and UI improvements**  
+- **Local Playlist creation and management**  
+- **Customizable UI**  
 
 ---
 
 For any issues or feature requests, please submit an issue on GitHub. 🚀  
+
+`
+Note:- All updates are being pushed to the main branch.
+`

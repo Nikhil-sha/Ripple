@@ -18,7 +18,7 @@ class Settings extends Component {
 
 	render() {
 		return (
-			<section className="fade_in_up min-h-0 grow w-full overflow-y-auto px-4 md:px-8 lg:px-12 pt-4 pb-[65px]">
+			<section className="animate-fade-in-up min-h-0 w-full px-4 md:px-8 lg:px-12 pt-4">
 				<div className="max-w-lg mx-auto">
 					<div className="w-full flex justify-between items-center gap-4 mb-4">
 						<h3 className="text-sm font-medium text-neutral-700 leading-snug mb-1">Audio Quality</h3>

@@ -1,12 +1,11 @@
 import React, { createContext, Component } from 'react';
+import { secureURL } from './components/utilities/all';
 
 export const AppContext = createContext();
 
 export class AppProvider extends Component {
 	state = {
 		limitForSaved: 150,
-		isOverlayVisible: false,
-		isAsideVisible: false,
 		homeSuggestion: {
 			picked: null,
 			results: null,
@@ -96,42 +95,23 @@ export class AppProvider extends Component {
 		const match = urlArray.find(urlObj => urlObj.quality === preferred);
 
 		if (match) {
-			return match.url;
+			return secureURL(match.url);
 		} else {
 			this.notify("warning", "No sources for preferred quality.")
-			return urlArray[urlArray.length - 1].url;
+			return secureURL(urlArray[urlArray.length - 1].url);
 		}
-	};
-
-	showOverlay = () => {
-		this.setState({
-			isOverlayVisible: true,
-		});
-	};
-
-	hideOverlay = () => {
-		this.setState({
-			isOverlayVisible: false,
-		});
-	};
-
-	handleAsideToggle = () => {
-		this.setState((prevState) => {
-			const shouldShowOverlay = !prevState.isAsideVisible; // Toggle state
-			return {
-				isAsideVisible: shouldShowOverlay,
-				isOverlayVisible: shouldShowOverlay, // Sync overlay with aside
-			};
-		});
 	};
 
 	notify = (type, message) => {
 		const date = new Date();
 		if (type === "success") {
+			showPopup({ colour: "green", text: message })
 			navigator.vibrate(40);
 		} else if (type === "error") {
+			showPopup({ colour: "red", text: message })
 			navigator.vibrate([40, 100, 60]);
 		} else {
+			showPopup({ colour: "yellow", text: message })
 			navigator.vibrate([40, 100, 40]);
 		}
 	};
@@ -255,9 +235,6 @@ export class AppProvider extends Component {
 					...this.state,
 					endpoints: this.endpoints,
 					playerRef: this.playerRef,
-					showOverlay: this.showOverlay,
-					hideOverlay: this.hideOverlay,
-					handleAsideToggle: this.handleAsideToggle,
 					notify: this.notify,
 					setHomeSuggestionResults: this.setHomeSuggestionResults,
 					setHomeSuggestionPicked: this.setHomeSuggestionPicked,
