@@ -15,7 +15,7 @@ const characterCode = {
 const checkResponseCode = (response) => {
 	if (!response.ok) {
 		if (response.status >= 500) {
-			throw new Error("Oops! A server error occurred, please try again later.");
+			throw new Error("Oops! A server error occurred, maybe the api hit the limit. please try again later.");
 		} else if (response.status >= 400) {
 			throw new Error("Oops! There's nothing to see here.");
 		} else {
