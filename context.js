@@ -25,6 +25,7 @@ export class AppProvider extends Component {
 	endpoints = [
 		{
 			songs: "https://saavn.dev/api/songs",
+			search: "https://saavn.dev/api/search/songs",
 			artists: "https://saavn.dev/api/artists",
 			albums: "https://saavn.dev/api/albums"
 		},

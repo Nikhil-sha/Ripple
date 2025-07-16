@@ -79,7 +79,7 @@ class Search extends Component {
 		const { signal } = this.abortController;
 
 		try {
-			const response = await fetch(`${endpoints[1].search}?query=${query.trim()}&limit=${parseInt(this.context.searchResultsLimit || "10")}`, { signal });
+			const response = await fetch(`${endpoints[0].search}?query=${query.trim()}&limit=${parseInt(this.context.searchResultsLimit || "10")}`, { signal });
 			checkResponseCode(response);
 			const data = await response.json();
 

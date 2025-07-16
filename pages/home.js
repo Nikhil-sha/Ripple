@@ -85,7 +85,7 @@ class Home extends Component {
 
 		try {
 			const { endpoints } = this.context;
-			const apiUrl = `${endpoints[1].songs}/${songId}/suggestions?limit=20`;
+			const apiUrl = `${endpoints[0].songs}/${songId}/suggestions?limit=20`;
 
 			const response = await fetch(apiUrl, { signal });
 			checkResponseCode(response);
