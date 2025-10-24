@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from 'react';
 
 class About extends Component {
-	render() {
-		return (
-			<section className="animate-fade-in-up w-full px-4 pt-4 md:px-8 lg:px-12">
+  render() {
+    return (
+      <section className="animate-fade-in-up w-full px-4 pt-4 md:px-8 lg:px-12">
 				<article className="mb-8 max-w-lg mx-auto">
 					<h1 className="text-xl font-medium text-neutral-800 leading-snug mb-2">
 						<i className="text-base fa-solid fa-hand text-yellow-400 mr-2.5"></i>
@@ -24,8 +24,14 @@ class About extends Component {
 					</h2>
 
 					{[
+					  {
+							version: '2.9.0',
+							changes: [
+								'Added <strong>Download</strong> functionality.',
+							]
+						},
 						{
-							version: '2.8.0 (current)',
+							version: '2.8.0',
 							changes: [
 								'Major improvements in UI.',
 								'Added <strong>Media Session</strong> JavaScript API for better UX.',
@@ -122,8 +128,8 @@ class About extends Component {
 					))}
 				</article>
 			</section>
-		);
-	}
+    );
+  }
 }
 
 export default About;

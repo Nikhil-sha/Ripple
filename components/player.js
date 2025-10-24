@@ -1,6 +1,6 @@
 import React, { Component, createRef } from "react";
 import { AppContext } from '../context';
-import { renderText } from './utilities/all';
+import { renderText, Downloader } from './utilities/all';
 
 class Player extends Component {
 	static contextType = AppContext;
@@ -17,6 +17,7 @@ class Player extends Component {
 			repeatMode: "none",
 			isShuffling: false,
 			currentTrack: null,
+			downloader: null,
 		};
 		this.audioRef = createRef();
 	}
@@ -217,6 +218,13 @@ class Player extends Component {
     ]
 			});
 		}
+	};
+	
+	downloadTrack = async (indexToDownload) => {
+		if (!this.context.playList[indexToDownload]) return;
+
+		const trackToDownload = this.context.playList[indexToDownload];
+		this.context.downloadMethod(this.context.getPreferredQualityURL(trackToDownload.sources), `${renderText(trackToDownload.name)} - ${renderText(trackToDownload.artist)}.m4a`, trackToDownload.coverSm);
 	};
 
 	seekTrack = (event) => {
@@ -487,7 +495,7 @@ class Player extends Component {
 										alt={`Track Thumbnail ${track.name}`}
 										className="w-8 h-8 rounded-md"
 									/>
-									<div className="min-w-0 grow flex flex-col">
+									<div className="min-w-0 grow inline-flex flex-col">
 										<h3 className="text-sm text-neutral-800 font-normal leading-tight truncate" aria-hidden="true">
 											{renderText(track.name)}
 										</h3>
@@ -496,7 +504,15 @@ class Player extends Component {
 										</span>
 									</div>
 									<span
-										className="size-8 fa-solid fa-times flex justify-center items-center rounded-full bg-neutral-100 text-neutral-700 hover:bg-red-400 hover:text-neutral-100 transition-all"
+										className="flex-shrink-0 size-8 fa-solid fa-download inline-flex justify-center items-center rounded-full bg-neutral-100 text-neutral-700 hover:bg-yellow-400 hover:text-neutral-100 transition-all"
+										onClick={(e) => {
+											e.stopPropagation();
+											this.downloadTrack(index);
+										}}
+										aria-label={`Download ${track.name}`}
+									/>
+									<span
+										className="flex-shrink-0 size-8 fa-solid fa-times inline-flex justify-center items-center rounded-full bg-neutral-100 text-neutral-700 hover:bg-red-400 hover:text-neutral-100 transition-all"
 										onClick={(e) => {
 											e.stopPropagation();
 											this.removeTrack(index);

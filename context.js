@@ -10,7 +10,10 @@ export class AppProvider extends Component {
 			picked: null,
 			results: null,
 		},
-		search: { query: null, results: null },
+		search: {
+			query: null,
+			results: null
+		},
 		specificSongLyrics: null,
 		specificSongDetails: null,
 		specificAlbumDetails: null,
@@ -20,41 +23,60 @@ export class AppProvider extends Component {
 		preferredQuality: null,
 		searchResultsLimit: null,
 		playerMethods: {},
+		downloadMethod: null,
+		downloadDir: null,
 	};
-
+	
 	endpoints = [
-		{
-			songs: "https://saavn.dev/api/songs",
-			search: "https://saavn.dev/api/search/songs",
-			artists: "https://saavn.dev/api/artists",
-			albums: "https://saavn.dev/api/albums"
-		},
-		{
-			search: "https://jiosavan-api2.vercel.app/api/search/songs",
-			songs: "https://jiosavan-api2.vercel.app/api/songs",
-		}
-	];
-
+	{
+		songs: "https://saavn.sumit.co/api/songs",
+		search: "https://saavn.sumit.co/api/search/songs",
+		artists: "https://saavn.sumit.co/api/artists",
+		albums: "https://saavn.sumit.co/api/albums"
+	},
+	{
+		search: "https://jiosavan-api2.vercel.app/api/search/songs",
+		songs: "https://jiosavan-api2.vercel.app/api/songs",
+	}];
+	
 	setPlayerMethods = (methods) => {
 		this.setState((prevState) => ({
 			playerMethods: { ...prevState.playerMethods, ...methods },
 		}));
 	};
-
+	
+	setDownloadMethod = (method) => {
+		this.setState({
+			downloadMethod: method,
+		});
+	};
+	
+	ensureDirectoryAccess = async () => {
+		if (this.state.downloadDir) return;
+		
+		this.notify('warning', 'Requesting directory access...');
+		this.setState({
+			downloadDir: await window.showDirectoryPicker()
+		});
+		const permission = await this.state.downloadDir.requestPermission({ mode: 'readwrite' });
+		if (permission !== 'granted') throw new Error('Permission not granted');
+		this.notify('success', 'Directory ready.');
+	}
+	
 	setSearchLimit = (limit) => {
 		let final;
-
+		
 		if (limit === "stored") {
 			final = localStorage.getItem("searchResultsLimit") || "5";
 		} else {
 			final = limit;
 		}
-
+		
 		// Update localStorage only if different
 		if (localStorage.getItem("searchResultsLimit") !== final) {
 			localStorage.setItem("searchResultsLimit", final);
 		}
-
+		
 		// Update state only if different
 		if (this.state.searchResultsLimit !== final) {
 			this.setState({
@@ -62,21 +84,21 @@ export class AppProvider extends Component {
 			});
 		}
 	};
-
+	
 	setPreferredQuality = (quality) => {
 		let final;
-
+		
 		if (quality === "stored") {
 			final = localStorage.getItem("preferredQuality") || "160kbps";
 		} else {
 			final = quality;
 		}
-
+		
 		// Update localStorage only if different
 		if (localStorage.getItem("preferredQuality") !== final) {
 			localStorage.setItem("preferredQuality", final);
 		}
-
+		
 		// Update state only if different
 		if (this.state.preferredQuality !== final) {
 			this.setState({
@@ -84,17 +106,17 @@ export class AppProvider extends Component {
 			});
 		}
 	};
-
+	
 	getPreferredQualityURL = (urlArray) => {
 		if (!Array.isArray(urlArray) || urlArray.length === 0) {
 			this.notify("error", "No sources found to play this song!");
 			return null; // Handle empty array case
 		}
-
+		
 		const preferred = this.state.preferredQuality;
-
+		
 		const match = urlArray.find(urlObj => urlObj.quality === preferred);
-
+		
 		if (match) {
 			return secureURL(match.url);
 		} else {
@@ -102,7 +124,7 @@ export class AppProvider extends Component {
 			return secureURL(urlArray[urlArray.length - 1].url);
 		}
 	};
-
+	
 	notify = (type, message) => {
 		const date = new Date();
 		if (type === "success") {
@@ -116,7 +138,7 @@ export class AppProvider extends Component {
 			navigator.vibrate([40, 100, 40]);
 		}
 	};
-
+	
 	updateSearchState = (query, results) => {
 		this.setState({
 			search: {
@@ -125,31 +147,31 @@ export class AppProvider extends Component {
 			},
 		});
 	};
-
+	
 	setSpecificSongLyrics = (songId, songLyrics) => {
 		this.setState({
 			specificSongLyrics: { id: songId, lyrics: songLyrics },
 		});
 	};
-
+	
 	setSpecificSongDetails = (newData) => {
 		this.setState({
 			specificSongDetails: newData,
 		});
 	};
-
+	
 	setSpecificAlbumDetails = (newData) => {
 		this.setState({
 			specificAlbumDetails: newData,
 		});
 	};
-
+	
 	setSpecificArtistDetails = (newData) => {
 		this.setState({
 			specificArtistDetails: newData,
 		});
 	};
-
+	
 	updatePlayList = (newPlayList) => {
 		const uniqueTrackIds = new Set();
 		const filteredPlayList = newPlayList.filter(track => {
@@ -159,14 +181,14 @@ export class AppProvider extends Component {
 			}
 			return false;
 		});
-
+		
 		this.setState({
 			playList: filteredPlayList,
 		});
-
+		
 		this.notify("success", "Playlist updated!");
 	};
-
+	
 	loadSavedTracks = () => {
 		return new Promise((resolve) => {
 			const savedTracksInStorage = JSON.parse(localStorage.getItem("trackList"));
@@ -179,19 +201,19 @@ export class AppProvider extends Component {
 			}
 		});
 	};
-
+	
 	updateLocalStorage = (newTrack) => {
 		const storedData = localStorage.getItem("trackList");
 		const storedTrackList = storedData ? JSON.parse(storedData) : []; // Ensure an array
-
+		
 		if (storedTrackList.length >= this.state.limitForSaved) {
 			this.notify("error", "Limit to save songs reached! Please check your saved tracks.");
 			return;
 		}
-
+		
 		try {
 			const isDuplicate = storedTrackList.some(track => track.id === newTrack.id);
-
+			
 			if (!isDuplicate) {
 				const updatedTrackList = [newTrack, ...storedTrackList];
 				localStorage.setItem("trackList", JSON.stringify(updatedTrackList));
@@ -204,7 +226,7 @@ export class AppProvider extends Component {
 			this.notify("error", "Error interacting with localStorage!");
 		}
 	};
-
+	
 	removeTrackFromLocalStorage = (songId) => {
 		try {
 			const storedTrackList = JSON.parse(localStorage.getItem("trackList") || []);
@@ -216,32 +238,32 @@ export class AppProvider extends Component {
 			this.notify("warning", "Error interacting with localStorage.");
 		}
 	};
-
+	
 	setHomeSuggestionResults = (results) => {
 		this.setState((prevState) => ({
 			homeSuggestion: { picked: prevState.homeSuggestion.picked, results: results },
 		}));
 	};
-
+	
 	setHomeSuggestionPicked = (song) => {
 		this.setState({
 			homeSuggestion: { picked: song, results: null },
 		});
 	};
-
+	
 	render() {
 		return (
 			<AppContext.Provider
 				value={{
 					...this.state,
 					endpoints: this.endpoints,
-					playerRef: this.playerRef,
 					notify: this.notify,
 					setHomeSuggestionResults: this.setHomeSuggestionResults,
 					setHomeSuggestionPicked: this.setHomeSuggestionPicked,
 					setSearchLimit: this.setSearchLimit,
 					loadSavedTracks: this.loadSavedTracks,
 					setPlayerMethods: this.setPlayerMethods,
+					setDownloadMethod: this.setDownloadMethod,
 					setPreferredQuality: this.setPreferredQuality,
 					getPreferredQualityURL: this.getPreferredQualityURL,
 					setSpecificSongLyrics: this.setSpecificSongLyrics,
@@ -252,6 +274,7 @@ export class AppProvider extends Component {
 					updatePlayList: this.updatePlayList,
 					updateLocalStorage: this.updateLocalStorage,
 					removeTrackFromLocalStorage: this.removeTrackFromLocalStorage,
+					ensureDirectoryAccess: this.ensureDirectoryAccess,
 				}}
 			>
 				{this.props.children}

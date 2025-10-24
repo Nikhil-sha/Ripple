@@ -6,6 +6,7 @@ import { HashRouter, Switch, Route } from 'react-router-dom';
 
 import Header from './components/header';
 import Player from './components/player';
+import Downloader from './components/downloader';
 
 import Home from './pages/home';
 import Search from './pages/search';
@@ -32,6 +33,8 @@ class App extends Component {
 					<Header />
 
 					<main className="min-h-0 grow overflow-y-auto pb-[65px]">
+						<Downloader />
+						
 						<Switch>
 							<Route exact path="/" component={Home} />
 							<Route path="/search" component={Search} />

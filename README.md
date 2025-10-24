@@ -7,7 +7,7 @@ Ripple is a **music web app** built using modern web technologies:
 - **CSS3 (Tailwind CSS)**
 - **JavaScript (React.js)**
 
-It leverages the [Saavn.dev API](https://saavn.dev/) for music streaming.
+It leverages the [Saavn API](https://saavn.sumit.co/) for music streaming.
 
 ### Repository  
 The source code for Ripple is available on GitHub:  
@@ -17,7 +17,12 @@ The source code for Ripple is available on GitHub:
 
 ## 📦 ChangeLog
 
-### Version 2.8.0 (Current)
+### Version 2.9.0
+- Added **Download** functionality.
+
+---
+
+### Version 2.8.0
 - Major improvements in UI  
 - Added **Media Session API** for better UX  
 - Pagination for saved tracks  
