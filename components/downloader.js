@@ -159,8 +159,8 @@ class Downloader extends Component {
     if (!this.state.queue.length) return null;
     
     return (
-      <section className="animate-fade-in-up min-h-0 sticky top-0 w-full px-4 md:px-8 lg:px-12 pt-4">
-        <ul className="max-w-lg w-full mx-auto p-1 flex gap-4 justify-start items-center overflow-x-auto scroll-smooth bg-white/75 backdrop-blur-sm border border-neutral-200 rounded-xl">
+      <section className="animate-fade-in-up min-h-0 sticky top-0 z-10 w-full px-4 md:px-8 lg:px-12 pt-4">
+        <ul className="max-w-lg w-full mx-auto p-1 flex gap-1 justify-start items-center overflow-x-auto scroll-smooth bg-white/75 backdrop-blur-sm border border-neutral-200 rounded-xl">
           {this.state.queue.map((item) => (
             <li
               key={item.id}

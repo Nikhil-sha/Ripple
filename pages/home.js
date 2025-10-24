@@ -118,7 +118,7 @@ class Home extends Component {
 						{ icon: 'heart', label: 'Saved', path: '/saved', color: 'from-blue-500 to-blue-300' },
 						{ icon: 'cogs', label: 'Settings', path: '/settings', color: 'from-rose-500 to-rose-300' }
 					].map(({ icon, label, path, color }) => (
-						<div key={label} className={`flex-shrink-0 w-28 h-28 rounded-md bg-gradient-to-tr ${color}`}>
+						<div key={label} className={`flex-shrink-0 w-28 h-28 rounded-xl bg-gradient-to-tr ${color}`}>
 							<Link to={path} className="w-full h-full flex flex-col justify-end items-start px-3 py-2">
 								<i className={`fa-solid fa-${icon} text-lg leading-tight text-white`}></i>
 								<span className="text-sm font-medium leading-tight text-white">{label}</span>
@@ -129,7 +129,7 @@ class Home extends Component {
 				</div>
 
 
-				{quoteData && <article className="max-w-md mx-auto w-full bg-yellow-50 rounded-md p-5 space-y-3">
+				{quoteData && <article className="max-w-md mx-auto w-full bg-yellow-50 rounded-xl p-5 space-y-3">
 					<div className="flex items-start space-x-2">
 						<p className="leading-snug text-neutral-800 text-sm"><i className="mr-1 text-yellow-400">“</i><span>{quoteData.quote}</span><i className="ml-1 text-yellow-400">”</i></p>
 					</div>
