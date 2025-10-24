@@ -29,6 +29,28 @@ class Downloader extends Component {
   
   generateId = () => Math.random().toString(36).substr(2, 9);
   
+  sanitizeFilename = (name) => {
+    if (typeof name !== 'string') {
+      throw new TypeError('Filename must be a string');
+    }
+    
+    const invalidChars = /[<>:"/\\|?*\x00-\x1F]/g;
+    let cleanName = name.replace(invalidChars, '');
+    
+    cleanName = cleanName.trim();
+    
+    const reservedNames = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\..*)?$/i;
+    if (reservedNames.test(cleanName)) {
+      cleanName = '_' + cleanName;
+    }
+    
+    if (cleanName.length === 0) {
+      cleanName = 'untitled';
+    }
+    
+    return cleanName;
+  }
+  
   addToQueue = (newQueueItem) => {
     this.setState((prevState) => ({
       queue: [newQueueItem, ...prevState.queue],
@@ -42,6 +64,7 @@ class Downloader extends Component {
   };
   
   downloadFile = async (url, filename, image) => {
+    filename = this.sanitizeFilename(filename);
     if (this.state.queue.some((i) => i.name === filename)) return;
     
     let response,
@@ -77,7 +100,6 @@ class Downloader extends Component {
       
       this.context.notify("success", `Downloading ${filename}`);
       response = await fetch(url, { signal });
-      // if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
       checkResponseCode(response);
       
       const reader = response.body.getReader();
