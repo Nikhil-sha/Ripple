@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="font-normal text-neutral-800">
+<html lang="en" class="font-normal text-neutral-800 bg-neutral-950">
 
 <head>
   <meta charset="UTF-8">
@@ -32,7 +32,7 @@
   <div id="react-app" class="h-dvh w-full">
     <div class="relative h-full w-full flex flex-col gap-8 justify-center items-center">
       <div id="timeout" class="hidden w-fit flex flex-col gap-1 justify-center items-center">
-        <p class="text-sm text-neutral-700 font-normal">Still waiting? Even a snail would be faster.</p>
+        <p class="text-sm text-neutral-700 font-normal">It is taking longer than expected.</p>
         <button class="text-sm text-neutral-800 px-2 py-1 rounded-lg bg-yellow-400" onclick="window.location.reload()">Reload!</button>
         <script>
           let timeoutMsg = document.getElementById("timeout");
@@ -42,12 +42,12 @@
         </script>
       </div>
       
-      <div class="flex gap-3 justify-center items-center">
-        <img class="size-16" src="/assets/images/icons/icon-512x512.png" alt="Ripple logo" />
+      <div class="relative flex justify-center items-center">
+        <img class="absolute top-1 size-14 rounded-full" src="./assets/images/icons/icon-512x512.png" alt="Ripple logo" />
         
-        <div class="size-14 mb-6">
+        <div class="size-16 mb-6">
           <svg class="w-full h-full animate-spin" viewBox="0 0 50 50">
-            <circle class="stroke-yellow-400 animate-dash" cx="25" cy="25" r="20" fill="none" stroke-width="5" stroke-linecap="round"></circle>
+            <circle class="stroke-yellow-400 animate-dash" cx="25" cy="25" r="23" fill="none" stroke-width="2" stroke-linecap="round"></circle>
           </svg>
         </div>
       </div>
