@@ -1,0 +1,60 @@
+import React, { Component, Fragment } from 'react';
+import { AppContext } from '../context';
+
+class Settings extends Component {
+	static contextType = AppContext;
+
+	handleQualityChange = (event) => {
+		let value = event.target.value;
+		this.context.setPreferredQuality(value);
+		this.context.notify("success", "Quality preference updated!")
+	};
+
+	handleSearchResLimitChange = (event) => {
+		let value = event.target.value;
+		this.context.setSearchResultLimit(value);
+		this.context.notify("success", "Search results limit updated!")
+	};
+	
+	render() {
+		return (
+			<section className="animate-fade-in-up min-h-0 w-full px-3 md:px-8 lg:px-12 pt-4">
+				<div className="max-w-lg mx-auto">
+					<div className="w-full flex justify-between items-center gap-4 mb-4">
+						<h3 className="text-sm text-neutral-200 leading-snug mb-1">Audio Quality</h3>
+						<div className="relative text-sm w-1/2">
+							<select value={this.context.preferredQuality} onChange={this.handleQualityChange} className="block appearance-none px-3 py-2 w-full rounded-md bg-neutral-800 text-neutral-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition">
+								<option value="12kbps">12 Kbps (low)</option>
+								<option value="48kbps">48 Kbps</option>
+								<option value="96kbps">96 Kbps (mid)</option>
+								<option value="160kbps">160 Kbps (preferred)</option>
+								<option value="320kbps">320 Kbps (high)</option>
+							</select>
+							<div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+								<i className="fa-solid fa-chevron-down text-neutral-400"></i>
+							</div>
+						</div>
+					</div>
+					
+					<div className="w-full flex justify-between items-center gap-4 mb-4">
+						<h3 className="text-sm font-medium text-neutral-200 leading-snug mb-1">Search results limit</h3>
+						<div className="relative text-sm w-1/2">
+							<select value={this.context.searchResultsLimit} onChange={this.handleSearchResLimitChange} className="block appearance-none px-3 py-2 w-full rounded-md bg-neutral-800 text-neutral-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition">
+								<option value="5">5</option>
+								<option value="10">10</option>
+								<option value="15">15 (preferred)</option>
+								<option value="20">20</option>
+								<option value="30">30 (max)</option>
+							</select>
+							<div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+								<i className="fa-solid fa-chevron-down text-neutral-400"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		);
+	}
+}
+
+export default Settings;

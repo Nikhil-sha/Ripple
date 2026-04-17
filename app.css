@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+html,
+body {
+  font-family: "Rubik", "SF Pro Text", "Roboto", "Segoe UI", sans-serif;
+  font-style: normal;
+  overscroll-behavior-y: none;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+::-webkit-scrollbar {
+  display: none !important;
+}
+
+.thumb-toggle::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: rgb(250, 204, 21);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+
+.fa-play {
+  margin-left: 0.3rem;
+}
