@@ -6,7 +6,7 @@
 	"scope": "/Ripple/",
 	"start_url": "/Ripple/index.html",
 	"display": "standalone",
-	"background_color": "#fafafa",
+	"background_color": "#0a0a0a",
 	"theme_color": "#0a0a0a",
 	"orientation": "portrait",
 	"icons": [
