@@ -436,20 +436,20 @@ class Player extends Component {
 					</div>
 					<div className="flex flex-col items-center">
 						<div className="w-72 inline-flex justify-between items-center gap-2 mb-6">
-							<span className="text-[10px] text-neutral-400">{formatTime(currentTime)}</span>
+							<span className="block w-7 text-xs text-center text-neutral-400">{formatTime(currentTime)}</span>
 							<input
 								type="range"
 								min="0"
 								max={totalDuration}
 								value={currentTime}
-								className="w-4/5 h-1 bg-neutral-600 rounded-lg appearance-none cursor-pointer accent-blue-400"
+								className="grow h-1.5 bg-neutral-600 rounded-lg appearance-none cursor-pointer accent-blue-400"
 								onInput={this.seekTrack}
 								aria-label="Seek track"
 								aria-valuemin="0"
 								aria-valuemax={totalDuration}
 								aria-valuenow={currentTime}
 							/>
-							<span className="text-[10px] text-neutral-400">{formatTime(totalDuration)}</span>
+							<span className="block w-7 text-xs text-center text-neutral-400">{formatTime(totalDuration)}</span>
 						</div>
 						
 						<h2 className="max-w-72 text-neutral-200 inline-block text-lg font-medium leading-tight truncate" aria-live="assertive">
