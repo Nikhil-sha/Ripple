@@ -17,6 +17,12 @@ The source code for Ripple is available on GitHub:
 
 ## 📦 ChangeLog
 
+### Version 3.0.1 (Stable)
+- Bug Fixes.
+- Removed 'setPositionState' of MediaSession due to some interference.
+
+---
+
 ### Version 3.0.0 (Stable, Hope so!)
 - Bug Fixes.
 - Major UI improvement (now Dark Themed).

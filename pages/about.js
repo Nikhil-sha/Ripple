@@ -3,6 +3,13 @@ import React, { Component, Fragment } from 'react';
 class About extends Component {
 	static versions = [
 		{
+			"version": "3.0.1 (Stable)",
+			"changes": [
+				"Bug Fixes.",
+				"Removed 'setPositionState' of MediaSession due to some interference.",
+			]
+		},
+		{
 			"version": "3.0.0 (Stable, Hope so!)",
 			"changes": [
 				"Bug Fixes.",

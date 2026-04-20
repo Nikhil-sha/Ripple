@@ -99,24 +99,12 @@ class Player extends Component {
 
 	updateProgress = () => {
 		this.setState({ currentTime: this.audioRef.current.currentTime });
-		this.setMSPositionState(this.audioRef.current.duration, this.audioRef.current.currentTime, this.audioRef.current.playbackRate);
 	};
 
 	setDuration = () => {
 		this.setState({ totalDuration: this.audioRef.current.duration });
-		this.setMSPositionState(this.audioRef.current.duration, this.audioRef.current.currentTime, this.audioRef.current.playbackRate);
 	};
-	
-	setMSPositionState = (duration, currentTime, playbackRate) => {
-		if (!'setPositionState' in navigator.mediaSession) return;
-		
-		navigator.mediaSession.setPositionState({
-			duration: duration > 0 ? duration : 180,
-			playbackRate: playbackRate || 1,
-			position: currentTime,
-		});
-	};
-	
+
 	setMSMetaData = (track) => {
 		if (!'mediaSession' in navigator) return;
 		
