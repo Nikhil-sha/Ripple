@@ -1,13 +1,11 @@
-import React, { Component, Fragment } from "react";
-import { withRouter, Link } from 'react-router-dom';
-import { AppContext } from '../context';
-import { renderText } from '../utilities/all';
+import { AppContext } from '../context.js';
+import { renderText } from '../utilities/all.js';
 
-import Artist from '../components/artist';
-import ErrorCard from '../components/error';
-import Song from '../components/song';
-import Button from '../components/button';
-import Spinner from '../components/loadings/spinner';
+import Artist from '../components/artist.js';
+import ErrorCard from '../components/error.js';
+import Song from '../components/song.js';
+import Button from '../components/button.js';
+import Spinner from '../components/loadings/spinner.js';
 
 class AlbumDetails extends Component {
 	static contextType = AppContext;
@@ -141,81 +139,106 @@ class AlbumDetails extends Component {
 		const { loading, error, errorMessage } = this.state;
 		let { specificAlbumDetails } = this.context;
 		if (loading) {
-			return (
-				<div className="animate-fade-in w-full h-full flex flex-col items-center justify-center gap-4">
-					<Spinner size="12" strokeColor="yellow-400"/>
-					<span>Wait a second…</span>
-				</div>
+			return e("div", { className: "animate-fade-in w-full h-full flex flex-col items-center justify-center gap-4" },
+				e(Spinner, { size: "12", strokeColor: "yellow-400" }),
+				e("span", null,
+					"Wait a second…"
+				)
 			)
 		}
 		
 		if (error) {
-			return (
-				<ErrorCard errorContext={this.state.errorMessage} />
-			)
+			return e(ErrorCard, { errorContext: this.state.errorMessage })
 		}
 		
-		return (
-			<section className="max-w-lg animate-fade-in-up min-h-0 w-full mx-auto">
-				<figure className="relative w-full h-fit">
-					<img src={specificAlbumDetails.image[specificAlbumDetails.image.length - 1].url} alt={specificAlbumDetails.name} className="w-full aspect-square" />
-					<figcaption className="absolute bottom-0 w-full px-3 md:px-8 lg:px-12 pt-12 bg-gradient-to-t from-neutral-950 to-transparent">
-						<h2 className="text-2xl text-neutral-200 font-medium">{specificAlbumDetails.name}</h2>
-					</figcaption>
-				</figure>
+		return e("section", { className: "max-w-lg animate-fade-in-up min-h-0 w-full mx-auto" },
+			e("figure", { className: "relative w-full h-fit" },
+				e("img", {
+					src: specificAlbumDetails.image[specificAlbumDetails.image.length - 1].url,
+					alt: specificAlbumDetails.name,
+					className: "w-full aspect-square"
+				}),
+				e("figcaption", { className: "absolute bottom-0 w-full px-3 md:px-8 lg:px-12 pt-12 bg-gradient-to-t from-neutral-950 to-transparent" },
+					e("h2", { className: "text-2xl text-neutral-200 font-medium" }, specificAlbumDetails.name)
+				)
+			),
+			
+			e("div", { className: "w-full px-3 md:px-8 lg:px-12" },
+				e("p", { className: "text-sm text-neutral-400 font-normal" }, specificAlbumDetails.description),
 				
-				<div className="w-full px-3 md:px-8 lg:px-12">
-					<p className="text-sm text-neutral-400 font-normal">{specificAlbumDetails.description}</p>
-
-					<div className="relative w-full flex flex-row justify-between gap-4 items-center mt-5">
-						<Button icon="share" accent="yellow" roundness="full" label="Share this album" clickHandler={this.shareThisAlbum} />
-						
-						<div className="max-w-1/2 min-w-24 h-8 inline-flex justify-center gap-1 items-center border border-neutral-700 rounded-full text-sm text-neutral-400 px-3">
-							<span className="truncate">{specificAlbumDetails.songCount ? (specificAlbumDetails.songCount > 1 ? `${specificAlbumDetails.songCount} Songs` : `${specificAlbumDetails.songCount} Song`) : "No Song"}</span>
-							<span>•</span>
-							<span className="truncate">{specificAlbumDetails.playCount ? (specificAlbumDetails.playCount > 1 ? `Played ${specificAlbumDetails.playCount} times` : `Played ${specificAlbumDetails.playCount} time`) : "Played N/A times"}</span>
-						</div>
-						
-						<Button icon="play" accent="yellow" roundness="full" label="Play this album" clickHandler={this.playWholeAlbum} />
-					</div>
-				</div>
+				e("div", { className: "relative w-full flex flex-row justify-between gap-4 items-center mt-5" },
+					e(Button, {
+						icon: "share",
+						accent: "yellow",
+						roundness: "full",
+						label: "Share this album",
+						clickHandler: this.shareThisAlbum
+					}),
+					
+					e("div", { className: "max-w-1/2 min-w-24 h-8 inline-flex justify-center gap-1 items-center border border-neutral-700 rounded-full text-sm text-neutral-400 px-3" },
+						e("span", { className: "truncate" }, specificAlbumDetails.songCount ? (specificAlbumDetails.songCount > 1 ? `${specificAlbumDetails.songCount} Songs` : `${specificAlbumDetails.songCount} Song`) : "No Song"),
+						e("span", null, "•"),
+						e("span", { className: "truncate" }, specificAlbumDetails.playCount ? (specificAlbumDetails.playCount > 1 ? `Played ${specificAlbumDetails.playCount} times` : `Played ${specificAlbumDetails.playCount} time`) : "Played N/A times")
+					),
+					
+					e(Button, {
+						icon: "play",
+						accent: "yellow",
+						roundness: "full",
+						label: "Play this album",
+						clickHandler: this.playWholeAlbum
+					})
+				)
+			),
+			
+			e("div", { className: "w-full mt-8 mb-4 px-3 md:px-8 lg:px-12" },
+				e("div", { className: "flex flex-wrap justify-center gap-2 text-sm text-neutral-400" },
+					e("a", { className: "text-blue-400 hover:underline", href: specificAlbumDetails.url },
+						"Listen to it on JioSaavn ",
+						e("i", { className: "fa-solid fa-external-link" })
+					)
+				),
 				
-				<div className="w-full mt-8 mb-4 px-3 md:px-8 lg:px-12">
-					<div className="flex flex-wrap justify-center gap-2 text-sm text-neutral-400">
-						<a className="text-blue-400 hover:underline" href={specificAlbumDetails.url}>Listen to it on JioSaavn <i className="fa-solid fa-external-link"></i></a>
-					</div>
-					
-					{specificAlbumDetails.songs && <Fragment>
-						<h4 className="text-neutral-500 text-base font-normal mt-6 mb-2">Songs</h4>
-						<div className="max-w-md flex flex-col gap-2 mx-auto mb-8">
-							{specificAlbumDetails.songs.length ? specificAlbumDetails.songs.map((song, index) => (
-								<Song 
-									key={song.id}
-									songId={song.id}
-									name={renderText(song.name)}
-									artist={renderText(song.artists.primary[0].name)}
-									album={renderText(song.album.name)}
-									year={song.year}
-									coverSm={song.image[1].url}
-									coverBg={song.image[song.image.length - 1].url}
-									sources={song.downloadUrl}
-									option="save"
-								/>
-							)) : <p className="text-sm text-neutral-400">No Songs Found!</p>}
-						</div>
-					</Fragment>}
-					
-					{specificAlbumDetails.artists && <Fragment>
-						<h4 className="text-neutral-500 text-base font-normal mt-6 mb-2">Artists</h4>
-						<div className="w-full flex gap-4 overflow-x-auto mb-8">
-							{specificAlbumDetails.artists.all.length ? specificAlbumDetails.artists.all.map((artist, index) => (
-								<Artist key={index} artistId={artist.id} name={artist.name} image={artist.image.length ? artist.image[artist.image.length - 1].url : ''} role={artist.dominantType} />
-							)) : <p className="text-sm text-neutral-400">No Similar Artists Found!</p>}
-						</div>
-					</Fragment>}
-				</div>
-			</section>
-		);
+				specificAlbumDetails.songs && e(Fragment, null,
+					e("h4", { className: "text-neutral-500 text-base font-normal mt-6 mb-2" }, "Songs"),
+					e("div", { className: "max-w-md flex flex-col gap-2 mx-auto mb-8" },
+						specificAlbumDetails.songs.length ?
+						specificAlbumDetails.songs.map((song, index) =>
+							e(Song, {
+								key: song.id,
+								songId: song.id,
+								name: renderText(song.name),
+								artist: renderText(song.artists.primary[0].name),
+								album: renderText(song.album.name),
+								year: song.year,
+								coverSm: song.image[1].url,
+								coverBg: song.image[song.image.length - 1].url,
+								sources: song.downloadUrl,
+								option: "save"
+							})
+						) :
+						e("p", { className: "text-sm text-neutral-400" }, "No Songs Found!")
+					)
+				),
+				
+				specificAlbumDetails.artists && e(Fragment, null,
+					e("h4", { className: "text-neutral-500 text-base font-normal mt-6 mb-2" }, "Artists"),
+					e("div", { className: "w-full flex gap-4 overflow-x-auto mb-8" },
+						specificAlbumDetails.artists.all.length ?
+						specificAlbumDetails.artists.all.map((artist, index) =>
+							e(Artist, {
+								key: index,
+								artistId: artist.id,
+								name: artist.name,
+								image: artist.image.length ? artist.image[artist.image.length - 1].url : '',
+								role: artist.dominantType
+							})
+						) :
+						e("p", { className: "text-sm text-neutral-400" }, "No Similar Artists Found!")
+					)
+				)
+			)
+		)
 	}
 }
 

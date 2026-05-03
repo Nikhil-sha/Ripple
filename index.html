@@ -19,9 +19,18 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="mobile-web-app-capable" content="yes">
   
+  <!-- React -->
+  <script type="text/javascript" charset="utf-8" src="./modules/react@17.0.1/react.production.min.js"></script>
+  <script type="text/javascript" charset="utf-8" src="./modules/react-dom@17.0.1/react-dom.production.min.js"></script>
+  
+  <!-- React Router -->
+  <script type="text/javascript" charset="utf-8" src="./modules/react-router-dom@5.3.0/react-router-dom.min.js"></script>
+  
   <!-- Tailwind -->
   <script src="./modules/tailwind@3.4.16/Tailwind.js" type="text/javascript" charset="utf-8"></script>
-  <script src="./tailwind.config.js" type="text/javascript" charset="utf-8"></script>
+  <script src="./modules/tailwind@3.4.16/tailwind.config.js" type="text/javascript" charset="utf-8"></script>
+  
+  <!-- Custom CSS -->
   <link rel="stylesheet" href="./app.css">
   
   <!-- Font Awesome -->
@@ -31,15 +40,9 @@
 <body class="bg-neutral-950 text-neutral-200 h-screen w-screen select-none">
   <div id="react-app" class="h-dvh w-full">
     <div class="relative h-full w-full flex flex-col gap-8 justify-center items-center">
-      <div id="timeout" class="hidden w-fit flex flex-col gap-1 justify-center items-center">
+      <div id="timeoutMsg" class="hidden w-fit flex flex-col gap-1 justify-center items-center">
         <p class="text-sm text-neutral-200 font-normal">It is taking longer than expected.</p>
         <button class="text-sm text-neutral-800 px-2 py-1 rounded-lg bg-yellow-400" onclick="window.location.reload()">Reload!</button>
-        <script>
-          let timeoutMsg = document.getElementById("timeout");
-          setTimeout(() => {
-            if (timeoutMsg) timeoutMsg.classList.remove("hidden");
-          }, 10000);
-        </script>
       </div>
       
       <div class="relative flex justify-center items-center">
@@ -67,9 +70,8 @@
   </aside>
   
   <!-- Scripts -->
-  <script src="./global.js"></script>
-  <script defer src="./modules/systemjs@0.19.47/system.js"></script>
-  <script defer src="./config.js"></script>
+  <script defer src="./global.js"></script>
+  <script defer type="module" src="./app.js"></script>
 </body>
 
 </html>

@@ -1,5 +1,4 @@
-import React, { createContext, Component } from 'react';
-import { secureURL } from './utilities/all';
+import { secureURL } from './utilities/all.js';
 
 export const AppContext = createContext();
 
@@ -13,7 +12,7 @@ export class AppProvider extends Component {
     search: {
       query: null,
       results: [],
-      isNextPossible: false,
+      lastPageIndex: Infinity,
     },
     specificSongLyrics: null,
     specificSongDetails: null,
@@ -46,6 +45,40 @@ export class AppProvider extends Component {
     this.setState({
       downloadMethod: method,
     });
+  };
+  
+  requestNotificationPermission = async () => {
+    if (!('Notification' in window)) {
+      this.notify('error', 'Notification not supported!')
+      return;
+    }
+    
+    if (Notification.permission === 'granted') {
+      return;
+    }
+    
+    const permission = await Notification.requestPermission();
+  };
+  
+  showSystemNotification = async (tag, title, body, image, actions, silent) => {
+    await this.requestNotificationPermission();
+    
+    let serviceWorkerRegistration = null;
+    if ('serviceWorker' in navigator) serviceWorkerRegistration = await navigator.serviceWorker.ready;
+    
+    if (serviceWorkerRegistration) {
+      serviceWorkerRegistration.active.postMessage({
+        type: 'NOTIFY',
+        payload: {
+          tag,
+          title,
+          body,
+          image,
+          actions,
+          silent
+        }
+      })
+    }
   };
   
   ensureDirectoryAccess = async () => {
@@ -121,24 +154,24 @@ export class AppProvider extends Component {
   notify = (type, message) => {
     const date = new Date();
     if (type === "success") {
-      showPopup({ colour: "green", text: message })
-      navigator.vibrate(40);
+      newToast({ color: "green", text: message })
+      navigator.vibrate(30);
     } else if (type === "error") {
-      showPopup({ colour: "red", text: message })
-      navigator.vibrate([40, 100, 60]);
+      newToast({ color: "red", text: message })
+      navigator.vibrate([30, 90, 50]);
     } else {
-      showPopup({ colour: "yellow", text: message })
-      navigator.vibrate([40, 100, 40]);
+      newToast({ color: "yellow", text: message })
+      navigator.vibrate([30, 90, 30]);
     }
   };
   
-  updateSearchState = (query, results, isNextPossible) => {
+  updateSearchState = (query, results, lastPageIndex) => {
     if (this.state.search.query === query) {
       this.setState((prevState) => ({
         search: {
           ...prevState.search,
           results: [...prevState.search.results, results],
-          isNextPossible
+          lastPageIndex
         },
       }));
     } else {
@@ -146,7 +179,7 @@ export class AppProvider extends Component {
         search: {
           query: query,
           results: [results],
-          isNextPossible
+          lastPageIndex
         },
       });
     }
@@ -276,33 +309,36 @@ export class AppProvider extends Component {
   
   render() {
     return (
-      <AppContext.Provider
-				value={{
-					...this.state,
-					endpoints: this.endpoints,
-					notify: this.notify,
-					setHomeSuggestionResults: this.setHomeSuggestionResults,
-					setHomeSuggestionPicked: this.setHomeSuggestionPicked,
-					setSearchResultLimit: this.setSearchResultLimit,
-					loadSavedTracks: this.loadSavedTracks,
-					setPlayerMethods: this.setPlayerMethods,
-					setDownloadMethod: this.setDownloadMethod,
-					setPreferredQuality: this.setPreferredQuality,
-					getPreferredQualityURL: this.getPreferredQualityURL,
-					setSpecificSongLyrics: this.setSpecificSongLyrics,
-					setSpecificSongDetails: this.setSpecificSongDetails,
-					setSpecificAlbumDetails: this.setSpecificAlbumDetails,
-					setSpecificArtistDetails: this.setSpecificArtistDetails,
-					updateSearchState: this.updateSearchState,
-					updatePlayList: this.updatePlayList,
-					updateLocalStorage: this.updateLocalStorage,
-					removeTrackFromLocalStorage: this.removeTrackFromLocalStorage,
-					ensureDirectoryAccess: this.ensureDirectoryAccess,
-					loadDownloadedFiles: this.loadDownloadedFiles,
-				}}
-			>
-				{this.props.children}
-			</AppContext.Provider>
-    );
+      e(
+        AppContext.Provider,
+        {
+          value: {
+            ...this.state,
+            endpoints: this.endpoints,
+            notify: this.notify,
+            setHomeSuggestionResults: this.setHomeSuggestionResults,
+            setHomeSuggestionPicked: this.setHomeSuggestionPicked,
+            setSearchResultLimit: this.setSearchResultLimit,
+            loadSavedTracks: this.loadSavedTracks,
+            setPlayerMethods: this.setPlayerMethods,
+            setDownloadMethod: this.setDownloadMethod,
+            setPreferredQuality: this.setPreferredQuality,
+            getPreferredQualityURL: this.getPreferredQualityURL,
+            setSpecificSongLyrics: this.setSpecificSongLyrics,
+            setSpecificSongDetails: this.setSpecificSongDetails,
+            setSpecificAlbumDetails: this.setSpecificAlbumDetails,
+            setSpecificArtistDetails: this.setSpecificArtistDetails,
+            updateSearchState: this.updateSearchState,
+            updatePlayList: this.updatePlayList,
+            updateLocalStorage: this.updateLocalStorage,
+            removeTrackFromLocalStorage: this.removeTrackFromLocalStorage,
+            ensureDirectoryAccess: this.ensureDirectoryAccess,
+            showSystemNotification: this.showSystemNotification,
+            loadDownloadedFiles: this.loadDownloadedFiles,
+          }
+        },
+        this.props.children
+      )
+    )
   }
 }

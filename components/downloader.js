@@ -1,8 +1,7 @@
-import React, { Component, createRef } from "react";
-import { AppContext } from "../context";
+import { AppContext } from "../context.js";
 
-import Button from './button';
-import Spinner from './loadings/spinner';
+import Button from './button.js';
+import Spinner from './loadings/spinner.js';
 
 class Downloader extends Component {
   static contextType = AppContext;
@@ -26,6 +25,14 @@ class Downloader extends Component {
   
   componentDidMount() {
     this.context.setDownloadMethod(this.downloadFile);
+    
+    navigator.serviceWorker.addEventListener('message', (event) => {
+      const data = event.data;
+      
+      if (data?.type === "NOTIFICATION_ACTION") {
+        this.cancelDownload(data.id);
+      }
+    })
   }
   
   sanitizeFilename = (name) => {
@@ -83,14 +90,16 @@ class Downloader extends Component {
   };
   
   downloadFile = async (data) => {
+    if (this.state.queue.some((i) => i.name === data.name)) return;
+    
     const filename = this.sanitizeFilename(`${data.name} - ${data.artist}.m4a`);
-    if (this.state.queue.some((i) => i.name === filename)) return;
     
     let response,
       fileHandle,
       writable,
       id = data.id,
       controller = new AbortController(),
+      sw,
       signal = controller.signal,
       addedToQueue = false,
       circumference = 2 * Math.PI * 17;
@@ -119,6 +128,8 @@ class Downloader extends Component {
       await new Promise((r) => requestAnimationFrame(r));
       
       this.context.notify("success", `Downloading ${filename}`);
+      this.context.showSystemNotification(data.id, data.name, "Downloading...", data.coverSm, [{ action: "cancel", title: "Cancel Download" }], false);
+      
       response = await fetch(this.getDownloadSource(data), { signal });
       
       if (!response.ok) {
@@ -139,6 +150,7 @@ class Downloader extends Component {
       writable = await fileHandle.createWritable();
       
       let total = 0;
+      let percent = 0;
       const CHUNK_SIZE = 128 * 1024;
       
       while (!signal.aborted) {
@@ -148,9 +160,14 @@ class Downloader extends Component {
         await writable.write(value);
         total += value.length;
         
-        if (fileSize > 0) {
-          const percent = total / fileSize;
-          progress.style.strokeDashoffset = circumference - percent * circumference;
+        const newPercent = (total / fileSize).toFixed(2);
+        
+        if (fileSize > 0 && newPercent !== percent) {
+          progress.style.strokeDashoffset = circumference - newPercent * circumference;
+          if (Math.floor(newPercent * 10) > Math.floor(percent * 10)) {
+            this.context.showSystemNotification(data.id, data.name, `${'▰'.repeat(Math.floor(newPercent * 10))}${'▱'.repeat(10 - Math.floor(newPercent * 10))}`, data.coverSm, [{ action: "cancel", title: "Cancel Download" }], true);
+          }
+          percent = newPercent;
         }
         
         if (total % (CHUNK_SIZE * 20) === 0) {
@@ -158,21 +175,24 @@ class Downloader extends Component {
         }
       }
       
-      if (signal.aborted) throw new Error("fetch request aborted");
+      if (signal.aborted) throw new Error("Fetch request aborted. Download cancelled.");
       
       await writable.close();
       this.context.notify(
         "success",
         `Downloaded ${filename} (${(total / 1048576).toFixed(2)} MB)`
       );
+      this.context.showSystemNotification(data.id, data.name, "Downloaded!", data.coverSm, [], false);
     } catch (err) {
       if (writable) {
         try {
           await writable.close();
           if (!signal.aborted) controller.abort();
-          await this.context.downloadDir.removeEntry(filename).catch(() => {});
+          await this.context.downloadDir.removeEntry(filename).catce(() => {});
         } catch (_) {}
       }
+      
+      this.context.showSystemNotification(data.id, data.name, "Failed!", data.coverSm, [], false);
       
       if (err.name === "QuotaExceededError") {
         this.context.notify(
@@ -202,51 +222,61 @@ class Downloader extends Component {
   };
   
   render() {
-    return (
-      <section className={`${this.props.isVisible ? "" : "hidden"} origin-top-right ${this.props.willUnmount ? "animate-scale-down" : "animate-scale-up"} w-64 absolute top-full right-0 z-40 p-3 bg-neutral-800 rounded-2xl shadow-lg shadow-neutral-900/80 border border-neutral-700 flex flex-col mt-2 overflow-hidden`}>
-    		<div className="flex justify-between items-center">
-    			<h2 className="text-lg font-bold text-neutral-200">Downloading</h2>
-    		</div>
-    
-    		<hr className="border-neutral-700/50 my-3" />
-    
-        {this.state.queue.length ? (<ul className="animate-fade-in w-full h-fit max-h-[40dvh] flex flex-col gap-2 justify-start items-center overflow-y-scroll scroll-smooth">
-          {this.state.queue.map((item) => (
-            <li
-              key={item.id}
-              className="w-full inline-flex gap-2 items-center justify-between text-neutral-200"
-            >
-              <div className="relative inline-flex items-center justify-center">
-                <svg width="40" height="40" className="transform -rotate-90">
-                  <circle
-                    ref={item.progressRef}
-                    cx="20"
-                    cy="20"
-                    r="17"
-                    stroke="currentColor"
-                    className={`${item.color} transition-all duration-300 ease-in-out`}
-                    strokeWidth="3"
-                    fill="none"
-                    strokeLinecap="round"
-                  ></circle>
-                </svg>
-                <img
-                  src={item.image}
-                  alt={`downloading ${item.name}`}
-                  className="absolute rounded-full h-2/3"
-                />
-              </div>
-              <span className="inline-block grow text-sm font-normal truncate">{item.name}</span>
-              {item.cancelling ? (
-                <Spinner size="8" strokeColor="blue-500" />
+    return e("section", {
+        className: `${this.props.isVisible ? "" : "hidden"} origin-top-right ${this.props.willUnmount ? "animate-scale-down" : "animate-scale-up"} w-64 absolute top-full right-0 z-40 p-3 bg-neutral-800 rounded-2xl shadow-lg shadow-neutral-900/80 border border-neutral-700 flex flex-col mt-2 overflow-hidden`
+      },
+      e("div", { className: "flex justify-between items-center" },
+        e("h2", { className: "text-lg font-bold text-neutral-200" }, "Downloading")
+      ),
+      
+      e("hr", { className: "border-neutral-700/50 my-3" }),
+      
+      this.state.queue.length ? (
+        e("ul", { className: "animate-fade-in w-full h-fit max-h-[40dvh] flex flex-col gap-2 justify-start items-center overflow-y-scroll scroll-smooth" },
+          this.state.queue.map((item) =>
+            e("li", {
+                key: item.id,
+                className: "w-full inline-flex gap-2 items-center justify-between text-neutral-200"
+              },
+              e("div", { className: "relative inline-flex items-center justify-center" },
+                e("svg", { width: "40", height: "40", className: "transform -rotate-90" },
+                  e("circle", {
+                    ref: item.progressRef,
+                    cx: "20",
+                    cy: "20",
+                    r: "17",
+                    stroke: "currentColor",
+                    className: `${item.color} transition-all duration-300 ease-in-out`,
+                    strokeWidth: "3",
+                    fill: "none",
+                    strokeLinecap: "round"
+                  })
+                ),
+                e("img", {
+                  src: item.image,
+                  alt: `downloading ${item.name}`,
+                  className: "absolute rounded-full h-2/3"
+                })
+              ),
+              e("span", { className: "inline-block grow text-sm font-normal truncate" }, item.name),
+              item.cancelling ? (
+                e(Spinner, { size: "8", strokeColor: "blue-500" })
               ) : (
-                <Button icon="times" accent="red" roundness="full" label={`Cancel downloading ${item.name}.`} clickHandler={() => this.cancelDownload(item.id)} />
-              )}
-            </li>
-          ))}
-        </ul>) : (<span className="animate-fade-in text-sm text-neutral-400 leading-none truncate">No file is being downloaded!</span>)}
-      </section>
-    );
+                e(Button, {
+                  icon: "times",
+                  accent: "red",
+                  roundness: "full",
+                  label: `Cancel downloading ${item.name}.`,
+                  clickHandler: () => this.cancelDownload(item.id)
+                })
+              )
+            )
+          )
+        )
+      ) : (
+        e("span", { className: "animate-fade-in text-sm text-neutral-400 leading-none truncate" }, "No file is being downloaded!")
+      )
+    )
   }
 }
 

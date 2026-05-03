@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+const { createElement: e, Fragment } = React;
 
 const characterCode = {
   amp: '&',
@@ -62,20 +62,20 @@ const handleNewLine = (paragraph) => {
   
   const lines = paragraph.split(/\r?\n/g);
   return lines.map((line, i) => (
-    <Fragment key={i}>
-      {line}
-      {i < lines.length - 1 && <br />}
-    </Fragment>
+    e(Fragment, { key: i },
+      line,
+      i < lines.length - 1 && e("br", null)
+    )
   ));
 };
 
 const renderLyrics = (html) => {
   const parts = html.split(/<br\s*\/?>/gi);
   return parts.map((part, i) => (
-    <Fragment key={i}>
-			{part}
-			{i < parts.length - 1 && <br />}
-		</Fragment>
+    e(Fragment, { key: i },
+      part,
+      i < parts.length - 1 && e("br", null)
+    )
   ));
 };
 

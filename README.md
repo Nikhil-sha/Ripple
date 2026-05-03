@@ -5,7 +5,7 @@
 Ripple is a **music web app** built using modern web technologies:
 - **HTML5**
 - **CSS3 (Tailwind CSS)**
-- **JavaScript (React.js 17 via SystemJs)**
+- **JavaScript (React.js 17 UMD)**
 
 It leverages the [Saavn API](https://saavn.sumit.co/) for music data.
 
@@ -16,6 +16,14 @@ The source code for Ripple is available on GitHub:
 ---
 
 ## 📦 ChangeLog
+
+### Version 3.2.0
+- Bug Fixes.
+- Added Service Worker to Cache static files and to use 'showNotification'.
+- Replaced SystemJs with React UMD Build to avoid the initial startup time.
+- Replaced JSX with React.createElement (using Babel Browser Standalone without SystemJs would interfere with ES modules).
+
+---
 
 ### Version 3.0.1 (Stable)
 - Bug Fixes.
@@ -117,7 +125,7 @@ The source code for Ripple is available on GitHub:
 ### Version 2.0.0
 - Introduced **music search**  
 - Added **song detail pages** with metadata  
-- Streaming support from detail pages  
+- Playing support from detail pages  
 
 ---
 
@@ -130,6 +138,10 @@ The source code for Ripple is available on GitHub:
 ### Playing Songs  
 - Click on a song from the search results or details page.  
 - The player will load and start streaming the selected track.  
+
+### Downloading Songs  
+- Click on the download button in the expanded player.  
+- Grant the permission to read/write a specific folder to save the music files.  
 
 ### Managing Saved Songs  
 - Use the **Save** button to store a song in Local Storage.  
@@ -157,5 +169,5 @@ Developers can refer to the official API documentation for further customization
 For any issues or feature requests, please submit an issue on GitHub. 🚀  
 
 `
-Note:- All updates are being pushed to the main branch.
+Note: All updates are being pushed to the main branch.
 `

@@ -1,12 +1,10 @@
-import React, { Component, createRef } from "react";
-import { withRouter } from 'react-router-dom';
-import { AppContext } from '../context';
+import { AppContext } from '../context.js';
 
-import Song from '../components/song';
-import Button from '../components/button';
-import ErrorCard from '../components/error';
-import { renderText } from '../utilities/all';
-import LoadingSongs from '../components/loadings/loadingSongs';
+import Song from '../components/song.js';
+import Button from '../components/button.js';
+import ErrorCard from '../components/error.js';
+import { renderText } from '../utilities/all.js';
+import LoadingSongs from '../components/loadings/loadingSongs.js';
 
 class Search extends Component {
 	static contextType = AppContext;
@@ -28,6 +26,8 @@ class Search extends Component {
 	componentDidMount() {
 		if (this.context.search.results.length) {
 			this.setState({ query: this.context.search.query });
+		} else {
+			this.inputRef.current.focus();
 		}
 		
 		this.loadHistory();
@@ -122,8 +122,8 @@ class Search extends Component {
 				this.setError(data.message || "No results found.");
 			} else {
 				this.setLoadingFalse();
-				const isNextPossible = data.data.total > (data.data.start + data.data.results.length);
-				return { results: data.data.results, isNextPossible };
+				const lastPageIndex = data.data.total > (data.data.start + data.data.results.length) ? Infinity : params.page;
+				return { results: data.data.results, lastPageIndex };
 			}
 		} catch (e) {
 			if (e.name !== 'AbortError') this.setError(e.message);
@@ -153,7 +153,7 @@ class Search extends Component {
 		});
 		
 		const res = await this.fetchResults({ query });
-		if (res.results && res.results.length) this.context.updateSearchState(query, res.results, res.isNextPossible);
+		if (res.results && res.results.length) this.context.updateSearchState(query, res.results, res.lastPageIndex);
 		
 		this.updateHistory({ type: 'addItem', item: query });
 	};
@@ -168,7 +168,7 @@ class Search extends Component {
 			if (this.context.search.results.length <= (this.state.pageIndex)) {
 				const res = await this.fetchResults({ query: this.context.search.query, page: this.state.pageIndex + 1 });
 				if (!res.results || !res.results.length) return;
-				this.context.updateSearchState(this.context.search.query, res.results, res.isNextPossible);
+				this.context.updateSearchState(this.context.search.query, res.results, res.lastPageIndex);
 			}
 			this.setState((prevState) => ({
 				pageIndex: prevState.pageIndex + 1,
@@ -201,74 +201,105 @@ class Search extends Component {
 			pageIndex,
 		} = this.state;
 		
-		return (
-			<section className="animate-fade-in-up min-h-0 w-full max-w-md px-3 pt-4 mx-auto">
-				<div className="min-h-full flex flex-col justify-start items-center">
-					<form
-						method="GET"
-						onSubmit={(e) => {e.preventDefault();this.handleSearch();}}
-						className="flex gap-2 w-full"
-					>
-						<input
-							type="text"
-							ref={this.inputRef}
-							value={query}
-							onChange={this.handleInputChange}
-							placeholder="Search for songs or enter JioSaavn song Url..."
-							className="grow px-4 py-2 rounded-xl bg-neutral-800 border border-neutral-700 text-neutral-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder-neutral-400 transition"
-						/>
-						<button
-							type="submit"
-							aria-label="Search"
-							className="flex-shrink-0 bg-yellow-400 hover:bg-yellow-500 text-neutral-800 font-semibold px-6 py-3 rounded-xl transition"
-						>
-							<i className="fa-solid fa-search mt-1"></i>
-						</button>
-					</form>
-					
-					{history ? <ul className="w-full flex gap-3 overflow-x-auto mt-4">
-						{history.map((item) => <li key={item} role="button" onClick={this.searchFromHistory} className="animate-fade-in w-fit flex-shrink-0 text-neutral-400 text-sm px-3 py-1 rounded-full bg-neutral-800 transition-[background-color] duration-300 hover:bg-neutral-700">{item}</li>)}
-					</ul> : null}
-
-					{loading || error || this.context.search.results.length ? (
-						<section className="w-full flex flex-col justify-start items-center mt-4 gap-3">
-							<h2 className="animate-fade-in w-full text-lg font-normal text-neutral-200 leading-snug">{loading ? 'Hold on…' : error ? 'An Error occurred!' : `Results for ${this.context.search.query}`}</h2>
-							{error ? (
-								<ErrorCard errorContext={errorMessage} />
-							) : loading ? (
-								<LoadingSongs list="8"></LoadingSongs>
-							) : this.context.search.results[pageIndex - 1].map((song) => (
-								<Song 
-									key={song.id} 
-									songId={song.id} 
-									name={renderText(song.name)} 
-									artist={renderText(song.artists.primary[0].name)} 
-									album={renderText(song.album.name)} 
-									year={song.year}
-									coverSm={song.image[0].url} 
-									coverBg={song.image[song.image.length - 1].url} 
-									sources={song.downloadUrl} 
-									option="save" 
-								/>
-							))}
-							{!error && (<div className="flex items-center justify-center gap-4 my-4" role="navigation" aria-label="Pagination Navigation">
-								<Button accent="yellow" roundness="xl" icon="chevron-left" label="Go to previous search page" clickHandler={() => this.handlePagination('prev')} disabled={pageIndex <= 1} />
-								<span className="text-base font-normal text-neutral-200">
-									{pageIndex}
-								</span>
-								<Button accent="yellow" roundness="xl" icon="chevron-right" label="Go to next search page" clickHandler={() => this.handlePagination('next')} disabled={ !this.context.search.isNextPossible || loading || error} />
-							</div>)}
-						</section>
-					) : (
-						<div className="animate-fade-in w-full mt-2">
-							<p className="font-normal text-center text-neutral-200">
-								What's on your mind today?
-							</p>
-						</div>
-					)}
-				</div>
-			</section>
-		);
+		return e(
+			"section", { className: "animate-fade-in-up min-h-0 w-full max-w-md px-3 pt-4 mx-auto" },
+			e(
+				"div", { className: "min-h-full flex flex-col justify-start items-center" },
+				e(
+					"form",
+					{
+						method: "GET",
+						onSubmit: (e) => {
+							e.preventDefault();
+							this.handleSearch();
+						},
+						className: "flex gap-2 w-full"
+					},
+					e("input", {
+						type: "text",
+						ref: this.inputRef,
+						value: query,
+						required: true,
+						onChange: this.handleInputChange,
+						placeholder: "Search for songs or enter JioSaavn song Url...",
+						className: "grow px-4 py-2 rounded-xl bg-neutral-800 border border-neutral-700 text-neutral-200 focus:outline-none focus:border-yellow-400 placeholder-neutral-400 transition"
+					}),
+					e(
+						"button",
+						{
+							type: "submit",
+							"aria-label": "Search",
+							className: "flex-shrink-0 bg-yellow-400/20 active:bg-yellow-400/30 text-yellow-400 font-semibold px-6 py-3 rounded-xl transition"
+						},
+						e("i", { className: "fa-solid fa-search" })
+					)
+				),
+				
+				history ? e(
+					"ul", { className: "w-full flex gap-3 overflow-x-auto mt-4" },
+					history.map((item) => e(
+						"li",
+						{
+							key: item,
+							role: "button",
+							onClick: this.searchFromHistory,
+							className: "animate-fade-in w-fit flex-shrink-0 text-neutral-400 text-sm px-3 py-1 rounded-full bg-neutral-800 transition-[background-color] duration-300 hover:bg-neutral-700"
+						},
+						item
+					))
+				) : null,
+				
+				loading || error || this.context.search.results.length ? e(
+					"section", { className: "w-full flex flex-col justify-start items-center mt-4 gap-3" },
+					e(
+						"h2", { className: "animate-fade-in w-full text-lg font-normal text-neutral-200 leading-snug" },
+						loading ? 'Hold on…' : error ? 'An Error occurred!' : `Results for "${this.context.search.query}"`
+					),
+					error ? e(ErrorCard, { errorContext: errorMessage }) :
+					loading ? e(LoadingSongs, { list: "1" }) :
+					this.context.search.results[pageIndex - 1].map((song) => e(Song, {
+						key: song.id,
+						songId: song.id,
+						name: renderText(song.name),
+						artist: renderText(song.artists.primary[0].name),
+						album: renderText(song.album.name),
+						year: song.year,
+						coverSm: song.image[0].url,
+						coverBg: song.image[song.image.length - 1].url,
+						sources: song.downloadUrl,
+						option: "save"
+					})),
+					!error && e(
+						"div",
+						{
+							className: "flex items-center justify-center gap-4 my-4",
+							role: "navigation",
+							"aria-label": "Pagination Navigation"
+						},
+						e(Button, {
+							accent: "yellow",
+							roundness: "xl",
+							icon: "chevron-left",
+							label: "Go to previous search page",
+							clickHandler: () => this.handlePagination('prev'),
+							disabled: pageIndex <= 1
+						}),
+						e("span", { className: "text-base font-normal text-neutral-200" }, pageIndex),
+						e(Button, {
+							accent: "yellow",
+							roundness: "xl",
+							icon: "chevron-right",
+							label: "Go to next search page",
+							clickHandler: () => this.handlePagination('next'),
+							...((this.context.search.lastPageIndex <= pageIndex) || loading || error ? {disabled: true} : false)
+						})
+					)
+				) : e(
+					"div", { className: "animate-fade-in w-full mt-4" },
+					e("p", { className: "font-normal text-center text-neutral-600" }, "What's on your mind today?")
+				)
+			)
+		)
 	}
 }
 
