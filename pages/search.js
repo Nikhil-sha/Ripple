@@ -256,7 +256,7 @@ class Search extends Component {
 						loading ? 'Hold on…' : error ? 'An Error occurred!' : `Results for "${this.context.search.query}"`
 					),
 					error ? e(ErrorCard, { errorContext: errorMessage }) :
-					loading ? e(LoadingSongs, { list: "1" }) :
+					loading ? e(LoadingSongs, { list: "5" }) :
 					this.context.search.results[pageIndex - 1].map((song) => e(Song, {
 						key: song.id,
 						songId: song.id,

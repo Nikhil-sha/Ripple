@@ -113,7 +113,6 @@ self.addEventListener('notificationclick', (event) => {
 	);
 });
 
-
 /* Debugging
 function sendLogToClients(level, args) {
 	self.clients.matchAll({ type: 'window', includeUncontrolled: true })
