@@ -46,6 +46,7 @@ const capitalize = (text) => {
 };
 
 const renderText = (text) => {
+  if (!text) return "Undefined";
   return text.replace(/&(#x?[0-9a-f]+|\w+);/gi, (_, code) => {
     if (code.startsWith('#x') || code.startsWith('#X')) {
       return String.fromCharCode(parseInt(code.slice(2), 16));
