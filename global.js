@@ -70,15 +70,3 @@ if ('serviceWorker' in navigator) {
 			.catch(err => console.error('SW failed:', err));
 	});
 }
-
-/* Debugging
-navigator.serviceWorker.addEventListener('message', (event) => {
-	const data = event.data;
-	
-	if (data?.type === 'SW_LOG') {
-		const { level, args } = data;
-		
-		console[level]('[SW]:', ...args);
-	}
-});
-*/

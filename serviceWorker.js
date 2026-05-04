@@ -1,42 +1,49 @@
-const CACHE_NAME = 'ripple-cache-3.2.0';
+const CACHE_NAME = 'ripple-cache-3.2.0-commit3';
 const STATIC_FILES = [
-	'./',
-	'./index.html',
-	'./app.css',
-	'./app.js',
-	'./global.js',
-	'./context.js',
-	'./errorBoundary.js',
-	'./utilities/all.js',
-	'./pages/home.js',
-	'./pages/about.js',
-	'./pages/search.js',
-	'./pages/saved.js',
-	'./pages/song.js',
-	'./pages/album.js',
-	'./pages/artist.js',
-	'./pages/downloads.js',
-	'./pages/settings.js',
-	'./pages/notFound.js',
-	'./components/button.js',
-	'./components/error.js',
-	'./components/header.js',
-	'./components/aside.js',
-	'./components/downloader.js',
-	'./components/player.js',
-	'./components/song.js',
-	'./components/album.js',
-	'./components/artist.js',
-	'./components/loadings/loadingSongs.js',
-	'./components/loadings/spinner.js',
-	'./assets/images/icons/icon-192x192.png',
-	'./assets/images/icons/icon-512x512.png',
+	"./",
+	"./index.html",
+	"./assets/images/icons/144.png",
+	"./assets/images/icons/128.png",
+	"./assets/images/icons/192.png",
+	"./assets/images/icons/72.png",
+	"./assets/images/icons/512.png",
 	"./assets/images/avatar-placeholder.png",
-	'./modules/react@17.0.1/react.production.min.js',
-	'./modules/react-dom@17.0.1/react-dom.production.min.js',
-	'./modules/react-router-dom@5.3.0/react-router-dom.min.js',
-	'./modules/tailwind@3.4.16/Tailwind.js',
-	'./modules/tailwind@3.4.16/tailwind.config.js'
+	"./components/loadings/loadingSongs.js",
+	"./components/loadings/spinner.js",
+	"./components/artist.js",
+	"./components/aside.js",
+	"./components/header.js",
+	"./components/song.js",
+	"./components/player.js",
+	"./components/error.js",
+	"./components/album.js",
+	"./components/downloader.js",
+	"./components/button.js",
+	"./modules/react@17.0.1/react.production.min.js",
+	"./modules/react-dom@17.0.1/react-dom.production.min.js",
+	"./modules/fontawesome-free-6.7.2-web/css/all.min.css",
+	"./modules/fontawesome-free-6.7.2-web/webfonts/fa-solid-900.ttf",
+	"./modules/fontawesome-free-6.7.2-web/webfonts/fa-solid-900.woff2",
+	"./modules/react-router-dom@5.3.0/react-router-dom.min.js",
+	"./modules/tailwind@3.4.16/Tailwind.js",
+	"./modules/tailwind@3.4.16/tailwind.config.js",
+	"./pages/about.js",
+	"./pages/artist.js",
+	"./pages/home.js",
+	"./pages/notFound.js",
+	"./pages/settings.js",
+	"./pages/saved.js",
+	"./pages/search.js",
+	"./pages/song.js",
+	"./pages/album.js",
+	"./pages/downloads.js",
+	"./utilities/all.js",
+	"./app.css",
+	"./app.js",
+	"./context.js",
+	"./errorBoundary.js",
+	"./global.js",
+	"./manifest.json",
 ];
 
 self.addEventListener('install', event => {
@@ -80,7 +87,7 @@ self.addEventListener('message', (event) => {
 			{
 				body,
 				icon: image,
-				badge: "/assets/images/icons/icon-192x192.png",
+				badge: "./assets/images/icons/512.png",
 				tag,
 				actions,
 				silent
@@ -108,31 +115,7 @@ self.addEventListener('notificationclick', (event) => {
 				return clients[0].focus();
 			}
 			
-			return self.clients.openWindow('/');
+			return self.clients.openWindow('/Ripple');
 		})
 	);
 });
-
-/* Debugging
-function sendLogToClients(level, args) {
-	self.clients.matchAll({ type: 'window', includeUncontrolled: true })
-		.then(clients => {
-			clients.forEach(client => {
-				client.postMessage({
-					type: 'SW_LOG',
-					level,
-					args
-				});
-			});
-		});
-}
-
-['log', 'warn', 'error'].forEach(level => {
-	const original = console[level];
-	
-	console[level] = (...args) => {
-		original.apply(console, args);
-		sendLogToClients(level, args);
-	};
-});
-*/

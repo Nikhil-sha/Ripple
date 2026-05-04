@@ -111,7 +111,7 @@ class Player extends Component {
 			title: track.name || 'Unknown Title',
 			artist: track.artist || 'Unknown Artist',
 			album: track.album || "Unknown Album",
-			artwork: [{ src: track.coverBg || './assets/images/icons/icon-512x512.png', sizes: '512x512', type: 'image/jpeg' }]
+			artwork: [{ src: track.coverBg || './assets/images/icons/512.png', sizes: '512x512', type: 'image/png' }]
 		});
 	};
 	
