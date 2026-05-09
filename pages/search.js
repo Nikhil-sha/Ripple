@@ -131,11 +131,11 @@ class Search extends Component {
 	};
 	
 	handleSearch = async () => {
-		if (!this.state.query) {
+		const query = this.state.query?.trim();
+		
+		if (!query) {
 			return;
 		}
-		
-		const query = this.state.query.trim();
 		
 		const isUrl = query.startsWith("https://www.jiosaavn.com/") || query.startsWith("http://");
 		if (isUrl) {
@@ -291,7 +291,7 @@ class Search extends Component {
 							icon: "chevron-right",
 							label: "Go to next search page",
 							clickHandler: () => this.handlePagination('next'),
-							...((this.context.search.lastPageIndex <= pageIndex) || loading || error ? {disabled: true} : false)
+							...((this.context.search.lastPageIndex <= pageIndex) || loading || error ? { disabled: true } : false)
 						})
 					)
 				) : e(

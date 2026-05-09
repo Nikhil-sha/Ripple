@@ -51,15 +51,15 @@ class Player extends Component {
 			});
 			
 			navigator.mediaSession.setActionHandler('seekbackward', (details) => {
-				this.audioRef.current.currentTime = Math.max(audio.currentTime - (details.seekOffset || 10), 0);
+				this.seekTrack(details.seekOffset || -10);
 			});
 			
 			navigator.mediaSession.setActionHandler('seekforward', (details) => {
-				this.audioRef.current.currentTime = Math.min(audio.currentTime + (details.seekOffset || 10), audio.duration);
+				this.seekTrack(details.seekOffset || 10);
 			});
 			
 			navigator.mediaSession.setActionHandler('seekto', (details) => {
-				this.audioRef.current.currentTime = details.seekTime;
+				this.seekTrack(details.seekTime || 0);
 			});
 			
 			navigator.mediaSession.setActionHandler('stop', () => {
@@ -277,6 +277,12 @@ class Player extends Component {
 	};
 	
 	seekTrack = (event) => {
+		if (!this.state.totalDuration) return;
+		if (typeof event === 'number') {
+			const seekOffset = event;
+			this.audioRef.current.currentTime = Math.min(Math.max(this.audioRef.current.currentTime + (seekOffset || 10), 0), this.state.totalDuration);
+			return;
+		}
 		this.audioRef.current.currentTime = event.currentTarget.value;
 	};
 	
@@ -485,24 +491,36 @@ class Player extends Component {
 							e("span", { className: "block w-7 text-xs text-center text-neutral-400" }, formatTime(totalDuration))
 						),
 						
-						e("div", { className: "inline-flex flex-row justify-center items-center gap-8 mt-6" },
+						e("div", { className: "inline-flex flex-row justify-center items-center gap-4 mt-6" },
 							e("button", {
-								className: "text-2xl text-neutral-400 active:text-neutral-500 p-2",
+								className: "text-xl text-neutral-400 active:text-neutral-500 p-1",
 								onClick: this.playPreviousTrack,
 								"aria-label": "Previous track"
-							}, e("i", { className: "fa-solid fa-backward-step" })),
+							}, e("i", { className: "size-5 fa-solid fa-backward-step" })),
+							
+							e("button", {
+								className: "text-xl text-neutral-400 active:text-neutral-500 p-1",
+								onClick: () => this.seekTrack(-10),
+								"aria-label": "seek backward"
+							}, e("i", { className: "fa-solid fa-backward" })),
 							
 							e("button", {
 								className: "text-5xl text-yellow-400 active:text-yellow-500",
 								onClick: this.togglePlayPause,
 								"aria-label": isPlaying ? "Pause track" : "Play track"
-							}, e("i", { className: `fa-solid fa-${isPlaying ? "pause" : "play"}-circle` })),
+							}, e("i", { className: `mx-2 fa-solid fa-${isPlaying ? "pause" : "play"}-circle` })),
 							
 							e("button", {
-								className: "text-2xl text-neutral-400 active:text-neutral-500 p-2",
+								className: "text-xl text-neutral-400 active:text-neutral-500 p-1",
+								onClick: () => this.seekTrack(10),
+								"aria-label": "seek forward"
+							}, e("i", { className: "fa-solid fa-forward" })),
+							
+							e("button", {
+								className: "text-xl text-neutral-400 active:text-neutral-500 p-1",
 								onClick: this.playNextTrack,
 								"aria-label": "Next track"
-							}, e("i", { className: "fa-solid fa-forward-step" }))
+							}, e("i", { className: "size-5 fa-solid fa-forward-step" }))
 						),
 					)
 				),

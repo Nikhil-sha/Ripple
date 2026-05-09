@@ -5,38 +5,38 @@ import Button from './button.js';
 class Song extends Component {
 	static contextType = AppContext;
 	
-	addToPlayList = (event) => {
-		event.stopPropagation();
-		const { songId, name, artist, album, year, coverSm, coverBg, sources } = this.props;
-		const track = {
-			id: songId,
-			name,
-			artist,
-			album,
-			year,
-			sources,
-			coverSm,
-			coverBg,
-		};
-		this.context.updatePlayList([track, ...this.context.playList]); // Updates the playlist context
-		setTimeout(() => this.context.playerMethods.setTrack(0), 100);
-		console.log(track)
+	state = {
+		track: {
+			id: this.props.songId,
+			name: this.props.name,
+			artist: this.props.artist,
+			album: this.props.album,
+			year: this.props.year,
+			coverSm: this.props.coverSm,
+			coverBg: this.props.coverBg,
+			sources: this.props.sources
+		},
+		optionsExpanded: false
 	};
 	
-	saveThis = (event) => {
-		event.stopPropagation();
-		const { songId, name, artist, album, year, coverSm, coverBg, sources } = this.props;
-		const track = {
-			id: songId,
-			name,
-			artist,
-			album,
-			year,
-			sources,
-			coverSm,
-			coverBg,
-		};
-		this.context.updateLocalStorage(track);
+	expandOptions = () => {
+		this.setState(prevState => ({
+			optionsExpanded: !prevState.optionsExpanded
+		}))
+	};
+	
+	addToPlayList = () => {
+		this.context.updatePlayList([this.state.track, ...this.context.playList]); // Updates the playlist context
+		setTimeout(() => this.context.playerMethods.setTrack(0), 100);
+		console.log(this.state.track)
+	};
+	
+	saveThis = () => {
+		this.context.updateLocalStorage(this.state.track);
+	};
+	
+	downloadThis = () => {
+		this.context.downloadMethod(this.state.track);
 	};
 	
 	deleteThis = () => {
@@ -72,13 +72,24 @@ class Song extends Component {
 				clickHandler: this.addToPlayList
 			}),
 			option === "save" ?
-			e(Button, {
-				accent: "yellow",
-				icon: "heart",
-				roundness: "full",
-				label: `Add ${name} to Saved`,
-				clickHandler: this.saveThis
-			}) :
+			e('div', { className: "relative size-fit" },
+				e(Button, {
+					accent: "yellow",
+					icon: "ellipsis-vertical",
+					roundness: "full",
+					label: `Add ${name} to Saved`,
+					clickHandler: this.expandOptions
+				}),
+				e('div', { className: `absolute z-10 top-9 shadow-lg right-0 bg-neutral-800 rounded-2xl border border-neutral-700 p-1 ${this.state.optionsExpanded ? 'block' : 'hidden'}` },
+					[
+						{ label: "Add to Saved", icon: "heart", handler: this.saveThis },
+						{ label: "Download", icon: "download", handler: this.downloadThis }
+					].map((item) => (e('button', { onClick: item.handler, className: "w-full text-neutral-200 group flex items-center text-xs text-nowrap px-3 py-2 rounded-xl hover:bg-neutral-700 transition-colors duration-500" },
+						e('i', { className: `fa-solid fa-${item.icon} text-neutral-400 group-hover:text-yellow-400 mr-2 text-center transition-colors duration-500` }),
+						item.label
+					)))
+				)
+			) :
 			option === "delete" ?
 			e(Button, {
 				accent: "red",

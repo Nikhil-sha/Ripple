@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ripple-cache-3.2.0-commit3';
+const CACHE_NAME = 'ripple-cache-3.2.0-commit4';
 const STATIC_FILES = [
 	"./",
 	"./index.html",
