@@ -77,7 +77,7 @@ class Song extends Component {
 					accent: "yellow",
 					icon: "ellipsis-vertical",
 					roundness: "full",
-					label: `Add ${name} to Saved`,
+					label: `More options`,
 					clickHandler: this.expandOptions
 				}),
 				e('div', { className: `absolute z-10 top-9 shadow-lg right-0 bg-neutral-800 rounded-2xl border border-neutral-700 p-1 ${this.state.optionsExpanded ? 'block' : 'hidden'}` },
@@ -95,7 +95,7 @@ class Song extends Component {
 				accent: "red",
 				icon: "times",
 				roundness: "full",
-				label: `Delete ${name}`,
+				label: `Remove ${name} from saved`,
 				clickHandler: this.deleteThis
 			}) : ''
 		)
