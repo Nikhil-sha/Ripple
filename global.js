@@ -25,7 +25,6 @@ setTimeout(() => {
 
 const popupContainer = document.getElementById("popupContainer");
 
-// https://opentdb.com/
 fetch("https://dummyjson.com/quotes/random")
 	.then(res => res.json())
 	.then((data) => {
