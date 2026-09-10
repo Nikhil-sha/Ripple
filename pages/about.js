@@ -1,6 +1,15 @@
 class About extends Component {
   static versions = [
   {
+    "version": "3.3.0 (Experimental)",
+    "changes": [
+      "Bug Fixes.",
+      "Lyrics added in Player(expanded).",
+      "Playlist suggestions on Home Page.",
+      "New Playlist Details Page added."
+    ]
+  },
+  {
     "version": "3.2.0",
     "changes": [
       "Bug Fixes.",

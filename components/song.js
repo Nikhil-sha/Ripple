@@ -7,22 +7,37 @@ class Song extends Component {
 	
 	state = {
 		track: {
-			id: this.props.songId,
+			id: this.props.id,
 			name: this.props.name,
 			artist: this.props.artist,
 			album: this.props.album,
 			year: this.props.year,
 			coverSm: this.props.coverSm,
 			coverBg: this.props.coverBg,
-			sources: this.props.sources
-		},
-		optionsExpanded: false
+			sources: this.props.sources,
+		}
 	};
 	
-	expandOptions = () => {
-		this.setState(prevState => ({
-			optionsExpanded: !prevState.optionsExpanded
-		}))
+	optionsHandler = () => {
+		this.context.setOptions([
+			{
+				isButton: true,
+				label: "Download",
+				icon: "download",
+				handler: this.downloadThis
+			},
+			this.props.option === "save" ? {
+				isButton: true,
+				label: "Add to Saved",
+				icon: "heart",
+				handler: this.saveThis
+			} : {
+				isButton: true,
+				label: "Remove from Saved",
+				icon: "trash",
+				handler: this.deleteThis
+			}
+		]);
 	};
 	
 	addToPlayList = () => {
@@ -42,15 +57,15 @@ class Song extends Component {
 	deleteThis = () => {
 		let confirmation = confirm("Do you really want to remove this song from Saved?");
 		if (confirmation) {
-			this.context.removeTrackFromLocalStorage(this.props.songId);
+			this.context.removeTrackFromLocalStorage(this.props.id);
 		}
 	};
 	
 	render() {
-		const { songId, name, artist, album, year, coverSm, tailwind, option } = this.props;
+		const { id, name, artist, album, year, coverSm, tailwind, option } = this.props;
 		
 		return e("div", { className: `animate-fade-in w-full p-2 flex flex-row items-center gap-3 rounded-xl hover:bg-neutral-900 transition-colors duration-300 ${tailwind || ""}` },
-			e(Link, { to: `/song/${songId}`, className: "min-w-0 grow flex items-center gap-3" },
+			e(Link, { to: `/song/${id}`, className: "min-w-0 grow flex items-center gap-3" },
 				e("div", { className: "shrink-0 size-14 overflow-hidden rounded-xl" },
 					e("img", {
 						className: "w-full h-full object-cover",
@@ -71,33 +86,13 @@ class Song extends Component {
 				label: `Add ${name} to your playlist`,
 				clickHandler: this.addToPlayList
 			}),
-			option === "save" ?
-			e('div', { className: "relative size-fit" },
-				e(Button, {
-					accent: "yellow",
-					icon: "ellipsis-vertical",
-					roundness: "full",
-					label: `More options`,
-					clickHandler: this.expandOptions
-				}),
-				e('div', { className: `absolute z-10 top-9 shadow-lg right-0 bg-neutral-800 rounded-2xl border border-neutral-700 p-1 ${this.state.optionsExpanded ? 'block' : 'hidden'}` },
-					[
-						{ label: "Add to Saved", icon: "heart", handler: this.saveThis },
-						{ label: "Download", icon: "download", handler: this.downloadThis }
-					].map((item) => (e('button', { onClick: item.handler, className: "w-full text-neutral-200 group flex items-center text-xs text-nowrap px-3 py-2 rounded-xl hover:bg-neutral-700 transition-colors duration-500" },
-						e('i', { className: `fa-solid fa-${item.icon} text-neutral-400 group-hover:text-yellow-400 mr-2 text-center transition-colors duration-500` }),
-						item.label
-					)))
-				)
-			) :
-			option === "delete" ?
 			e(Button, {
-				accent: "red",
-				icon: "times",
+				accent: "yellow",
+				icon: "ellipsis-vertical",
 				roundness: "full",
-				label: `Remove ${name} from saved`,
-				clickHandler: this.deleteThis
-			}) : ''
+				label: `More options`,
+				clickHandler: this.optionsHandler
+			}),
 		)
 	}
 }

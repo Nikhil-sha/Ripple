@@ -1,5 +1,5 @@
 import { AppContext } from '../context.js';
-import { formatTime, formatDate, renderText, renderLyrics } from '../utilities/all.js';
+import { formatTime, formatDate, renderText } from '../utilities/all.js';
 
 import Album from '../components/album.js';
 import Artist from '../components/artist.js';
@@ -16,10 +16,6 @@ class SongDetails extends Component {
 			loading: true,
 			error: false,
 			errorMessage: null,
-			lyricsState: {
-				status: "idle",
-				message: null
-			},
 		};
 		this.abortController = null;
 	}
@@ -65,12 +61,6 @@ class SongDetails extends Component {
 		this.setState({ error: false });
 	};
 	
-	setLyricsState = (status, message = null) => {
-		this.setState({
-			lyricsState: { status, message },
-		});
-	};
-	
 	fetchSong = async (songId) => {
 		this.setLoadingTrue();
 		const decodedSongId = decodeURIComponent(songId);
@@ -96,46 +86,8 @@ class SongDetails extends Component {
 				this.setErrorFalse();
 			}
 		} catch (error) {
-			if (error.name === "AbortError") {
-				console.log("Fetch request was aborted");
-			} else {
+			if (error.name !== "AbortError") {
 				this.setError(error.message);
-			}
-		}
-	};
-	
-	loadLyrics = () => {
-		const { id } = this.context.specificSongDetails;
-		if (!this.context.specificSongLyrics || this.context.specificSongLyrics.id !== id) {
-			this.fetchLyrics(id);
-		} else {
-			this.setLyricsState("idle");
-		}
-	};
-	
-	fetchLyrics = async (songId) => {
-		this.setLyricsState("loading");
-		this.abortController = new AbortController();
-		const { signal } = this.abortController;
-		
-		try {
-			const { endpoints } = this.context;
-			const apiUrl = `${endpoints.songs}/${songId}/lyrics`;
-			
-			const response = await fetch(apiUrl, { signal });
-			const data = await response.json();
-			
-			if (!data.success) {
-				this.setLyricsState("error", data.message || "Lyrics not found!");
-			} else {
-				this.context.setSpecificSongLyrics(songId, data.data);
-				this.setLyricsState("success");
-			}
-		} catch (error) {
-			if (error.name === "AbortError") {
-				this.setLyricsState("error", "Fetch request was aborted!");
-			} else {
-				this.setLyricsState("error", error.message);
 			}
 		}
 	};
@@ -172,13 +124,13 @@ class SongDetails extends Component {
 	};
 	
 	render() {
-		const { loading, error, errorMessage, lyricsState } = this.state;
-		let { specificSongDetails, specificSongLyrics } = this.context;
+		const { loading, error, errorMessage } = this.state;
+		let { specificSongDetails } = this.context;
 		if (loading) {
 			return e("div", { className: "animate-fade-in w-full h-full flex flex-col items-center justify-center gap-4" },
 				e(Spinner, { size: "12", strokeColor: "yellow-400" }),
 				e("span", null,
-					"Wait a second…"
+					"Wait a moment…"
 				)
 			)
 		}
@@ -194,7 +146,7 @@ class SongDetails extends Component {
 					alt: specificSongDetails.name,
 					className: "w-full aspect-square"
 				}),
-				e("figcaption", { className: "absolute bottom-0 w-full px-3 md:px-8 lg:px-12 pt-12 bg-gradient-to-t from-neutral-950 to-transparent" },
+				e("figcaption", { className: "absolute bottom-0 w-full px-3 md:px-8 lg:px-12 pt-12 bg-gradient-to-t from-neutral-950 to-transparent to-90%" },
 					e("h2", { className: "text-2xl text-neutral-200 font-medium" }, renderText(specificSongDetails.name))
 				)
 			),
@@ -242,33 +194,11 @@ class SongDetails extends Component {
 					)
 				),
 				
-				e("h4", { className: "text-neutral-500 text-base font-normal mt-6 mb-2" }, "Lyrics"),
-				lyricsState.status === "loading" ? (
-					e("div", { className: "animate-fade-in w-fit mx-auto flex justify-center items-center" },
-						e(Spinner, { size: "4", strokeColor: "yellow-400" }),
-						e("span", { className: "ml-2 text-sm" }, "Loading…")
-					)
-				) : lyricsState.status === "error" ? (
-					e("p", { className: "text-sm text-neutral-400" }, lyricsState.message)
-				) : specificSongLyrics && specificSongLyrics.id === specificSongDetails.id ? (
-					e("div", { className: "mb-8" },
-						e("p", { className: "text-sm text-neutral-200" }, renderLyrics(specificSongLyrics.lyrics.lyrics)),
-						e("p", { className: "text-sm text-neutral-400 font-medium" }, renderLyrics(specificSongLyrics.lyrics.copyright))
-					)
-				) : specificSongDetails.hasLyrics ? (
-					e("button", {
-						onClick: this.loadLyrics,
-						className: "px-2 py-1 text-sm bg-yellow-400 hover:bg-yellow-500 rounded-md text-neutral-600"
-					}, "Load lyrics")
-				) : (
-					e("p", { className: "text-sm text-neutral-400" }, "Lyrics Unavailable for this song.")
-				),
-				
 				e("h4", { className: "text-neutral-500 text-base font-normal mt-6 mb-2" }, "Album"),
 				e(Album, {
 					name: specificSongDetails.album.name,
 					cover: specificSongDetails.image[1].url,
-					albumId: specificSongDetails.album.id
+					id: specificSongDetails.album.id
 				}),
 				
 				e("h4", { className: "text-neutral-500 text-base font-normal mt-6 mb-2" }, "Artists"),
@@ -276,7 +206,7 @@ class SongDetails extends Component {
 					specificSongDetails.artists.all ? specificSongDetails.artists.all.map((artist, index) =>
 						e(Artist, {
 							key: index,
-							artistId: artist.id,
+							id: artist.id,
 							name: artist.name,
 							image: artist.image.length ? artist.image[artist.image.length - 1].url : '',
 							role: artist.role

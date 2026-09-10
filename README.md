@@ -9,13 +9,21 @@ Ripple is a **music web app** built using modern web technologies:
 
 It leverages the [Saavn API](https://saavn.sumit.co/) for music data.
 
-### Repository  
-The source code for Ripple is available on GitHub:  
-[🔗 Ripple Repository](https://github.com/Nikhil-sha/Ripple/)
-
 ---
 
 ## 📦 ChangeLog
+
+### Version 3.3.0
+- Bug Fixes.
+- **Synced Lyrics** added in Player(expanded).
+- Playlist suggestions on Home Page.
+- New **Playlist Details** Page added.
+- Player UI redesign.
+- Player and PopUps now support collapse using **back navigation** button.
+- Updated Options dynamics.
+- Option to download file with or without metadata.
+
+---
 
 ### Version 3.2.0
 - Bug Fixes.

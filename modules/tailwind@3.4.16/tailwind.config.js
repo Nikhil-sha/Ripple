@@ -2,16 +2,26 @@ tailwind.config = {
 	theme: {
 		extend: {
 			animation: {
-				'fade-in': 'fadeIn 0.5s ease-out',
-				'fade-out': 'fadeOut 0.5s ease-in',
-				'scale-up': 'scaleUp 0.3s ease-out',
-				'scale-down': 'scaleDown 0.3s ease-in',
+				'enter-up': 'enterUp 0.25s ease-out',
+				'leave-down': 'leaveDown 0.25s ease-in',
+				'fade-in': 'fadeIn 0.5s',
+				'fade-out': 'fadeOut 0.5s',
+				'scale-up': 'scaleUp 0.45s ease-out',
+				'scale-down': 'scaleDown 0.45s ease-out',
 				'fade-in-up': 'fadeInUp 0.4s ease',
 				'expand-height': 'expand 0.4s ease-out',
 				'shrink-height': 'shrink 0.4s ease-out',
 				'dash': 'dash 1.5s ease-in-out infinite',
 			},
 			keyframes: {
+				leaveDown: {
+					'0%': { transform: 'translateY(0%)' },
+					'100%': { transform: 'translateY(100%)' }
+				},
+				enterUp: {
+					'0%': { transform: 'translateY(100%)' },
+					'100%': { transform: 'translateY(0%)' }
+				},
 				fadeIn: {
 					'0%': { opacity: '0' },
 					'100%': { opacity: '1' }
@@ -56,7 +66,7 @@ tailwind.config = {
 	plugins: [
 		function({ addUtilities }) {
 			const newUtilities = {
-				".blur-progressive": {
+				".mask-gradient": {
 					maskImage: "linear-gradient(to top, black, transparent)"
 				}
 			}

@@ -9,10 +9,18 @@ class Downloads extends Component {
 		files: []
 	}
 	
+	filenameFormat = /^(.+) - (.+)\.m4a$/;
+	
 	async componentDidMount() {
 		const { downloadDir, downloadedFiles, loadDownloadedFiles } = this.context;
 		if (downloadDir && !downloadedFiles.length) loadDownloadedFiles();
 	}
+	
+	parseFilename = (str) => {
+		if (!this.filenameFormat.test(str)) return null;
+		const matches = str.match(this.filenameFormat);
+		return [matches[1], matches[2]]
+	};
 	
 	selectFolder = async () => {
 		if (!this.context.downloadDir) {
@@ -63,7 +71,10 @@ class Downloads extends Component {
 							e("span", { className: "flex-shrink-0 size-10 rounded-xl flex justify-center items-center bg-gradient-to-b from-neutral-700 to-neutral-800" },
 								e("i", { className: "fa-solid fa-headphones text-yellow-400" })
 							),
-							e("span", { className: "min-w-0 w-full truncate" }, file.name),
+							e('div', { className: "min-w-0 w-full inline-flex flex-col gap-0.5" },
+								e("h4", { className: "text-sm font-normal text-neutral-200 truncate leading-tight" }, this.parseFilename(file.name)[0]),
+								e("span", { className: "text-xs text-neutral-400 truncate" }, this.parseFilename(file.name)[1]),
+							),
 							e(Button, {
 								icon: "trash",
 								accent: "red",

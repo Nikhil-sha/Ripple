@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ripple-cache-3.2.0-commit6';
+const CACHE_NAME = 'ripple-cache-3.3.0-commit1';
 const STATIC_FILES = [
 	"./",
 	"./index.html",
@@ -11,7 +11,6 @@ const STATIC_FILES = [
 	"./components/loadings/loadingSongs.js",
 	"./components/loadings/spinner.js",
 	"./components/artist.js",
-	"./components/aside.js",
 	"./components/header.js",
 	"./components/song.js",
 	"./components/player.js",
@@ -19,6 +18,9 @@ const STATIC_FILES = [
 	"./components/album.js",
 	"./components/downloader.js",
 	"./components/button.js",
+	"./components/playlist.js",
+	"./components/options.js",
+	"./components/lyricsRenderer.js",
 	"./modules/react@17.0.1/react.production.min.js",
 	"./modules/react-dom@17.0.1/react-dom.production.min.js",
 	"./modules/fontawesome-free-6.7.2-web/css/all.min.css",
@@ -37,6 +39,8 @@ const STATIC_FILES = [
 	"./pages/song.js",
 	"./pages/album.js",
 	"./pages/downloads.js",
+	"./pages/playlist.js",
+	"./pages/redirect.js",
 	"./utilities/all.js",
 	"./app.css",
 	"./app.js",

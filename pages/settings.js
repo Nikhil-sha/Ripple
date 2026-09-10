@@ -4,15 +4,44 @@ class Settings extends Component {
 	static contextType = AppContext;
 	
 	static options = {
-		audioQuality: [
-			{
-				label: "12kbps",
-				value: "12kbps"
-			}
-		],
+		preferredQuality: [
+		{
+			label: "12 Kbps",
+			value: "12kbps"
+		},
+		{
+			label: "48 Kbps",
+			value: "48kbps"
+		},
+		{
+			label: "96 Kbps",
+			value: "96kbps"
+		},
+		{
+			label: "160 Kbps",
+			value: "160kbps"
+		},
+		{
+			label: "320 Kbps",
+			value: "320kbps"
+		}],
 		searchResultsLimit: [
-			
-		]
+		{
+			label: "05 Songs",
+			value: "5"
+		},
+		{
+			label: "10 Songs",
+			value: "10"
+		},
+		{
+			label: "20 Songs",
+			value: "20"
+		},
+		{
+			label: "30 Songs",
+			value: "30"
+		}]
 	};
 	
 	handleQualityChange = (event) => {
@@ -38,11 +67,9 @@ class Settings extends Component {
 								onChange: this.handleQualityChange,
 								className: "block appearance-none px-3 py-2 w-full rounded-xl bg-neutral-800 border border-neutral-700 text-neutral-200 focus:outline-none focus:border-yellow-400 transition"
 							},
-							e("option", { value: "12kbps" }, "12 Kbps (low)"),
-							e("option", { value: "48kbps" }, "48 Kbps"),
-							e("option", { value: "96kbps" }, "96 Kbps (mid)"),
-							e("option", { value: "160kbps" }, "160 Kbps (pref)"),
-							e("option", { value: "320kbps" }, "320 Kbps (high)")
+							Settings.options.preferredQuality.map((opt, i) => (
+								e("option", { value: opt.value }, opt.label)
+							))
 						),
 						e("div", { className: "absolute inset-y-0 right-3 flex items-center pointer-events-none" },
 							e("i", { className: "fa-solid fa-chevron-down text-neutral-400" })
@@ -58,11 +85,9 @@ class Settings extends Component {
 								onChange: this.handleSearchResLimitChange,
 								className: "block appearance-none px-3 py-2 w-full rounded-xl bg-neutral-800 border border-neutral-700 text-neutral-200 focus:outline-none focus:border-yellow-400 transition"
 							},
-							e("option", { value: "5" }, "5"),
-							e("option", { value: "10" }, "10"),
-							e("option", { value: "15" }, "15"),
-							e("option", { value: "20" }, "20"),
-							e("option", { value: "30" }, "30")
+							Settings.options.searchResultsLimit.map((opt, i) => (
+								e("option", { value: opt.value }, opt.label)
+							))
 						),
 						e("div", { className: "absolute inset-y-0 right-3 flex items-center pointer-events-none" },
 							e("i", { className: "fa-solid fa-chevron-down text-neutral-400" })

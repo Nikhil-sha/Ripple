@@ -2,6 +2,7 @@ import { AppContext } from '../context.js';
 import { renderText, formatTime } from '../utilities/all.js';
 
 import Button from './button.js';
+import LyricsRenderer from './lyricsRenderer.js';
 
 class Player extends Component {
 	static contextType = AppContext;
@@ -11,14 +12,19 @@ class Player extends Component {
 		isPlaying: false,
 		isBuffering: false,
 		currentTime: 0,
+		currentPercent: 0,
 		totalDuration: 0,
 		currentTrackIndex: 0,
 		repeatMode: "playlist",
 		isShuffling: false,
+		isLrcCompMounted: false,
+		isLrcCompUnmounting: false,
 		currentTrack: null,
 	};
 	
 	audioRef = createRef();
+	lrcCompUnmountTimeout = null;
+	onPopState = null;
 	
 	componentDidMount() {
 		const audio = this.audioRef.current;
@@ -92,16 +98,37 @@ class Player extends Component {
 		this.resetAudio();
 	}
 	
-	handleExpand = () => {
-		this.setState((prevState) => ({ isExpanded: !prevState.isExpanded }));
+	handleExpandShrink = (action) => {
+		if (action === "expand") {
+			window.history.pushState({ player: true }, "Player", window.location.href);
+			
+			this.onPopState = () => this.handleExpandShrink("shrink");
+			window.addEventListener("popstate", this.onPopState, { once: true });
+			
+			this.setState({ isExpanded: true });
+		} else {
+			if (this.onPopState) {
+				window.removeEventListener("popstate", this.onPopState);
+				this.onPopState = null;
+			}
+			
+			if (this.state.isExpanded && window.history.state?.player) {
+				window.history.back();
+			}
+			
+			this.setState({ isExpanded: false });
+		}
 	};
 	
 	updateProgress = () => {
-		this.setState({ currentTime: this.audioRef.current.currentTime });
+		const currentTime = this.audioRef.current.currentTime.toFixed(2);
+		const currentPercent = this.state.totalDuration > 0 ? ((currentTime / this.state.totalDuration) * 100).toFixed(2) : 0;
+		
+		this.setState({ currentTime, currentPercent });
 	};
 	
 	setDuration = () => {
-		this.setState({ totalDuration: this.audioRef.current.duration });
+		this.setState({ totalDuration: this.audioRef.current.duration.toFixed(2) });
 	};
 	
 	setMSMetaData = (track) => {
@@ -120,6 +147,7 @@ class Player extends Component {
 		this.setState({
 			currentTrack: null,
 			currentTime: 0,
+			currentPercent: 0,
 			totalDuration: 0,
 		});
 	};
@@ -227,6 +255,27 @@ class Player extends Component {
 		this.setState((prevState) => ({ isShuffling: !prevState.isShuffling }));
 	};
 	
+	toggleLyrics = () => {
+		if (this.lrcCompUnmountTimeout) {
+			clearTimeout(this.lrcCompUnmountTimeout);
+		}
+		
+		if (this.state.isLrcCompMounted) {
+			this.setState({
+				isLrcCompUnmounting: true,
+			});
+			this.lrcCompUnmountTimeout = setTimeout(() => this.setState({
+				isLrcCompMounted: false,
+				isLrcCompUnmounting: false,
+			}), 500);
+		} else {
+			this.setState((prevState) => ({
+				isLrcCompUnmounting: false,
+				isLrcCompMounted: true,
+			}), () => this.context.notify("warning", "Crowdsourced Lyrics from LrcLib. Not Official*"));
+		}
+	}
+	
 	setTrack = (index) => {
 		if (!this.context.playList[index]) return;
 		
@@ -327,6 +376,7 @@ class Player extends Component {
 		
 		this.setState({
 			currentTime: 0,
+			currentPercent: 0,
 			totalDuration: 0,
 			currentTrack: null,
 			currentTrackIndex: null,
@@ -343,17 +393,20 @@ class Player extends Component {
 			isPlaying,
 			isBuffering,
 			currentTime,
+			currentPercent,
 			totalDuration,
 			currentTrack,
 			repeatMode,
 			isShuffling,
+			isLrcCompMounted,
+			isLrcCompUnmounting,
 			trackPalette
 		} = this.state;
 		
 		return e("div", {
-				className: `flex-shrink-0 bg-neutral-900 absolute z-50 left-0 bottom-0 ${isExpanded ? "animate-expand-height h-full md:h-96" : "animate-shrink-height rounded-t-xl border-t"} max-w-md w-full border-neutral-800 bg-center bg-cover bg-no-repeat transition-[background] duration-500 overflow-hidden`,
+				className: `flex-shrink-0 bg-neutral-900 absolute z-40 left-0 bottom-0 ${isExpanded ? "animate-expand-height h-full" : "animate-shrink-height rounded-t-xl border-t"} max-w-md w-full border-neutral-800 bg-center bg-cover bg-no-repeat transition-[background] duration-500 overflow-hidden`,
 				"aria-live": "polite",
-				style: { backgroundImage: `url(${currentTrack ? currentTrack.coverSm : "https://picsum.photos/80.webp?blur=8"})` }
+				style: { backgroundImage: `url(${currentTrack ? currentTrack.coverSm : "https://picsum.photos/50.webp?blur=10"})` }
 			},
 			e("audio", { ref: this.audioRef, "aria-hidden": "true" }),
 			
@@ -368,7 +421,7 @@ class Player extends Component {
 						"aria-label": "Track Thumbnail"
 					},
 					e("img", {
-						src: currentTrack ? currentTrack.coverSm : "https://picsum.photos/80.webp?blur=8",
+						src: currentTrack ? currentTrack.coverSm : "https://picsum.photos/50.webp?blur=10",
 						alt: currentTrack ? currentTrack.name : "No Track",
 						className: "object-cover"
 					})
@@ -404,129 +457,131 @@ class Player extends Component {
 						roundness: "full",
 						icon: "chevron-up",
 						label: "Expand player",
-						clickHandler: this.handleExpand
+						clickHandler: () => this.handleExpandShrink("expand")
 					})
 				),
 				
 				currentTrack && e("div", {
 					className: "absolute bottom-0 left-0 -z-10 h-0.5 bg-blue-400",
-					style: { width: `${(currentTime / totalDuration) * 100}%` },
+					style: { width: `${currentPercent}%` },
 					"aria-hidden": "true"
 				})
 			),
 			
 			e("div", {
 					key: "expanded",
-					className: `${isExpanded ? "" : "hidden"} bg-neutral-950/75 backdrop-blur-2xl w-full h-full p-3 overflow-y-auto`,
+					className: `${isExpanded ? "" : "hidden"} bg-gradient-to-b from-neutral-950 to-neutral-950/80 to-10% backdrop-blur-2xl w-full h-full px-6 py-4 overflow-y-auto`,
 					"aria-hidden": !isExpanded
 				},
-				e("button", {
-						className: "mx-auto h-8 w-14 flex justify-center items-center rounded-full bg-neutral-800/40 hover:bg-neutral-800/60 transition-colors duration-500",
-						onClick: this.handleExpand,
-						"aria-label": "Collapse player"
-					},
-					e("i", { className: "text-neutral-400 fa-solid fa-chevron-down" })
+				e('div', { className: "w-full flex justify-between items-center" },
+					e(Button, { accent: "yellow", icon: "chevron-down", roundness: "full", label: "collapse player", clickHandler: () => this.handleExpandShrink("shrink"), disabled: false }),
+					
+					e('div', { className: "inline-flex flex-row items-center gap-3" },
+						e(Button, { accent: "yellow", icon: "heart", roundness: "full", label: "save", clickHandler: this.saveTrack, disabled: false }),
+						e(Button, { accent: "yellow", icon: "share", roundness: "full", label: "share", clickHandler: this.shareTrack, disabled: false }),
+					)
 				),
 				
-				e("div", { className: "w-full my-6" },
-					e("div", { className: "relative size-64 rounded-4xl mx-auto mb-6" },
-						e("img", {
-							src: currentTrack ? currentTrack.coverBg : "https://picsum.photos/80.webp?blur=8",
-							alt: currentTrack ? currentTrack.name : "No Track",
-							className: `size-full absolute top-0 object-cover rounded-3xl border-yellow-400 ${isBuffering ? "border-4 animate-pulse" : ""} transition duration-800`,
-							"aria-hidden": "true"
-						})
-					),
-					
-					e("div", { className: "flex flex-col items-center" },
+				e("div", { className: `relative min-w-0 w-full rounded-3xl overflow-hidden border-yellow-400 ${isBuffering ? "border-4 animate-pulse" : ""} transition duration-800 mx-auto mt-4 mb-4` },
+					e("img", {
+						src: currentTrack ? currentTrack.coverBg : "https://picsum.photos/50.webp?blur=10",
+						alt: currentTrack ? currentTrack.name : "No Track",
+						className: "size-full aspect-square",
+					}),
+					(isExpanded && currentTrack && isLrcCompMounted) && e(LyricsRenderer, { currentTime, trackName: currentTrack.name, trackArtist: currentTrack.artist, cover: currentTrack.coverBg, startToUnmount: isLrcCompUnmounting })
+				),
+				
+				e('div', { className: "w-full flex justify-between items-start gap-2 mb-6" },
+					e('div', { className: "flex flex-col" },
 						e("h2", {
 							className: "max-w-72 text-neutral-200 inline-block text-lg font-medium leading-tight truncate",
 							"aria-live": "assertive"
 						}, currentTrack ? renderText(currentTrack.name) : "No Track"),
 						
 						e("span", { className: "text-sm text-neutral-400", "aria-hidden": "true" },
-							currentTrack ? renderText(currentTrack.artist) : ""
-						),
-						
-						e("div", { className: "w-72 inline-flex flex-row justify-start items-center gap-4 mt-4 mb-2" },
-							e("button", {
-								className: "text-neutral-400 active:text-neutral-500 p-1",
-								onClick: this.toggleRepeatMode,
-								"aria-label": `Repeat mode: ${repeatMode}`
-							}, e("i", { className: `fa-solid fa-${repeatMode === "single" ? "repeat text-blue-400" : repeatMode === "playlist" ? "infinity text-blue-400" : "repeat text-neutral-400"}` })),
-							
-							e("button", {
-								className: "text-neutral-400 active:text-neutral-500 p-1",
-								onClick: this.toggleShuffle,
-								"aria-label": `Shuffle: ${isShuffling ? "On" : "Off"}`
-							}, e("i", { className: `fa-solid fa-shuffle ${isShuffling ? "text-blue-400" : ""}` })),
-							
-							e("button", {
-								className: "text-neutral-400 active:text-neutral-500 p-1",
-								onClick: this.saveTrack,
-								"aria-label": "save"
-							}, e("i", { className: "fa-solid fa-heart" })),
-							
-							e("button", {
-								className: "text-neutral-400 active:text-neutral-500 p-1",
-								onClick: this.shareTrack,
-								"aria-label": "Share"
-							}, e("i", { className: "fa-solid fa-share" }))
-						),
-						
-						e("div", { className: "w-72 inline-flex justify-between items-center gap-2" },
-							e("span", { className: "block w-7 text-xs text-center text-neutral-400" }, formatTime(currentTime)),
-							e("input", {
-								type: "range",
-								min: "0",
-								max: totalDuration,
-								value: currentTime,
-								className: "grow h-1.5 bg-neutral-600 rounded-lg appearance-none cursor-pointer accent-blue-400",
-								onInput: this.seekTrack,
-								"aria-label": "Seek track",
-								"aria-valuemin": "0",
-								"aria-valuemax": totalDuration,
-								"aria-valuenow": currentTime
-							}),
-							e("span", { className: "block w-7 text-xs text-center text-neutral-400" }, formatTime(totalDuration))
-						),
-						
-						e("div", { className: "inline-flex flex-row justify-center items-center gap-4 mt-6" },
-							e("button", {
-								className: "text-xl text-neutral-400 active:text-neutral-500 p-1",
-								onClick: this.playPreviousTrack,
-								"aria-label": "Previous track"
-							}, e("i", { className: "size-5 fa-solid fa-backward-step" })),
-							
-							e("button", {
-								className: "text-xl text-neutral-400 active:text-neutral-500 p-1",
-								onClick: () => this.seekTrack(-10),
-								"aria-label": "seek backward"
-							}, e("i", { className: "fa-solid fa-backward" })),
-							
-							e("button", {
-								className: "text-5xl text-yellow-400 active:text-yellow-500",
-								onClick: this.togglePlayPause,
-								"aria-label": isPlaying ? "Pause track" : "Play track"
-							}, e("i", { className: `mx-2 fa-solid fa-${isPlaying ? "pause" : "play"}-circle` })),
-							
-							e("button", {
-								className: "text-xl text-neutral-400 active:text-neutral-500 p-1",
-								onClick: () => this.seekTrack(10),
-								"aria-label": "seek forward"
-							}, e("i", { className: "fa-solid fa-forward" })),
-							
-							e("button", {
-								className: "text-xl text-neutral-400 active:text-neutral-500 p-1",
-								onClick: this.playNextTrack,
-								"aria-label": "Next track"
-							}, e("i", { className: "size-5 fa-solid fa-forward-step" }))
-						),
-					)
+							currentTrack ? renderText(currentTrack.artist) : "Unknown artist"
+						)
+					),
+					
+					e("button", {
+						className: "text-neutral-400 active:text-neutral-500 p-1",
+						onClick: this.toggleLyrics,
+						disabled: isLrcCompUnmounting,
+						"aria-label": "show lyrics"
+					}, e("i", { className: `fa-solid fa-music ${(isLrcCompMounted && !isLrcCompUnmounting) ? "text-blue-400" : ""}` })),
+				),
+				
+				e("div", { className: "w-full grid grid-cols-2 justify-center items-center gap-2 mb-4" },
+					e("input", {
+						type: "range",
+						min: "0",
+						max: totalDuration,
+						value: currentTime,
+						className: `col-span-2 h-1.5 bg-gradient-to-r from-blue-400 from-[${((currentPercent * 0.95) + 2).toFixed(0)}%] to-[${((currentPercent * 0.95) + 2).toFixed(0)}%] to-neutral-600 rounded-lg appearance-none cursor-pointer accent-blue-400`,
+						onInput: this.seekTrack,
+						"aria-label": "Seek track",
+						"aria-valuemin": "0",
+						"aria-valuemax": totalDuration,
+						"aria-valuenow": currentTime
+					}),
+					e("span", { className: "text-xs text-neutral-400" }, formatTime(currentTime)),
+					e("span", { className: "justify-self-end text-xs text-neutral-400" }, formatTime(totalDuration))
+				),
+				
+				e("div", { className: "flex flex-row justify-center items-center gap-4 mb-8" },
+					e("button", {
+						className: "text-xl text-neutral-400 active:text-neutral-500 p-1",
+						onClick: this.playPreviousTrack,
+						"aria-label": "Previous track"
+					}, e("i", { className: "size-5 fa-solid fa-backward-step" })),
+					
+					e("button", {
+						className: "text-xl text-neutral-400 active:text-neutral-500 p-1",
+						onClick: () => this.seekTrack(-10),
+						"aria-label": "seek backward"
+					}, e("i", { className: "fa-solid fa-backward" })),
+					
+					e("button", {
+						className: "text-5xl text-yellow-400 active:text-yellow-500",
+						onClick: this.togglePlayPause,
+						"aria-label": isPlaying ? "Pause track" : "Play track"
+					}, e("i", { className: `mx-2 fa-solid fa-${isPlaying ? "pause" : "play"}-circle` })),
+					
+					e("button", {
+						className: "text-xl text-neutral-400 active:text-neutral-500 p-1",
+						onClick: () => this.seekTrack(10),
+						"aria-label": "seek forward"
+					}, e("i", { className: "fa-solid fa-forward" })),
+					
+					e("button", {
+						className: "text-xl text-neutral-400 active:text-neutral-500 p-1",
+						onClick: this.playNextTrack,
+						"aria-label": "Next track"
+					}, e("i", { className: "size-5 fa-solid fa-forward-step" }))
 				),
 				
 				e("div", { className: "w-full mt-2" },
-					e("h3", { className: "text-sm font-medium text-neutral-400 mb-2" }, "QUEUE"),
+					e('div', { className: "flex justify-between items-center mb-2 gap-2" },
+						e("h3", { className: "text-sm font-medium text-neutral-400" }, "QUEUE"),
+						
+						e('span', { className: "grow h-0 border border-neutral-700" }),
+						
+						e("button", {
+							className: "text-neutral-400 active:text-neutral-500 p-1",
+							onClick: this.toggleRepeatMode,
+							"aria-label": `Repeat mode: ${repeatMode}`
+						}, e("i", { className: `fa-solid fa-${repeatMode === "single" ? "repeat text-blue-400" : repeatMode === "playlist" ? "infinity text-blue-400" : "repeat text-neutral-400"}` })),
+						e("button", {
+							className: "text-neutral-400 active:text-neutral-500 p-1",
+							onClick: this.toggleShuffle,
+							"aria-label": `Shuffle: ${isShuffling ? "On" : "Off"}`
+						}, e("i", { className: `fa-solid fa-shuffle ${isShuffling ? "text-blue-400" : ""}` })),
+						this.context.playList.length ? e("button", {
+							className: "text-sm font-medium text-neutral-400 hover:text-red-400 py-0.5 px-2",
+							onClick: () => this.changePlayList([]),
+							"aria-label": "clear playlist queue"
+						}, e("i", { className: "fa-solid fa-trash" })) : null
+					),
 					e("ul", { className: "w-full flex flex-col gap-1" },
 						this.context.playList.length ? (
 							this.context.playList.map((track, index) =>
@@ -537,7 +592,7 @@ class Player extends Component {
 										"aria-label": `Select ${track.name}`
 									},
 									e("img", {
-										src: track ? track.coverSm : "https://picsum.photos/80.webp?blur=8",
+										src: track ? track.coverSm : "https://picsum.photos/25.webp?blur=10",
 										alt: `Track Thumbnail ${track.name}`,
 										className: "w-8 h-8 rounded-lg"
 									}),

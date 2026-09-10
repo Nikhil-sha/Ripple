@@ -17,12 +17,8 @@ class ArtistDetails extends Component {
 			loading: true,
 			error: false,
 			errorMessage: null,
-			isExternalsVisible: false,
-			willExternalsHide: null,
-			externalsButton: true
 		};
 		this.abortController = null;
-		this.externalsUnmountTimeout = null;
 	}
 	
 	componentDidMount() {
@@ -122,26 +118,17 @@ class ArtistDetails extends Component {
 		}
 	};
 	
-	handleExternalsToggle = () => {
-		if (this.externalsUnmountTimeout) {
-			clearTimeout(this.externalsUnmountTimeout);
-		}
+	handleExternals = () => {
+		const { specificArtistDetails } = this.context;
 		
-		if (this.state.isExternalsVisible) {
-			this.setState({
-				willExternalsHide: true,
-				externalsButton: false
-			});
-			this.externalsUnmountTimeout = setTimeout(() => this.setState({
-				isExternalsVisible: false,
-				externalsButton: true
-			}), 300);
-		} else {
-			this.setState((prevState) => ({
-				willExternalsHide: false,
-				isExternalsVisible: true,
-			}));
-		}
+		const externals = [
+			...(specificArtistDetails.wiki ? [{ to: `/redirect/${encodeURIComponent(specificArtistDetails.wiki)}`, icon: "brands fa-wikipedia-w", label: "Visit on Wikipedia" }] : []),
+			...(specificArtistDetails.url ? [{ to: `/redirect/${encodeURIComponent(specificArtistDetails.url)}`, icon: "arrow-up-right-from-square", label: "Visit on JioSaavn" }] : []),
+			...(specificArtistDetails.twitter ? [{ to: `/redirect/${encodeURIComponent(specificArtistDetails.twitter)}`, icon: "brands fa-twitter", label: "Visit on Twitter/X" }] : []),
+			...(specificArtistDetails.fb ? [{ to: `/redirect/${encodeURIComponent(specificArtistDetails.fb)}`, icon: "brands fa-facebook", label: "Visit on Facebook" }] : [])
+		];
+		
+		this.context.setOptions(externals);
 	};
 	
 	render() {
@@ -151,7 +138,7 @@ class ArtistDetails extends Component {
 			return e("div", { className: "animate-fade-in w-full h-full flex flex-col items-center justify-center gap-4" },
 				e(Spinner, { size: "12", strokeColor: "yellow-400" }),
 				e("span", null,
-					"Wait a second…"
+					"Wait a moment…"
 				)
 			)
 		}
@@ -179,24 +166,14 @@ class ArtistDetails extends Component {
 					specificArtistDetails.fanCount, " fans & ", specificArtistDetails.followerCount, " followers"
 				),
 				
-				e("div", { className: "relative w-full flex flex-row justify-between gap-4 items-center mt-5" },
+				e("div", { className: "w-full flex flex-row justify-between gap-4 items-center mt-5" },
 					e(Button, {
 						icon: "ellipsis-vertical",
 						accent: "yellow",
 						roundness: "full",
 						label: "Visit artist on others sites",
-						clickHandler: this.handleExternalsToggle,
-						disabled: !this.state.externalsButton
+						clickHandler: this.handleExternals,
 					}),
-					
-					e("ul", {
-							className: `${this.state.isExternalsVisible ? "" : "hidden"} origin-top-left ${this.state.willExternalsHide ? "animate-scale-down" : "animate-scale-up"} w-fit border p-3 absolute top-full left-0 z-10 text-sm text-neutral-200 bg-neutral-800 rounded-2xl shadow-lg shadow-neutral-900/80 border-neutral-700 flex flex-col mt-3 overflow-hidden`
-						},
-						specificArtistDetails.wiki ? e("li", null, e("a", { className: "hover:underline", target: "_blank", href: specificArtistDetails.wiki }, "Visit on Wikipedia")) : "",
-						specificArtistDetails.url ? e("li", null, e("a", { className: "hover:underline", target: "_blank", href: specificArtistDetails.url }, "Visit on JioSaavn")) : "",
-						specificArtistDetails.twitter ? e("li", null, e("a", { className: "hover:underline", target: "_blank", href: specificArtistDetails.twitter }, "Visit on Twitter")) : "",
-						specificArtistDetails.fb ? e("li", null, e("a", { className: "hover:underline", target: "_blank", href: specificArtistDetails.fb }, "Visit on Facebook")) : ""
-					),
 					
 					e("div", { className: "max-w-1/2 min-w-24 h-8 inline-flex justify-center gap-1 items-center border border-neutral-700 rounded-full text-sm text-neutral-400 px-3" },
 						e("span", { className: "truncate" }, capitalize(specificArtistDetails.dominantType)),
@@ -252,7 +229,7 @@ class ArtistDetails extends Component {
 						specificArtistDetails.singles.length ? specificArtistDetails.singles.map((album, index) =>
 							e(Album, {
 								key: index,
-								albumId: album.id,
+								id: album.id,
 								name: album.name,
 								cover: album.image.length ? album.image[1].url : ''
 							})
@@ -266,7 +243,7 @@ class ArtistDetails extends Component {
 						specificArtistDetails.topSongs.length ? specificArtistDetails.topSongs.map((song, index) =>
 							e(Song, {
 								key: song.id,
-								songId: song.id,
+								id: song.id,
 								name: renderText(song.name),
 								artist: renderText(song.artists.primary[0].name),
 								album: renderText(song.album.name),
@@ -286,7 +263,7 @@ class ArtistDetails extends Component {
 						specificArtistDetails.topAlbums.length ? specificArtistDetails.topAlbums.map((album, index) =>
 							e(Album, {
 								key: index,
-								albumId: album.id,
+								id: album.id,
 								name: album.name,
 								cover: album.image.length ? album.image[1].url : ''
 							})
@@ -300,7 +277,7 @@ class ArtistDetails extends Component {
 						specificArtistDetails.similarArtists.length ? specificArtistDetails.similarArtists.map((artist, index) =>
 							e(Artist, {
 								key: index,
-								artistId: artist.id,
+								id: artist.id,
 								name: artist.name,
 								image: artist.image.length ? artist.image[artist.image.length - 1].url : '',
 								role: artist.dominantType

@@ -122,7 +122,7 @@ class Saved extends Component {
 				savedTracks.length > 0 ? savedTracks.slice(chunk.offset, chunk.offset + chunk.length).map((track, index) =>
 					e(Song, {
 						key: track.id,
-						songId: track.id,
+						id: track.id,
 						name: track.name,
 						artist: track.artist,
 						album: track.album,

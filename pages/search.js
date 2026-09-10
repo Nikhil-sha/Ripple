@@ -112,7 +112,7 @@ class Search extends Component {
 		this.abortController = new AbortController();
 		const { signal } = this.abortController;
 		
-		const url = `${endpoints.search}?query=${params.query}&page=${params.page || 1}&limit=${this.context.searchResultsLimit || "15"}`;
+		const url = `${endpoints.search.songs}?query=${params.query}&page=${params.page || 1}&limit=${this.context.searchResultsLimit || "15"}`;
 		
 		try {
 			const response = await fetch(encodeURI(url), { signal });
@@ -122,7 +122,7 @@ class Search extends Component {
 				this.setError(data.message || "No results found.");
 			} else {
 				this.setLoadingFalse();
-				const lastPageIndex = data.data.total > (data.data.start + data.data.results.length) ? Infinity : params.page;
+				const lastPageIndex = data.data.total > (data.data.start + (data.data.results.length - 1)) ? Infinity : params.page;
 				return { results: data.data.results, lastPageIndex };
 			}
 		} catch (e) {
@@ -259,7 +259,7 @@ class Search extends Component {
 					loading ? e(LoadingSongs, { list: "5" }) :
 					this.context.search.results[pageIndex - 1].map((song) => e(Song, {
 						key: song.id,
-						songId: song.id,
+						id: song.id,
 						name: renderText(song.name),
 						artist: renderText(song.artists.primary[0].name),
 						album: renderText(song.album.name),
@@ -267,7 +267,7 @@ class Search extends Component {
 						coverSm: song.image[0].url,
 						coverBg: song.image[song.image.length - 1].url,
 						sources: song.downloadUrl,
-						option: "save"
+						option: "save",
 					})),
 					!error && e(
 						"div",
@@ -282,7 +282,7 @@ class Search extends Component {
 							icon: "chevron-left",
 							label: "Go to previous search page",
 							clickHandler: () => this.handlePagination('prev'),
-							disabled: pageIndex <= 1
+							disabled: (pageIndex <= 1)
 						}),
 						e("span", { className: "text-base font-normal text-neutral-200" }, pageIndex),
 						e(Button, {
@@ -291,7 +291,8 @@ class Search extends Component {
 							icon: "chevron-right",
 							label: "Go to next search page",
 							clickHandler: () => this.handlePagination('next'),
-							...((this.context.search.lastPageIndex <= pageIndex) || loading || error ? { disabled: true } : false)
+							// ...((this.context.search.lastPageIndex <= pageIndex) || loading || error ? { disabled: true } : false),
+							disabled: ((this.context.search.lastPageIndex <= pageIndex) || loading || error)
 						})
 					)
 				) : e(
