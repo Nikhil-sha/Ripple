@@ -13,11 +13,7 @@ const characterCode = {
 };
 
 const secureURL = (url) => {
-	if (url.startsWith("http://")) {
-		return url.replace("http://", "https://");
-	} else {
-		return url;
-	}
+	return url.startsWith("http://") ? url.replace("http://", "https://") : url;
 };
 
 const formatTime = (time) => {
