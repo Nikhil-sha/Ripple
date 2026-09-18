@@ -61,17 +61,17 @@ window.addEventListener("beforeunload", function(event) {
 	event.returnValue = "Are you sure you want to leave?";
 });
 
-// if ('serviceWorker' in navigator) {
-// 	window.addEventListener('load', () => {
-// 		navigator.serviceWorker.register('./serviceWorker.js')
-// 			.then(reg => {
-// 				reg.addEventListener('updatefound', () => {
-// 					newToast({
-// 						color: "yellow",
-// 						text: "[Notice]: New Update Detected!\nIf you are using a browser, reopen or refresh the tab.\nIf you are using the PWA, reopen or reinstall the PWA."
-// 					}, 1.5e4)
-// 				})
-// 			})
-// 			.catch(err => console.error('SW failed:', err));
-// 	});
-// }
+if ('serviceWorker' in navigator) {
+	window.addEventListener('load', () => {
+		navigator.serviceWorker.register('./serviceWorker.js')
+			.then(reg => {
+				reg.addEventListener('updatefound', () => {
+					newToast({
+						color: "yellow",
+						text: "[Notice]: New Update Detected!\nIf you are using a browser, reopen or refresh the tab.\nIf you are using the PWA, reopen or reinstall the PWA."
+					}, 1.5e4)
+				})
+			})
+			.catch(err => console.error('SW failed:', err));
+	});
+}
