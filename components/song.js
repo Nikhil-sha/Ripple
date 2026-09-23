@@ -75,8 +75,8 @@ class Song extends Component {
 				),
 				e("div", { className: "min-w-0 grow" },
 					e("h2", { className: "text-sm font-normal text-neutral-200 truncate" }, name),
-					e("p", { className: "text-xs text-neutral-400 truncate" }, artist),
-					e("p", { className: "text-xs text-neutral-400 truncate" }, album)
+					e("p", { className: "text-xs text-neutral-400 truncate" }, e('i', {className: "fa-solid fa-user fa-xs mr-1.5"}), artist),
+					e("p", { className: "text-xs text-neutral-400 truncate" }, e('i', {className: "fa-solid fa-compact-disc fa-xs mr-1.5"}), album)
 				)
 			),
 			e(Button, {

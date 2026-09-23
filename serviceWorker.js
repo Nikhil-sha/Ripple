@@ -29,7 +29,6 @@ const STATIC_FILES = [
 	"./modules/react-router-dom@5.3.0/react-router-dom.min.js",
 	"./modules/tailwind@3.4.16/Tailwind.js",
 	"./modules/tailwind@3.4.16/tailwind.config.js",
-	"./pages/about.js",
 	"./pages/artist.js",
 	"./pages/home.js",
 	"./pages/notFound.js",

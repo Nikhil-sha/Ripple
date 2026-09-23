@@ -11,7 +11,6 @@ class Home extends Component {
 	static contextType = AppContext;
 	
 	static navOptions = [
-		{ icon: 'user', label: 'About', path: '/about', color: 'cyan' },
 		{ icon: 'search', label: 'Search', path: '/search', color: 'yellow' },
 		{ icon: 'heart', label: 'Saved', path: '/saved', color: 'blue' },
 		{ icon: 'gear', label: 'Settings', path: '/settings', color: 'rose' },

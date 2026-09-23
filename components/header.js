@@ -19,7 +19,6 @@ class Header extends Component {
 	handleAside = () => {
 		const menuOptions = [
 			{ to: "/", icon: "home", label: "Home" },
-			{ to: "/about", icon: "info", label: "About" },
 			{ to: "/search", icon: "search", label: "Search" },
 			{ to: "/saved", icon: "heart", label: "Saved" },
 			{ to: "/settings", icon: "cog", label: "Settings" },
